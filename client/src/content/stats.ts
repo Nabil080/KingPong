@@ -72,28 +72,19 @@ async function statsHTML(username: string, stats: ReturnType<typeof calculateSta
 		.join("")
 
 	const content = /* HTML */ `
-		<section id="charts" class="center h-[calc(100vh-57px)] w-full">
-			<div class="grid h-[700px] w-[1080px] grid-cols-3 grid-rows-2 gap-4">
-				<article class="container col-span-1 row-span-1">
-					<h3>${t("winLoss")}</h3>
-					<p>${t("wins")}: ${win}</p>
-					<p>${t("losses")}: ${loose}</p>
-				</article>
-				<article class="container col-span-2 row-span-1">
-					<h3>${t("averageScorePerGame")}</h3>
-					<p>${averageScore.toFixed(2)}</p>
-				</article>
-				<article class="container col-span-2 row-span-1">
-					<h3>${t("averageDurationPerGame")}</h3>
-					<p>${averageDuration.toFixed(2)} ${t("seconds")}</p>
-				</article>
-				<article class="container col-span-1 row-span-1">
-					<h3>${t("mostPlayedUsers")}</h3>
-					<ul>
-						${mostPlayedUsersHTML || `<li>${t("noData")}</li>`}
-					</ul>
-				</article>
-			</div>
+		<section class="[&>article]:center grid h-[700px] w-[1080px] grid-cols-3 grid-rows-2 gap-4 [&>article]:container [&>article]:p-5">
+			<article class="col-span-1 row-span-1">
+				<canvas id="winLossChart"></canvas>
+			</article>
+			<article class="col-span-2 row-span-1">
+				<canvas id="scorePerGameChart"></canvas>
+			</article>
+			<article class="col-span-2 row-span-1">
+				<canvas id="durationPerGameChart"></canvas>
+			</article>
+			<article class="col-span-1 row-span-1">
+				<canvas id="mostPlayedUsersChart"></canvas>
+			</article>
 		</section>
 	`
 

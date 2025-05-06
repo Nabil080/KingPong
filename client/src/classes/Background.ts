@@ -11,7 +11,7 @@ export default class Background {
 		this.root = document.createElement("div")
 		this.root.id = "background"
 		this.root.className = "absolute left-0 w-full pointer-events-none center"
-		// Score div
+		// Score div // TODO: Put this in the gameRenderer class to have the same for regular games
 		this.root.innerHTML = /* HTML */ `
 			<div id="score" class="absolute top-0 flex w-[800px] items-center justify-between px-4 py-2">
 				<div class="w-fit text-center text-2xl font-bold">
@@ -42,19 +42,21 @@ export default class Background {
 
 	// Show the background (start drawing)
 	show() {
-		if (!this.game) return
-		this.game.setRenderState(true)
+		this.root.style.display = "block"
 		this.app.content.root.style.position = "relative"
 		this.app.content.root.style.zIndex = "1"
-		// this.app.content.root.style.backgroundColor = "rgba(0, 0, 0, 0.5)"
-		// this.app.content.root.style.backdropFilter = "blur(5px)"
+		this.app.content.root.style.backdropFilter = "blur(5px)"
+		if (this.game) {
+			this.game.setRenderState(true)
+		}
 	}
 
 	// Hide the background (stop drawing)
 	hide() {
-		if (!this.game) return
-		this.game.setRenderState(false)
-		this.app.content.root.style.backgroundColor = "transparent"
+		this.root.style.display = "none"
 		this.app.content.root.style.backdropFilter = "none"
+		if (this.game) {
+			this.game.setRenderState(false)
+		}
 	}
 }

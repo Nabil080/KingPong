@@ -36,9 +36,6 @@ const genericOptions = (title: string = "") => {
 				},
 			},
 		},
-		layout: {
-			padding: 24,
-		},
 		scales: {
 			x: {
 				ticks: {
