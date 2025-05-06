@@ -1,5 +1,7 @@
 export const translations = {
 	fr: {
+		pong: "Pong",
+		about: "À propos",
 		flag: "FR.png",
 		offline: "Hors-ligne",
 		online: "En Ligne",
@@ -141,6 +143,7 @@ export const translations = {
 		contactUsInfo: "Si vous avez des questions concernant notre politique de confidentialité, veuillez nous contacter à",
 	},
 	en: {
+		pong: "Pong",
 		deleteAccountConfirmation: "Are you sure you want to delete your account? This action is irreversible.",
 		confidentiality: "Confidentiality",
 		confidentialityPolicy: "Confidentiality Policy",
@@ -274,6 +277,7 @@ export const translations = {
 		contactUsInfo: "If you have any questions about our confidentiality policy, please contact us at",
 	},
 	ch: {
+		pong: "Pong",
 		flag: "CN.png",
 		offline: "离线",
 		online: "在线",
@@ -402,6 +406,7 @@ export const translations = {
 		contactUsInfo: "如果您对我们的保密政策有任何疑问，请通过以下方式联系我们：",
 	},
 	ta: {
+		pong: "Pong",
 		flag: "TA.png",
 		offline: "ஆஃப்லைன்",
 		online: "ஆன்லைன்",
@@ -531,6 +536,7 @@ export const translations = {
 		contactUsInfo: "எங்கள் ரகசியக் கொள்கை குறித்து உங்களுக்கு ஏதேனும் கேள்விகள் இருந்தால், எங்களை தொடர்பு கொள்ளவும்:",
 	},
 	ar: {
+		pong: "Pong",
 		flag: "AR.png",
 		offline: "غير متصل",
 		online: "متصل",

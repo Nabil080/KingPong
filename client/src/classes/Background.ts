@@ -13,7 +13,7 @@ export default class Background {
 		this.root.className = "absolute left-0 w-full pointer-events-none center"
 		// Score div
 		this.root.innerHTML = /* HTML */ `
-			<div id="score" class="absolute top-16 flex w-[800px] items-center justify-between px-4 py-2">
+			<div id="score" class="absolute top-0 flex w-[800px] items-center justify-between px-4 py-2">
 				<div class="w-fit text-center text-2xl font-bold">
 					<div id="player1">Player 1</div>
 					<div id="score1">0</div>
@@ -47,7 +47,7 @@ export default class Background {
 		this.app.content.root.style.position = "relative"
 		this.app.content.root.style.zIndex = "1"
 		// this.app.content.root.style.backgroundColor = "rgba(0, 0, 0, 0.5)"
-		this.app.content.root.style.backdropFilter = "blur(5px)"
+		// this.app.content.root.style.backdropFilter = "blur(5px)"
 	}
 
 	// Hide the background (stop drawing)

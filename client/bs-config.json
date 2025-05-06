@@ -2,7 +2,7 @@
 	"injectChanges": false,
 	"files": ["./**/*.{html,htm,css,js}"],
 	"watchOptions": { "ignored": "node_modules" },
-	"port": 3000,
+	"port": 3001,
 	"server": {
 		"baseDir": "public",
 		"https": {
