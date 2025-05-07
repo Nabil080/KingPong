@@ -1,4 +1,5 @@
 import { App } from "../classes/App.js"
+import { renderConfidentiality } from "../content/confidentiality.js"
 import { renderHistory } from "../content/history.js"
 import { renderHome } from "../content/home.js"
 import { renderPlayers } from "../content/players.js"
@@ -45,7 +46,7 @@ export const routes: routeType[] = [
 	{
 		path: "/confidentiality",
 		title: "Politique de confidentialite",
-		renderer: placeholderRenderer,
+		renderer: renderConfidentiality,
 		authorization: "everyone" as authorizationType,
 	},
 

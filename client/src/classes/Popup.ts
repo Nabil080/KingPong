@@ -71,7 +71,7 @@ export default class Popup {
 			})
 			// Add a message above the popup
 			const message = document.createElement("div")
-			message.className = "absolute top-24 text-center text-white p-2"
+			message.className = "absolute top-24 text-center text-white p-2 backdrop-blur-2xl rounded-lg"
 			message.innerHTML = "Click outside to close the popup"
 			this.popupElement.appendChild(message)
 		}
