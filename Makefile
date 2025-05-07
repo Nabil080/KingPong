@@ -13,7 +13,7 @@ dev:
 	docker compose up --build
 
 copy-translation:
-	cp client/src/translation.ts server/src/
+	cp client/src/translations/translations.ts server/src/
 
 clean-db:
 	@if [ -f server/database.sqlite ]; then \
