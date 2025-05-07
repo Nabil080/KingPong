@@ -3,10 +3,10 @@ import { t } from "../translations/translations.js"
 
 function confidentialityHTML(): string {
 	return /* HTML */ `
-		<div class="flex h-full w-full flex-col items-center justify-start gap-4 px-10 py-6 text-lg font-bold">
+		<div class="flex h-full w-full flex-col items-center justify-start gap-12 px-10 py-6 text-lg font-bold">
 			<h1 class="text-2xl">${t("confidentialityPolicy")}</h1>
 			<p class="text-center text-base font-normal">${t("confidentialityIntro")}</p>
-			<div class="w-full max-w-3xl text-left text-base font-normal">
+			<div class="w-full text-left text-base font-normal">
 				<h2 class="text-xl font-bold">1. ${t("informationWeCollect")}</h2>
 				<ul class="list-disc pl-6">
 					<li>${t("usernameInfo")}</li>
