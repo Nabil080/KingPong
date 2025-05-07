@@ -188,4 +188,11 @@ export default class Server {
 
 		return this.sendServerRequest("/users/update/avatar", "POST", { avatar: avatarBody })
 	}
+
+	async updatePassword(oldPassword: string, newPassword: string): Promise<any> {
+		return this.sendServerRequest("/users/update/password", "POST", {
+			oldPassword,
+			newPassword,
+		})
+	}
 }
