@@ -17,9 +17,9 @@ export default class Game {
 		player1: string | null = null,
 		player2: string | null = null,
 	) {
-		this.canvas.width = 960
-		// Calculate height based on the aspect ratio (4:3)
-		this.canvas.height = Math.floor((this.canvas.width * 3) / 4)
+		this.canvas.width = 1216
+		// Calculate height based on the aspect ratio (16/9)
+		this.canvas.height = Math.floor(this.canvas.width / (16 / 9))
 
 		this.gameState = new GameState(canvas)
 		this.gameInputs = new GameInputs(this)
