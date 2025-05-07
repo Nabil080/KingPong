@@ -42,7 +42,7 @@ export default class Background {
 
 	// Show the background (start drawing)
 	show() {
-		this.root.style.display = "block"
+		this.root.style.display = "flex"
 		this.app.content.root.style.position = "relative"
 		this.app.content.root.style.zIndex = "1"
 		this.app.content.root.style.backdropFilter = "blur(5px)"
