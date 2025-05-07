@@ -7,6 +7,7 @@ import { connectPopup } from "./connect_popup.js"
 import { UserData } from "../types/user.js"
 
 export async function renderHistory(app: App, params?: routeParams) {
+	app.hideBackground()
 	// Get the username or redirect if necessary
 	const username = getUsernameOrRedirect(app, params)
 	if (!username) return
@@ -19,8 +20,10 @@ export async function renderHistory(app: App, params?: routeParams) {
 	const matches = await app.cache.getMatchesByUsername(username)
 
 	// Render the history page
-	app.changeContent(await historyHTML(username, matches))
-	app.hideBackground()
+	const pageContent = await historyHTML(username, matches)
+	// Wait for 2 seconds before showing the content
+
+	app.changeContent(pageContent)
 }
 
 /**

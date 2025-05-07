@@ -47,6 +47,7 @@ export class Router {
 				this.renderPreviousPage()
 			} else {
 				this.app.popup.close()
+				this.app.content.loader()
 				route.renderer(this.app, match.params)
 				this.app.navbar.updateNavbarActiveLink(route.path)
 				document.title = "KingPong | " + route.title
