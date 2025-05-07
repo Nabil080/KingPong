@@ -62,10 +62,7 @@ export async function historyHTML(username: string, matches: Match[]): Promise<s
 
 	const center = /* HTML */ `
 		<section class="large-size container">
-			<div class="flex h-[57px] w-full text-xl font-bold">
-				<button class="bg-violet hover:bg-berry flex w-full items-center justify-center px-4 py-2">${t("history")}</button>
-			</div>
-			<div class="no-scrollbar flex h-full flex-col overflow-y-auto text-sm">
+			<div class="custom-scrollbar flex h-full flex-col overflow-y-auto text-sm">
 				${matchHistories || `<p class="text-center my-auto">${t("noMatchesFound")}</p>`}
 			</div>
 		</section>

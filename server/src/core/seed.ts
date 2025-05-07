@@ -10,30 +10,53 @@ export async function seedDatabase(db: any) {
         `)
 
 		// Create dummy users
-		const users = ["Nabil", "David", "Coco", "Kiwi"]
+		const users = [
+			"Nabil",
+			"David",
+			"Coco",
+			"Kiwi",
+			"Maxime",
+			"Tom",
+			"Louis",
+			"Alice",
+			"Lea",
+			"Lola",
+			"Maya",
+			"Nina",
+			"Emma",
+			"Lina",
+			"Zoe",
+			"Chloe",
+			"Eva",
+			"Louise",
+			"Jade",
+			"Ines",
+		]
+		// shuffle users
+		users.sort(() => Math.random() - 0.5)
+
 		for (const username of users) {
 			await registerUser(username, "password")
 		}
 
 		// Generate matches between every pair of users
 		const matches: string[] = []
-        for (let nsm = 0; nsm < 100; nsm++)
-        {
-            for (let i = 0; i < users.length; i++) {
-                for (let j = i + 1; j < users.length; j++) {
-                    const player1 = users[i]
-                    const player2 = users[j]
+		for (let nsm = 0; nsm < 100; nsm++) {
+			for (let i = 0; i < users.length; i++) {
+				for (let j = i + 1; j < users.length; j++) {
+					const player1 = users[i]
+					const player2 = users[j]
 
-                    // Randomly decide the winner and scores
-                    const score1 = Math.floor(Math.random() * 4) // Random score between 1 and 10
-                    const score2 = Math.floor(Math.random() * 4) // Random score between 1 and 10
-                    const winner = score1 > score2 ? player1 : player2
-                    const duration = Math.floor(Math.random() * 300) + 10 // Random duration between 10 and 300 seconds
+					// Randomly decide the winner and scores
+					const score1 = Math.floor(Math.random() * 4) // Random score between 1 and 10
+					const score2 = Math.floor(Math.random() * 4) // Random score between 1 and 10
+					const winner = score1 > score2 ? player1 : player2
+					const duration = Math.floor(Math.random() * 300) + 10 // Random duration between 10 and 300 seconds
 
-                    matches.push(`('${player1}', '${player2}', '${winner}', ${score1}, ${score2}, ${duration})`)
-                }
-            }
-        }
+					matches.push(`('${player1}', '${player2}', '${winner}', ${score1}, ${score2}, ${duration})`)
+				}
+			}
+		}
 
 		// Insert all matches into the database
 		db.exec(`

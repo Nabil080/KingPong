@@ -33,7 +33,7 @@ export function playersListHTML(app: App, tab: playerListTab): string {
 					class="focus:ring-berry w-full border px-3 py-2 focus:outline-none focus:ring-2"
 				/>
 			</div>
-			<div data-tab-content="players-list" id="players-list" class="no-scrollbar overflow-y-scroll text-sm">
+			<div data-tab-content="players-list" id="players-list" class="custom-scrollbar overflow-y-scroll text-sm">
 				${playersTabContentHTML(app, tab)}
 			</div>
 		</section>

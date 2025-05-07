@@ -27,6 +27,7 @@ export const translations = {
 		modifyAvatar: "Modifier l'avatar",
 		modifyPassword: "Modifier le mot de passe",
 		blockedUser: "Utilisateur bloqué",
+		blockedUsers: "Utilisateurs bloqués",
 		graphic: "Graphique",
 		connected: "connecté",
 		disconnected: "déconnecté",

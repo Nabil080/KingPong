@@ -18,6 +18,23 @@
 		scrollbar-width: none;
 	}
 
+	/* Stylized scrollbar */
+	.custom-scrollbar::-webkit-scrollbar {
+		@apply w-2; /* Width of the scrollbar */
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		@apply bg-berry; /* Thumb color and rounded corners */
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+		@apply brightness-200; /* Thumb color on hover */
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-track {
+		@apply bg-violet; /* Track background color */
+	}
+
 	.hover-effect {
 		@apply cursor-pointer duration-300 hover:opacity-80;
 	}
