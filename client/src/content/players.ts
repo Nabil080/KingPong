@@ -5,12 +5,13 @@ import { UserData } from "../types/user.js"
 import { attachTabEventListener, tabItem } from "../utils/tabs.js"
 import { connectPopup } from "./connect_popup.js"
 
-type playerListTab = "all" | "friends" | "online" | "offline"
+type playerListTab = "all" | "friends" | "online" | "offline" | "blocked"
 
 export function playersTabContentHTML(app: App, tab: playerListTab): string {
 	let users: UserData[] = []
 	if (tab === "all") users = app.cache.getAllOtherUsers()
 	else if (tab === "friends") users = app.cache.getAllFriends()
+	else if (tab === "blocked") users = app.cache.getAllBlockedUsers()
 
 	return (
 		users.map((userData) => playerCard(userData.user, userData.relationship, true)).join("") ||

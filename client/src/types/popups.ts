@@ -2,6 +2,7 @@ import { App } from "../classes/App.js"
 import { connectPopup } from "../content/connect_popup.js"
 import { languagePopup } from "../content/language_popup.js"
 import { registerPopup } from "../content/register_popup.js"
+import { blockedUsersPopup } from "../content/settings/blocked_users_popup.js"
 import { changeAvatarPopup } from "../content/settings/change_avatar_popup.js"
 import { changePasswordPopup } from "../content/settings/change_password_popup.js"
 import { changeUsernamePopup } from "../content/settings/change_username_popup.js"
@@ -25,7 +26,7 @@ export const popups: popupRoutes[] = [
 	{ id: "change-username", handler: changeUsernamePopup },
 	{ id: "change-avatar", handler: changeAvatarPopup },
 	{ id: "change-password", handler: changePasswordPopup },
-	{ id: "confidentiality", handler: confidentialityPopup}
-	{ id: "blocked-users", handler: settingsPopup }, // TODO: Add blocked users popup
+	{ id: "confidentiality", handler: confidentialityPopup },
+	{ id: "blocked-users", handler: blockedUsersPopup }, // TODO: Add blocked users popup
 	{ id: "delete-account", handler: deleteAccountPopup },
 ]

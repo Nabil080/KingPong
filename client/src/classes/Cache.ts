@@ -56,7 +56,15 @@ export default class Cache {
 		if (this.app.loggedUser) {
 			return Array.from(this.users.values()).filter((userData) => userData.relationship === "friend")
 		} else {
-			return this.getAllUsers()
+			return []
+		}
+	}
+
+	getAllBlockedUsers(): UserData[] {
+		if (this.app.loggedUser) {
+			return Array.from(this.users.values()).filter((userData) => userData.relationship === "blocked")
+		} else {
+			return []
 		}
 	}
 
