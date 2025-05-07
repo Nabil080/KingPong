@@ -1,5 +1,5 @@
 import { App } from "../../classes/App.js"
-import { baseButton, link } from "../../components/buttons.js"
+import { baseButton, link, popupLink } from "../../components/buttons.js"
 import { errorDiv, passwordInput } from "../../components/inputs.js"
 import { t } from "../../translations/translations.js"
 import { PASS_LEN, showError } from "../../utils/forms.js"
@@ -18,7 +18,7 @@ function changePasswordPopupHTML(): string {
 				${passwordInput("old-password", t("oldPassword"))} ${passwordInput("new-password", t("newPassword"))}
 				${passwordInput("confirm-password", t("confirm"))} ${baseButton(t("confirmOptions"), "type='submit'")}
 			</form>
-			${link("/settings", t("back"))}
+			${popupLink("settings", t("back"))}
 		</section>
 	`
 }
