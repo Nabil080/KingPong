@@ -33,6 +33,11 @@ export default class Popup {
 		this.popupHandlers.set(id, handler)
 	}
 
+	callHandler(id: string, closeOnOutsideClick: boolean = true) {
+		// Call the corresponding popup handler if it exists
+		this.popupHandlers.get(id)?.(this.app)
+	}
+
 	/**
 	 * Opens a popup with the given content.
 	 * @param content The HTML content to display inside the popup.

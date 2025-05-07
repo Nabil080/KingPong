@@ -174,4 +174,18 @@ export default class Server {
 			console.error("Error updating relationship:", err)
 		}
 	}
+
+	async updateAvatar(avatarFile: File): Promise<any> {
+		// Read the file as base64
+		const base64Avatar = await fileToBase64(avatarFile)
+
+		// Add the avatar data and file type to the request
+		const avatarBody = {
+			data: base64Avatar,
+			mimeType: avatarFile.type,
+			filename: avatarFile.name,
+		}
+
+		return this.sendServerRequest("/users/update/avatar", "POST", { avatar: avatarBody })
+	}
 }
