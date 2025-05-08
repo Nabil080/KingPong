@@ -11,11 +11,6 @@ export default class Background {
 		this.root = document.createElement("div")
 		this.root.id = "background"
 		this.root.className = "absolute left-0 w-full pointer-events-none center flex flex-col"
-		this.root.innerHTML = /* HTML */ `
-			<div>TEst</div>
-		
-		`
-
 
 		// Create the background canvas
 		this.canvas = document.createElement("canvas")

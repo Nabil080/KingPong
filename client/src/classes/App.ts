@@ -7,6 +7,7 @@ import { Router } from "./Router.js"
 import Server from "./Server.js"
 import WebSocketClient from "./WebSocketClient.js"
 import { User } from "../types/user.js"
+import { Tournament } from "./Tournament.js"
 
 export class App {
 	// Config
@@ -22,6 +23,10 @@ export class App {
 	public content: Content
 	public background: Background
 	public popup: Popup
+	// // States
+	public tournament?: Tournament
+	// public notifications: Notification[]
+	// public game: Game
 
 	constructor() {
 		// Initialize Services in appropriate order

@@ -7,6 +7,7 @@ import { renderPlayers } from "../content/players.js"
 import { renderPong } from "../content/pong.js"
 import { renderProfil } from "../content/profil.js"
 import { renderStats } from "../content/stats.js"
+import { renderTournament } from "../content/tournament/tournament_handler.js"
 
 export type routeType = {
 	renderer: viewRenderer
@@ -36,11 +37,7 @@ export const routes: routeType[] = [
 	{ path: "/", title: "Accueil", renderer: renderHome, authorization: "everyone" as authorizationType },
 	{ path: "/options", title: "Options", renderer: placeholderRenderer, authorization: "everyone" as authorizationType },
 	{ path: "/options/:tournament", title: "Options2", renderer: placeholderRenderer, authorization: "everyone" as authorizationType },
-	{ path: "/local", title: "Local", renderer: placeholderRenderer, authorization: "everyone" as authorizationType },
-	{ path: "/local/:tournament", title: "Local2", renderer: placeholderRenderer, authorization: "everyone" as authorizationType },
-	{ path: "/tournament", title: "Tournoi", renderer: backgroundRenderer, authorization: "everyone" as authorizationType },
-	{ path: "/matches", title: "Match", renderer: placeholderRenderer, authorization: "everyone" as authorizationType },
-	{ path: "/winner", title: "Winner", renderer: placeholderRenderer, authorization: "everyone" as authorizationType },
+	{ path: "/tournament", title: "Tournoi", renderer: renderTournament, authorization: "everyone" as authorizationType },
 	{ path: "/players", title: "Joueurs", renderer: renderPlayers, authorization: "everyone" as authorizationType },
 	{ path: "/profil/:?username", title: "Profil", renderer: renderProfil, authorization: "everyone" as authorizationType },
 	{ path: "/history/:?username", title: "Historique", renderer: renderHistory, authorization: "everyone" as authorizationType },

@@ -125,11 +125,11 @@ export function switchChatInput(id: number, enable: boolean) {
 	messageSubmit.disabled = !enable
 }
 
-export function renderChat(app: App, params: routeParams) {
+export function renderChat(app: App, params?: routeParams) {
 	app.showBackground()
 	// Check the id in the URL and if it's not the logged user
 	const id = Number(params?.id)
-	if (!id || id === app.loggedUser?.id) {
+	if (!params?.id || id === app.loggedUser?.id) {
 		app.router.notFound()
 		return
 	}
