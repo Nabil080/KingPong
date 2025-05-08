@@ -22,18 +22,18 @@ export function playersTabContentHTML(app: App, tab: playerListTab): string {
 export function playersListHTML(app: App, tab: playerListTab): string {
 	return /* HTML */ `
 		<section class="small-size container">
-			<div data-tab="players-list" class="flex h-[57px] w-full text-xl font-bold">
+			<div data-tab="players-list" class="flex h-[57px] min-h-[57px] w-full text-xl font-bold">
 				${tabItem("all", t("players"), tab === "all", "w-1/2")} ${tabItem("friends", t("friends"), tab === "friends", "w-1/2")}
 			</div>
-			<div class="p-2">
+			<div class="p-4">
 				<input
 					id="player-search"
 					type="text"
 					placeholder="${t("search")}"
-					class="focus:ring-berry w-full border px-3 py-2 focus:outline-none focus:ring-2"
+					class="focus:ring-berry w-full border px-4 py-2 focus:outline-none focus:ring-2"
 				/>
 			</div>
-			<div data-tab-content="players-list" id="players-list" class="custom-scrollbar overflow-y-scroll text-sm">
+			<div data-tab-content="players-list" id="players-list" class="no-scrollbar overflow-y-scroll text-sm">
 				${playersTabContentHTML(app, tab)}
 			</div>
 		</section>

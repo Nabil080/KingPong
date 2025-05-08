@@ -21,9 +21,9 @@ export function playerCard(user: User, relationship: RelationshipType = null, sh
 			data-username=${user.username}
 			class="border-berry flex h-[55.9px] w-full items-center justify-between border-b px-4"
 		>
-			<div id="user-info" class="group flex items-center gap-4" data-link href="/profil/${user.username}">
-				<div data-status="${user.status}" class="avatar pointer-events-none w-2.5"></div>
-				<img src="${getAvatarPath(user.avatar)}" class="avatar hover-effect pointer-events-none w-9" alt="${user.username}" />
+			<div id="user-info" class="group relative flex items-center gap-4" data-link href="/profil/${user.username}">			
+			<img src="${getAvatarPath(user.avatar)}" class="avatar hover-effect pointer-events-none w-9" alt="${user.username}" />
+			<div data-status="${user.status}" class="avatar pointer-events-none absolute left-6 top-6 w-3"></div>
 				<span class="pointer-events-none w-[9ch] truncate font-bold">${user.username}</span>
 			</div>
 			<div id="user-buttons" class="flex items-center gap-4">
