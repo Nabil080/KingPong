@@ -1,4 +1,5 @@
 import { App } from "../classes/App.js"
+import { renderChat } from "../content/chat.js"
 import { renderConfidentiality } from "../content/confidentiality.js"
 import { renderHistory } from "../content/history.js"
 import { renderHome } from "../content/home.js"
@@ -57,6 +58,6 @@ export const routes: routeType[] = [
 
 	// LoggedIn routes
 	{ path: "/settings", title: "Parametres", renderer: placeholderRenderer, authorization: "loggedIn" as authorizationType },
-	{ path: "/chat/:id", title: "Chat", renderer: placeholderRenderer, authorization: "loggedIn" as authorizationType },
+	{ path: "/chat/:id", title: "Chat", renderer: renderChat, authorization: "loggedIn" as authorizationType },
 	{ path: "/online", title: "Online", renderer: placeholderRenderer, authorization: "loggedIn" as authorizationType },
 ]
