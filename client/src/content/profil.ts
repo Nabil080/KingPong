@@ -167,7 +167,7 @@ async function profilHTML(
 					<span>${t("biggestLoose")}:</span>
 					${biggestLoose
 						? `
-						${biggestLoose.player1} ${biggestLoose.score1} - ${biggestLoose.score2} ${biggestLoose.player2}</span>
+						<span class="text-red">${biggestLoose.player1} ${biggestLoose.score1} - ${biggestLoose.score2} ${biggestLoose.player2}</span>
 						`
 						: t("none")}
 				</div>

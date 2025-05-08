@@ -63,27 +63,20 @@ function calculateStatistics(matches: Match[], username: string) {
 /**
  * Generates the HTML for the stats page.
  */
-async function statsHTML(username: string, stats: ReturnType<typeof calculateStatistics>): Promise<string> {
-	const { nbGame, win, loose, averageScore, averageDuration, mostPlayedUsers } = stats
-
-	// Generate the most played users chart data
-	const mostPlayedUsersHTML = Object.entries(mostPlayedUsers)
-		.map(([user, count]) => `<li>${user}: ${count} games</li>`)
-		.join("")
-
+function statsHTML(): string {
 	const content = /* HTML */ `
-		<section class="[&>article]:center grid h-[700px] w-[1080px] grid-cols-3 grid-rows-2 gap-4 [&>article]:container [&>article]:p-5">
+		<section class="[&>article]:center grid h-[700px] w-[1080px] grid-cols-3 grid-rows-2 gap-4 [&>article]:container">
 			<article class="col-span-1 row-span-1">
-				<canvas id="winLossChart"></canvas>
+				<canvas id="winLossChart" class="w-full"></canvas>
 			</article>
 			<article class="col-span-2 row-span-1">
-				<canvas id="scorePerGameChart"></canvas>
+				<canvas id="scorePerGameChart" class="w-full"></canvas>
 			</article>
 			<article class="col-span-2 row-span-1">
-				<canvas id="durationPerGameChart"></canvas>
+				<canvas id="durationPerGameChart" class="w-full"></canvas>
 			</article>
 			<article class="col-span-1 row-span-1">
-				<canvas id="mostPlayedUsersChart"></canvas>
+				<canvas id="mostPlayedUsersChart" class="w-full"></canvas>
 			</article>
 		</section>
 	`
@@ -107,8 +100,7 @@ export async function renderStats(app: App, params?: routeParams) {
 	const stats = calculateStatistics(matches, username)
 
 	// Render the stats page
-	const content = await statsHTML(username, stats)
-	app.changeContent(content)
+	app.changeContent(statsHTML())
 	createWinLossChart(stats.win, stats.loose)
 	createScorePerGameChart(username, matches)
 	createDurationPerGameChart(matches)

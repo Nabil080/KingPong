@@ -10,7 +10,7 @@ export function homeHTML(): string {
 					<img id="logo" src="/assets/images/full_logo.png" />
 				</div>
 				${baseButton(t("online"), "data-link href='/players'")} ${baseButton(t("offline"), "data-link href='/pong'")}
-				${baseButton(t("tournament"), "data-link href='/local'")}
+				${baseButton(t("tournament"), "data-link href='/tournament'")}
 			</div>
 		</section>
 	`

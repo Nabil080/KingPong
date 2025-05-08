@@ -68,7 +68,7 @@ export default class Navbar {
 		const linksContainer = document.querySelector("nav #center-nav") as HTMLElement
 		if (!linksContainer) return
 		linksContainer.innerHTML = `
-			${link(t("pong"), "/", "/?:pong")}
+			${link(t("pong"), "/")}
 			${link(t("players"), "/players")}
 			${link(t("tournament"), "/tournament")}
 			${link(t("profil"), "/profil", "/profil/:?username")}

@@ -12,9 +12,9 @@ export function history(username: string, match: Match): string {
 				<span class="${isWinner ? "text-green" : "text-red"} font-bold"> ${isWinner ? "✔" : "✘"} </span>
 				<span class=""> ${match.player1} ${match.score1} - ${match.score2} ${match.player2} </span>
 			</div>
-			<div class="text-sm text-gray-400">
-				<span>${formattedDate}</span>
-				<span>${formattedTime}</span>
+			<div class="text-sm">
+				<span class="text-gray-400">${formattedDate}</span>
+				<span class="text-gray-400">${formattedTime}</span>
 			</div>
 		</div>
 	`

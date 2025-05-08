@@ -10,28 +10,7 @@ export async function seedDatabase(db: any) {
         `)
 
 		// Create dummy users
-		const users = [
-			"Nabil",
-			"David",
-			"Coco",
-			"Kiwi",
-			"Maxime",
-			"Tom",
-			"Louis",
-			"Alice",
-			"Lea",
-			"Lola",
-			"Maya",
-			"Nina",
-			"Emma",
-			"Lina",
-			"Zoe",
-			"Chloe",
-			"Eva",
-			"Louise",
-			"Jade",
-			"Ines",
-		]
+		const users = ["Nabil", "David", "Coco", "Kiwi", "Maxime", "Tom", "Louis", "Alice", "Lea", "Lola", "Maya", "Nina", "Emma", "Lina", "Ines"]
 		// shuffle users
 		users.sort(() => Math.random() - 0.5)
 
