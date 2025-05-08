@@ -1,4 +1,5 @@
 import { switchPlayerCardStatus } from "../components/player_card.js"
+import { switchChatInput } from "../content/chat.js"
 import { t } from "../translations/translations.js"
 import { ConnectReply, LogoutReply, WebSocketMessage, WebSocketReply } from "../types/websocket.js"
 import { App } from "./App.js"
@@ -123,7 +124,7 @@ export default class WebSocketClient {
 
 		// Update visual indicators of user status
 		switchPlayerCardStatus(this.app, reply.userId, status)
-		// switchChatInput(reply.userId, false)
+		switchChatInput(reply.userId, false)
 		// const userData = wsClient.getUser(reply.userId)
 		// const username = userData?.user?.username || reply.userId.toString
 		// notif(`${username} ${t("disconnected")}`)

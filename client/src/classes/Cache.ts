@@ -1,5 +1,7 @@
+import { appendNewChatMessage } from "../content/chat.js"
 import { Match } from "../types/match.js"
 import { RelationshipType, User, UserData } from "../types/user.js"
+import { ChatMessage, ChatReply } from "../types/websocket.js"
 import { App } from "./App.js"
 
 export default class Cache {
@@ -127,6 +129,32 @@ export default class Cache {
 		if (!existing) return
 
 		existing.relationship = relationship
+	}
+
+	// ----------------- Chat data -----------------
+	// ----------------- Chat data -----------------
+	// ----------------- Chat data -----------------
+	// ----------------- Chat data -----------------
+
+	/**
+	 * Adds a chat message to the conversation with a specific user
+	 * Updates the UI to reflect the new message
+	 * @param userId - The user ID of the conversation partner
+	 * @param message - The message to add
+	 */
+	addMessage(userId: number, message: ChatMessage | ChatReply) {
+		const userData = this.users.get(userId)
+		if (!userData) {
+			console.error(`User with ID ${userId} not found`)
+			return
+		}
+
+		if (!userData.chats) {
+			userData.chats = []
+		}
+
+		userData.chats.push(message)
+		appendNewChatMessage(this.app, message)
 	}
 
 	// ----------------- Matches data -----------------

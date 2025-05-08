@@ -1,7 +1,9 @@
 import { App } from "../classes/App.js"
 import { initPlayerButtonEvents, playerCard } from "../components/player_card.js"
+import { t } from "../translations/translations.js"
 import { routeParams } from "../types/routes.js"
-import { UserData } from "../types/user.js"
+import { Chat, UserData } from "../types/user.js"
+import { ChatMessage, ChatReply } from "../types/websocket.js"
 
 function chatHTML(userData: UserData): string {
 	const user = userData.user
@@ -37,6 +39,92 @@ function chatHTML(userData: UserData): string {
 	`
 }
 
+// Checks if we're in the page corresponding to the chat
+// If the chat is a reply, we need to be in the correct /chat/:id else we create a notif
+// If the chat is a message, we only need the /chat
+function isInCorrectChatPage(app: App, chatMessage: Chat) {
+	const path = window.location.pathname.split("/")
+	if (isReply(chatMessage)) {
+		if (path[1] === "chat" && Number(path[2]) === chatMessage.senderId) {
+			return true
+		} else {
+			const userData = app.cache.getUser(chatMessage.senderId)
+			const username = userData?.user?.username || chatMessage.senderId.toString()
+			// notif(`${username} ${t("sendMessage")}`, true)
+			return false
+		}
+	} else {
+		return path[1] === "chat"
+	}
+}
+
+function isReply(chat: Chat): chat is ChatReply {
+	return (chat as ChatReply).senderId !== undefined
+}
+
+export function appendNewChatMessage(app: App, chatMessage: Chat) {
+	// Checks that we're in the chat overlay
+	if (!isInCorrectChatPage(app, chatMessage)) return
+
+	const container = document.getElementById("chatMessages") as HTMLElement
+	if (!container) return
+
+	const messageDiv = document.createElement("div")
+	// Layout
+	messageDiv.classList.add("inline-block", "p-2", "w-fit", "max-w-[90%]", "break-words")
+
+	if (isReply(chatMessage)) {
+		messageDiv.classList.add("bg-violet")
+	} else {
+		messageDiv.classList.add("bg-berry", "ml-auto")
+	}
+
+	// Safely set text content to prevent from XSS attacks(escapes HTML automatically)
+	messageDiv.textContent = chatMessage.message
+	// If fake messages are there, remove them
+	if (container.getAttribute("data-dummy") === "true") {
+		container.innerHTML = ""
+		container.setAttribute("data-dummy", "false")
+	}
+	container.appendChild(messageDiv)
+	container.scrollTop = container.scrollHeight
+}
+
+function initChatEvents(app: App) {
+	document.getElementById("chatForm")?.addEventListener("submit", (e) => {
+		e.preventDefault()
+		const input = document.getElementById("messageInput") as HTMLInputElement
+
+		const content = input.value.trim()
+		const target = input?.getAttribute("data-target-id")
+
+		if (!content) {
+			console.error("Can't send an empty message")
+		} else if (!target) {
+			console.error("Message has no target")
+		} else {
+			const chat: ChatMessage = { type: "chat", targetId: Number(target), message: content }
+			app.websocket.send(chat)
+			// wsClient.addMessage(chat.targetId, chat)
+			input.value = ""
+		}
+	})
+}
+
+export function switchChatInput(id: number, enable: boolean) {
+	//console.log(`Switching ${id} to be ${enable}`)
+	// Check that we're in the correct chat
+	const messageInput = document.querySelector(`#messageInput`) as HTMLInputElement
+	const messageSubmit = document.querySelector(`#messageSubmit`) as HTMLButtonElement
+	if (!messageInput || !messageSubmit) return
+	const userId = Number(messageInput.getAttribute("data-target-id"))
+	if (userId != id) return
+
+	// Disable or enable the input
+	messageInput.disabled = !enable
+	messageSubmit.disabled = !enable
+}
+
 export function renderChat(app: App, params: routeParams) {
 	app.showBackground()
 	// Check the id in the URL and if it's not the logged user
@@ -58,5 +146,5 @@ export function renderChat(app: App, params: routeParams) {
 	// Add the stored messages in the container
 	// wsClient.getConversation(Number(params.id))?.forEach((chat) => appendNewChatMessage(chat))
 	initPlayerButtonEvents(app)
-	// initChatEvents()
+	initChatEvents(app)
 }
