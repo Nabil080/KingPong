@@ -91,10 +91,8 @@ export default class WebSocketClient {
 				console.log("Websocket received pong")
 				break
 			case "connect":
-				this.handleConnectReply(reply)
-				break
 			case "logout":
-				this.handleLogoutReply(reply)
+				this.handleUserStatusReply(reply)
 				break
 			default:
 				console.warn("Unknown WebSocket message type:", reply.type)
@@ -105,42 +103,26 @@ export default class WebSocketClient {
 	// ------------------- REPLY HANDLERS ------------------
 	// ------------------- REPLY HANDLERS ------------------
 	// ------------------- REPLY HANDLERS ------------------
-	async handleConnectReply(reply: ConnectReply) {
-		// ignore update for self
+
+	async handleUserStatusReply(reply: ConnectReply | LogoutReply) {
+		// Determine the status based on the reply type
+		const status = reply.type === "connect" ? "online" : "offline"
+
+		// Ignore update for self
 		if (reply.userId === this.app.loggedUser?.id) {
 			return
 		}
 
 		// Update user status in the cache
-		await this.app.cache.updateStatus(reply.userId, "online")
-		// ignore visual updates for blocked users
+		await this.app.cache.updateStatus(reply.userId, status)
+
+		// Ignore visual updates for blocked users
 		if (this.app.cache.isBlocked(reply.userId)) {
 			return
 		}
 
 		// Update visual indicators of user status
-		switchPlayerCardStatus(this.app, reply.userId, "online")
-		// switchChatInput(reply.userId, true)
-		// const userData = wsClient.getUser(reply.userId)
-		// const username = userData?.user?.username || reply.userId.toString
-		// notif(`${username} ${t("connected")}`)
-	}
-
-	async handleLogoutReply(reply: LogoutReply) {
-		// ignore update for self
-		if (reply.userId === this.app.loggedUser?.id) {
-			return
-		}
-
-		// Update user status in the cache
-		await this.app.cache.updateStatus(reply.userId, "offline")
-		// ignore visual updates for blocked users
-		if (this.app.cache.isBlocked(reply.userId)) {
-			return
-		}
-
-		// Update visual indicators of user status
-		switchPlayerCardStatus(this.app, reply.userId, "offline")
+		switchPlayerCardStatus(this.app, reply.userId, status)
 		// switchChatInput(reply.userId, false)
 		// const userData = wsClient.getUser(reply.userId)
 		// const username = userData?.user?.username || reply.userId.toString
