@@ -18,7 +18,7 @@ export class GameState {
 		this.paddle2 = new Paddle(canvasWidth - 20, canvasHeight / 2 - 50, canvasWidth * 0.02, canvasHeight * 0.2, canvasHeight)
 
 		// Initialize ball
-		this.ball = new Ball(this.game, canvasWidth / 2, canvasHeight / 2, Math.min(canvasWidth, canvasHeight) * 0.02, 6, 6, canvasWidth, canvasHeight)
+		this.ball = new Ball(this.game, canvasWidth / 2, canvasHeight / 2, Math.min(canvasWidth, canvasHeight) * 0.02, 6, 0, canvasWidth, canvasHeight)
 	}
 
 	// Updates the game state

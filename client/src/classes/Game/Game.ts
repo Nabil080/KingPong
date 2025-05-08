@@ -41,28 +41,28 @@ export default class Game {
 
 	// Main game loop
 	private gameLoop() {
-		this.gameRenderer.clearCanvas(); // Clear the canvas at the start of each frame
+		this.gameRenderer.clearCanvas() // Clear the canvas at the start of each frame
 
 		if (this.updateState) {
-			this.gameInputs.update(); // Handle player inputs
+			this.gameInputs.update() // Handle player inputs
 
 			// Update GameBots if they exist
-			if (this.player1 instanceof GameBot) this.player1.update();
-			if (this.player2 instanceof GameBot) this.player2.update();
+			if (this.player1 instanceof GameBot) this.player1.update()
+			if (this.player2 instanceof GameBot) this.player2.update()
 
-			this.gameState.update(); // Update game state
+			this.gameState.update() // Update game state
 		}
 
 		if (this.renderState) {
-			this.gameRenderer.render(); // Render the game
+			this.gameRenderer.render() // Render the game
 		}
 
 		if (!this.updateState && this.renderState) {
 			// Render the paused overlay if rendering but not updating
-			this.gameRenderer.pauseOverlay();
+			this.gameRenderer.pauseOverlay()
 		}
 
-		requestAnimationFrame(() => this.gameLoop()); 
+		requestAnimationFrame(() => this.gameLoop())
 	}
 
 	public setUpdateState(state: boolean) {

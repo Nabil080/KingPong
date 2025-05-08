@@ -118,10 +118,12 @@ async function profilHTML(
 ): Promise<string> {
 	// Statistics
 	const statInsightsHTML = /* HTML */ `
-		<div class="flex h-[57px] w-full text-xl font-bold">
-			<div class="flex h-[57px] w-full text-sm font-bold">
-				${playerCard(userData.user, userData.relationship, userData.user.id !== app.loggedUser?.id)}
-			</div>
+		<div class="flex h-[57px] w-full font-bold">
+			<article class="border-berry h-[55.9px] w-full border-b px-4">
+				${userData.user.username === app.loggedUser?.username
+					? `<div class="center h-full">${t("stats")}</div>`
+					: playerCard(userData.user, userData.relationship, userData.user.id !== app.loggedUser?.id)}
+			</article>
 		</div>
 		<div class="flex h-full flex-col justify-center px-5 py-6">
 			<div class="flex min-h-[300px] w-full flex-col gap-2">
@@ -177,13 +179,13 @@ async function profilHTML(
 	`
 	// Games with this user
 	const historyInsightsHTML = /* HTML */ `
-		<div class="flex h-[57px] w-full text-sm font-bold">
+		<div class="flex h-[57px] w-full font-bold">
 			<article class="border-berry flex h-[55.9px] w-full items-center justify-center gap-[19px] border-b px-4">
-				Vos matchs avec ${userData.user.username}
+				${userData.user.username === app.loggedUser?.username ? `${t("games")}` : t("gamesWith") + ` ${userData.user.username}`}
 			</article>
 		</div>
 		<div class="flex h-full flex-col justify-center px-5 py-6">
-			<div class="no-scrollbar flex min-h-[300px] flex-col justify-center overflow-y-auto text-center text-sm">
+			<div class="no-scrollbar flex min-h-[300px] flex-col justify-center overflow-y-auto text-center">
 				${last6Matches.map((match) => history(userData.user.username, match)).join("") || "Vous n'avez aucun match avec cet utilisateur."}
 			</div>
 			<div class="mt-4 flex w-full cursor-pointer flex-col items-center justify-center gap-2">
@@ -193,7 +195,7 @@ async function profilHTML(
 	`
 
 	const content = /* HTML */ `
-		<section class="flex gap-14">
+		<section class="flex gap-5 text-sm">
 			<article class="medium-size container">${statInsightsHTML}</article>
 			<article class="medium-size container">${historyInsightsHTML}</article>
 		</section>
