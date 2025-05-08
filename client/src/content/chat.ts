@@ -105,7 +105,7 @@ function initChatEvents(app: App) {
 		} else {
 			const chat: ChatMessage = { type: "chat", targetId: Number(target), message: content }
 			app.websocket.send(chat)
-			// wsClient.addMessage(chat.targetId, chat)
+			app.cache.addMessage(chat.targetId, chat)
 			input.value = ""
 		}
 	})
@@ -144,7 +144,7 @@ export function renderChat(app: App, params: routeParams) {
 	app.changeContent(chatHTML(userData))
 
 	// Add the stored messages in the container
-	// wsClient.getConversation(Number(params.id))?.forEach((chat) => appendNewChatMessage(chat))
+	app.cache.getConversation(Number(params.id))?.forEach((chat) => appendNewChatMessage(app, chat))
 	initPlayerButtonEvents(app)
 	initChatEvents(app)
 }

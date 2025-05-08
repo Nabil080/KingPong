@@ -1,6 +1,6 @@
 import { appendNewChatMessage } from "../content/chat.js"
 import { Match } from "../types/match.js"
-import { RelationshipType, User, UserData } from "../types/user.js"
+import { Chat, RelationshipType, User, UserData } from "../types/user.js"
 import { ChatMessage, ChatReply } from "../types/websocket.js"
 import { App } from "./App.js"
 
@@ -155,6 +155,16 @@ export default class Cache {
 
 		userData.chats.push(message)
 		appendNewChatMessage(this.app, message)
+	}
+
+	getConversation(userId: number): Chat[] | null {
+		const userData = this.users.get(userId)
+		if (!userData) {
+			console.error(`User with ID ${userId} not found`)
+			return null
+		}
+
+		return userData.chats || null
 	}
 
 	// ----------------- Matches data -----------------
