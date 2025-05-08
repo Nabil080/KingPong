@@ -9,10 +9,10 @@ export function popupLink(id: string, label: string): string {
 }
 
 export function baseButton(label: string, attributes: string = "type='button'"): string {
-	return coloredButton(label, "bg-berry ", attributes)
+	return customButton(label, "bg-berry ", attributes)
 }
 
-export function coloredButton(label: string, classList: string, attributes: string = "type='button'"): string {
+export function customButton(label: string, classList: string, attributes: string = "type='button'"): string {
 	return /* HTML */ `
 		<button ${attributes} class="${classList} w-full px-5 py-1.5 text-center text-lg duration-200 hover:bg-opacity-80">${label}</button>
 	`

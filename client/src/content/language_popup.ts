@@ -1,5 +1,5 @@
 import { App } from "../classes/App.js"
-import { baseButton, coloredButton } from "../components/buttons.js"
+import { baseButton, customButton } from "../components/buttons.js"
 import { setLang } from "../translations/translations.js"
 
 const langButton = (key: string, label: string) =>
@@ -9,9 +9,9 @@ export function languagePopupHTML(): string {
 	const content = /* HTML */ `
 		<section class="small-size container">
 			<div class="mx-6 my-auto space-y-4 text-lg font-bold">
-				${coloredButton("🇫🇷 Français", "bg-violet", "data-lang='fr'")} ${coloredButton("🇬🇧 English", "bg-violet", "data-lang='en'")}
-				${coloredButton("🇨🇳 中文", "bg-violet", "data-lang='ch'")} ${coloredButton("🇱🇰 தமிழ்", "bg-violet", "data-lang='ta'")}
-				${coloredButton("🇩🇿 عربي", "bg-violet", "data-lang='ar'")}
+				${customButton("🇫🇷 Français", "bg-violet", "data-lang='fr'")} ${customButton("🇬🇧 English", "bg-violet", "data-lang='en'")}
+				${customButton("🇨🇳 中文", "bg-violet", "data-lang='ch'")} ${customButton("🇱🇰 தமிழ்", "bg-violet", "data-lang='ta'")}
+				${customButton("🇩🇿 عربي", "bg-violet", "data-lang='ar'")}
 			</div>
 		</section>
 	`

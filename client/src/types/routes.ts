@@ -7,7 +7,7 @@ import { renderPlayers } from "../content/players.js"
 import { renderPong } from "../content/pong.js"
 import { renderProfil } from "../content/profil.js"
 import { renderStats } from "../content/stats.js"
-import { renderTournament } from "../content/tournament/tournament_handler.js"
+import { renderTournament } from "../content/tournament/tournament.js"
 
 export type routeType = {
 	renderer: viewRenderer

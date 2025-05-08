@@ -1,12 +1,12 @@
 import { App } from "../../classes/App.js"
+import { renderTournamentFirstRound } from "./firstRound.js"
 import { renderNewTournament } from "./new_tournament.js"
 
 // Render the tournament page based on the current round
 export function renderTournament(app: App) {
-	alert("Current state: " + app.tournament?.currentRound)
-
 	switch (app.tournament?.currentRound) {
 		case "firstRound":
+			renderTournamentFirstRound(app)
 			break
 		case "final":
 			break
