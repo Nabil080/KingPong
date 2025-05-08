@@ -1,6 +1,9 @@
-import { Paddle } from "./Paddle"
+import Game from "../Game.js"
+import { Paddle } from "./Paddle.js"
 
 export class Ball {
+	public game: Game
+
 	public startingX: number
 	public startingY: number
 	public startingVelocityX: number
@@ -15,7 +18,8 @@ export class Ball {
 	public CanvasWidth: number
 	public CanvasHeight: number
 
-	constructor(x: number, y: number, radius: number, velocityX: number, velocityY: number, CanvasWidth: number = 800, CanvasHeight: number = 600) {
+	constructor(game: Game, x: number, y: number, radius: number, velocityX: number, velocityY: number, CanvasWidth: number = 800, CanvasHeight: number = 600) {
+		this.game = game
 		this.startingX = x
 		this.startingY = y
 		this.startingVelocityX = velocityX
@@ -43,8 +47,12 @@ export class Ball {
 		this.checkPaddleCollision(paddle1)
 		this.checkPaddleCollision(paddle2)
 
-		// Reset the ball position if it goes out of bounds
-		if (this.x - this.radius < 0 || this.x + this.radius > this.CanvasWidth) {
+		// Check for scoring and reset the ball
+		if (this.x - this.radius < 0) {
+			this.game.gameState.score2 += 1
+			this.reset()
+		} else if (this.x + this.radius > this.CanvasWidth) {
+			this.game.gameState.score1 += 1
 			this.reset()
 		}
 	}

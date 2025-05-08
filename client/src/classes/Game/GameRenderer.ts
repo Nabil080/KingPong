@@ -1,13 +1,15 @@
+import Game from "./Game.js"
 import { GameState } from "./GameState.js"
 
 export class GameRenderer {
 	constructor(
 		private canvas: HTMLCanvasElement,
-		private gameState: GameState,
+		private game: Game,
 		private ballColor: string = "#C10BD9",
 		private paddleColor: string = "#C10BD9",
 		private borderColor: string = "#C10BD9",
 		private ctx: CanvasRenderingContext2D = canvas.getContext("2d") as CanvasRenderingContext2D,
+		private gameState: GameState = game.gameState,
 	) {}
 
 	// Clears the canvas
@@ -25,6 +27,9 @@ export class GameRenderer {
 
 		// Draw ball
 		this.drawBall()
+
+		// Draw score
+		this.drawScore()
 	}
 
 	drawBorder() {
@@ -45,5 +50,23 @@ export class GameRenderer {
 		this.ctx.fillStyle = this.ballColor
 		this.ctx.fill()
 		this.ctx.closePath()
+	}
+
+	pauseOverlay() {
+		this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)"
+		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
+		this.ctx.font = "30px Arial"
+		this.ctx.fillStyle = "#FFFFFF"
+		this.ctx.textAlign = "center"
+		this.ctx.fillText("Game Paused", this.canvas.width / 2, this.canvas.height / 2)
+	}
+
+	drawScore() {
+		this.ctx.font = "30px Arial"
+		this.ctx.fillStyle = "#FFFFFF"
+		this.ctx.textAlign = "center"
+		this.ctx.fillText(`
+			${this.gameState.score1} - ${this.gameState.score2}
+		`, this.canvas.width / 2, 50)
 	}
 }

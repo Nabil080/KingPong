@@ -3,6 +3,7 @@ import { renderConfidentiality } from "../content/confidentiality.js"
 import { renderHistory } from "../content/history.js"
 import { renderHome } from "../content/home.js"
 import { renderPlayers } from "../content/players.js"
+import { renderPong } from "../content/pong.js"
 import { renderProfil } from "../content/profil.js"
 import { renderStats } from "../content/stats.js"
 
@@ -43,6 +44,7 @@ export const routes: routeType[] = [
 	{ path: "/profil/:?username", title: "Profil", renderer: renderProfil, authorization: "everyone" as authorizationType },
 	{ path: "/history/:?username", title: "Historique", renderer: renderHistory, authorization: "everyone" as authorizationType },
 	{ path: "/stats/:?username", title: "Statistique", renderer: renderStats, authorization: "everyone" as authorizationType },
+	{ path: "/pong", title: "Pong", renderer: renderPong, authorization: "everyone" as authorizationType },
 	{
 		path: "/confidentiality",
 		title: "Politique de confidentialite",

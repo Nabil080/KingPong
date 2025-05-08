@@ -6,6 +6,7 @@ export class GameBot {
 	constructor(
 		private gameState: GameState,
 		private isLeftPaddle: boolean, // Determines if the bot controls the left or right paddle
+		public username: string = "GameBot"
 	) {}
 
 	// Updates the bot's paddle movement
@@ -30,5 +31,9 @@ export class GameBot {
 			// Ensure the paddle stays within the canvas bounds
 			paddle.constrain()
 		}
+	}
+
+	public toString(): string {
+		return this.username
 	}
 }

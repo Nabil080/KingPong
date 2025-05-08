@@ -9,7 +9,7 @@ export function homeHTML(): string {
 				<div id="logo-wrapper" class="mx-auto mb-6 w-1/2">
 					<img id="logo" src="/assets/images/full_logo.png" />
 				</div>
-				${baseButton(t("online"), "data-link href='/players'")} ${baseButton(t("offline"), "data-link href='/local'")}
+				${baseButton(t("online"), "data-link href='/players'")} ${baseButton(t("offline"), "data-link href='/pong'")}
 				${baseButton(t("tournament"), "data-link href='/local'")}
 			</div>
 		</section>

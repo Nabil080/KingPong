@@ -1,4 +1,7 @@
 import { App } from "../classes/App.js"
+import { GameUserType } from "../classes/Game/Game.js"
+import { GameBot } from "../classes/Game/GameBot.js"
+import { app } from "../index.js"
 import { RelationshipType, User } from "../types/user.js"
 import { getAvatarPath } from "../utils/utils.js"
 
