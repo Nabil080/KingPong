@@ -1,5 +1,7 @@
-import { WebSocketMessage, WebSocketReply } from "../types/websocket"
-import { App } from "./App"
+import { switchPlayerCardStatus } from "../components/player_card.js"
+import { t } from "../translations/translations.js"
+import { ConnectReply, LogoutReply, WebSocketMessage, WebSocketReply } from "../types/websocket.js"
+import { App } from "./App.js"
 
 export default class WebSocketClient {
 	public ready: boolean = false
@@ -72,15 +74,11 @@ export default class WebSocketClient {
 	async sendConnectMessage() {
 		if (this.app.loggedUser) {
 			this.send({ type: "connect", userId: this.app.loggedUser.id })
-			// // Fetch personalized user list instead of public list
-			// await wsClient.fetchInitialUsers()
 		}
 	}
 
 	async sendLogoutMessage() {
 		this.send({ type: "logout" })
-		// // Restore public user list after logout
-		// await wsClient.fetchInitialUsers()
 	}
 	/**
 	 * Handles incoming WebSocket messages
@@ -92,8 +90,60 @@ export default class WebSocketClient {
 			case "pong":
 				console.log("Websocket received pong")
 				break
+			case "connect":
+				this.handleConnectReply(reply)
+				break
+			case "logout":
+				this.handleLogoutReply(reply)
+				break
 			default:
 				console.warn("Unknown WebSocket message type:", reply.type)
 		}
+	}
+
+	// ------------------- REPLY HANDLERS ------------------
+	// ------------------- REPLY HANDLERS ------------------
+	// ------------------- REPLY HANDLERS ------------------
+	// ------------------- REPLY HANDLERS ------------------
+	async handleConnectReply(reply: ConnectReply) {
+		// ignore update for self
+		if (reply.userId === this.app.loggedUser?.id) {
+			return
+		}
+
+		// Update user status in the cache
+		await this.app.cache.updateStatus(reply.userId, "online")
+		// ignore visual updates for blocked users
+		if (this.app.cache.isBlocked(reply.userId)) {
+			return
+		}
+
+		// Update visual indicators of user status
+		switchPlayerCardStatus(this.app, reply.userId, "online")
+		// switchChatInput(reply.userId, true)
+		// const userData = wsClient.getUser(reply.userId)
+		// const username = userData?.user?.username || reply.userId.toString
+		// notif(`${username} ${t("connected")}`)
+	}
+
+	async handleLogoutReply(reply: LogoutReply) {
+		// ignore update for self
+		if (reply.userId === this.app.loggedUser?.id) {
+			return
+		}
+
+		// Update user status in the cache
+		await this.app.cache.updateStatus(reply.userId, "offline")
+		// ignore visual updates for blocked users
+		if (this.app.cache.isBlocked(reply.userId)) {
+			return
+		}
+
+		// Update visual indicators of user status
+		switchPlayerCardStatus(this.app, reply.userId, "offline")
+		// switchChatInput(reply.userId, false)
+		// const userData = wsClient.getUser(reply.userId)
+		// const username = userData?.user?.username || reply.userId.toString
+		// notif(`${username} ${t("disconnected")}`)
 	}
 }

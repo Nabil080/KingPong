@@ -73,6 +73,8 @@ export default class Cache {
 		this.ready = false
 	}
 
+	isBlocked = (userId: number): boolean => this.getUser(userId)?.relationship === "blocked"
+
 	/**
 	 * Retrieves initial user data from the server
 	 * Populates the users map with data from the API
