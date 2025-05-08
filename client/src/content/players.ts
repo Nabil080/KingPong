@@ -21,6 +21,12 @@ export function playersTabContentHTML(app: App, tab: playerListTab): string {
 		emptyMessage = t("noBlocked")
 	}
 
+	users.sort((a, b) => {
+		const statusA = a.user.status === "online" ? 0 : 1
+		const statusB = b.user.status === "online" ? 0 : 1
+		return statusA - statusB
+	})
+
 	return (
 		users.map((userData) => playerCard(userData.user, userData.relationship, true)).join("") ||
 		`<div class="h-full w-full flex justify-center items-center">${emptyMessage}</div>`
