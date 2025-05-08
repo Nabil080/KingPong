@@ -1,7 +1,7 @@
 import { switchPlayerCardStatus } from "../components/player_card.js"
 import { switchChatInput } from "../content/chat.js"
 import { t } from "../translations/translations.js"
-import { ConnectReply, LogoutReply, WebSocketMessage, WebSocketReply } from "../types/websocket.js"
+import { ChatReply, ConnectReply, LogoutReply, WebSocketMessage, WebSocketReply } from "../types/websocket.js"
 import { App } from "./App.js"
 
 export default class WebSocketClient {
@@ -95,6 +95,9 @@ export default class WebSocketClient {
 			case "logout":
 				this.handleUserStatusReply(reply)
 				break
+			case "chat":
+				this.handleChatReply(reply)
+				break
 			default:
 				console.warn("Unknown WebSocket message type:", reply.type)
 		}
@@ -128,5 +131,13 @@ export default class WebSocketClient {
 		// const userData = wsClient.getUser(reply.userId)
 		// const username = userData?.user?.username || reply.userId.toString
 		// notif(`${username} ${t("disconnected")}`)
+	}
+
+	handleChatReply(reply: ChatReply) {
+		// ignore messages from blocked users
+		if (this.app.cache.isBlocked(reply.senderId)) {
+			return
+		}
+		this.app.cache.addMessage(reply.senderId, reply)
 	}
 }
