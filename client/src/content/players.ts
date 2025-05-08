@@ -9,13 +9,20 @@ type playerListTab = "all" | "friends" | "online" | "offline" | "blocked"
 
 export function playersTabContentHTML(app: App, tab: playerListTab): string {
 	let users: UserData[] = []
-	if (tab === "all") users = app.cache.getAllOtherUsers()
-	else if (tab === "friends") users = app.cache.getAllFriends()
-	else if (tab === "blocked") users = app.cache.getAllBlockedUsers()
+	let emptyMessage = ""
+	if (tab === "all") {users = app.cache.getAllOtherUsers()
+		emptyMessage = t("noPlayers")
+	}
+	else if (tab === "friends") {users = app.cache.getAllFriends()
+		emptyMessage = t("noFriends")
+	}
+	else if (tab === "blocked") {users = app.cache.getAllBlockedUsers()
+		emptyMessage = t("noBlocked")
+	}
 
 	return (
 		users.map((userData) => playerCard(userData.user, userData.relationship, true)).join("") ||
-		`<div class="h-full center "> ${t("noPlayers")}</div>`
+		`<div class="h-full w-full flex justify-center items-center">${emptyMessage}</div>`
 	)
 }
 
@@ -33,7 +40,7 @@ export function playersListHTML(app: App, tab: playerListTab): string {
 					class="focus:ring-berry w-full border px-4 py-2 focus:outline-none focus:ring-2"
 				/>
 			</div>
-			<div data-tab-content="players-list" id="players-list" class="no-scrollbar overflow-y-scroll text-sm">
+			<div data-tab-content="players-list" id="players-list" class="no-scrollbar overflow-y-scroll text-sm h-full w-full">
 				${playersTabContentHTML(app, tab)}
 			</div>
 		</section>
