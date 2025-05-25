@@ -12,6 +12,7 @@ import { changeUsernamePopup } from "../content/settings/change_username_popup.j
 import { confidentialityPopup } from "../content/settings/confidentiality_popup.js"
 import { deleteAccountPopup } from "../content/settings/delete_account_popup.js"
 import { settingsPopup } from "../content/settings/settings_popup.js"
+import { themePopup } from "../content/theme_popup.js"
 
 export type popupHandler = (app: App) => void
 
@@ -35,4 +36,5 @@ export const popups: popupRoutes[] = [
 	{ id: "options", handler: optionsPopup },
 	{ id: "opponents", handler: opponentsPopup },
 	{ id: "online-players", handler: onlinePlayersPopup },
+    { id: "themes", handler: themePopup}
 ]

@@ -18,6 +18,9 @@ export default class Navbar {
 				<button id="lang-button" data-popup="language" class="group-event">
 					<img id="lang-flag" src="/assets/images/lang/${t("flag")}" class="h-[40px]" alt="KingPong Flag" />
 				</button>
+                <button data-popup="themes">
+                    themes
+                </button>
 			</section>
 
 			<!-- Center section: Navigation buttons -->

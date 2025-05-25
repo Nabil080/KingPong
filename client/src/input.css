@@ -6,6 +6,62 @@
 	body {
 		@apply font-anonymous text-white;
 	}
+
+    [data-theme="purple"] {
+        --primary: #500A59;
+        --secondary: #940AA1;
+        --accent: #C10BD9;
+        --background: #230926;
+    }
+
+    [data-theme="blue"] {
+        --primary: #0A3D62;
+        --secondary: #1E6FA4;
+        --accent: #3498DB;
+        --background: #0B1F33;
+    }
+
+    [data-theme="red"] {
+        --primary: #5C0A0A;
+        --secondary: #A4161A;
+        --accent: #E63946;
+        --background: #2B0B0E;
+    }
+
+    [data-theme="green"] {
+        --primary: #0A5C2A;
+        --secondary: #1A9445;
+        --accent: #2ECC71;
+        --background: #0D2B1A;
+    }
+
+    [data-theme="orange"] {
+        --primary: #803D00;
+        --secondary: #D97706;
+        --accent: #FFA500;
+        --background: #2E1600;
+    }
+
+    [data-theme="cyber"] {
+        --primary: #0D0D0D;
+        --secondary: #00FF9F;
+        --accent: #39FF14;
+        --background: #020202;
+    }
+
+    [data-theme="pastel"] {
+        --primary: #A3C1AD;
+        --secondary: #CBAACB;
+        --accent: #FFD6A5;
+        --background: #FAF3F3;
+    }
+
+    [data-theme="monochrome"] {
+        --primary: #1A1A1A;
+        --secondary: #333333;
+        --accent: #999999;
+        --background: #000000;
+    }
 }
 
 @layer utilities {

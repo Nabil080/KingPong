@@ -3,10 +3,10 @@ module.exports = {
 	theme: {
 		extend: {
 			colors: {
-				primary: "#500A59",
-				secondary: "#940AA1",
-				accent: "#C10BD9",
-				background: "#230926",
+				primary: "var(--primary)",
+				secondary: "var(--secondary)",
+				accent: "var(--accent)",
+				background: "var(--background)",
 			},
 			fontFamily: {
 				anonymous: ['"Anonymous Pro"', "monospace"],
