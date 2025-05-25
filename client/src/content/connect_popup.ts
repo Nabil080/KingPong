@@ -10,7 +10,7 @@ export function connectPopupHTML(): string {
 		<section id="coonect-popup" class="small-size container">
 			<div class="flex h-[57px] w-full text-xl font-bold">
 				<button
-					class="bg-violet hover:bg-accent flex w-1/2 cursor-pointer items-center justify-center rounded-tl-lg px-4 py-2"
+					class="bg-secondary hover:bg-accent flex w-1/2 cursor-pointer items-center justify-center rounded-tl-lg px-4 py-2"
 					data-popup="register"
 				>
 					${t("register")}

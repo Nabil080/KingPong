@@ -3,7 +3,7 @@ function input(
 	name: string,
 	label: string,
 	attributes: string = "",
-	classList: string = "w-full border-2 border-violet/50 hover:border-violet px-4 py-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-accent rounded-lg text-background bg-white/95 shadow-sm transition-all duration-200",
+	classList: string = "w-full border-2 border-secondary/50 hover:border-secondary px-4 py-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-accent rounded-lg text-background bg-white/95 shadow-sm transition-all duration-200",
 ): string {
 	return /* HTML */ `
 		<div class="flex flex-col">
@@ -33,7 +33,7 @@ export function resetInput(name: string, label: string, attributes: string = "")
 		name,
 		label,
 		attributes,
-		"bg-gradient-to-r from-violet to-accent hover:opacity-90 active:opacity-100 active:scale-[0.99] h-[42px] w-full border-none text-base font-semibold text-white rounded-lg shadow-md transition-all duration-200",
+		"bg-gradient-to-r from-secondary to-accent hover:opacity-90 active:opacity-100 active:scale-[0.99] h-[42px] w-full border-none text-base font-semibold text-white rounded-lg shadow-md transition-all duration-200",
 	)
 }
 

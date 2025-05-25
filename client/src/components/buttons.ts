@@ -10,7 +10,7 @@ export function popupLink(id: string, label: string): string {
 
 // Main button of the app (berry color)
 export function baseButton(label: string, attributes: string = "type='button'"): string {
-	return customButton(label, "bg-gradient-to-r from-violet to-accent text-white rounded-lg", attributes)
+	return customButton(label, "bg-gradient-to-r from-secondary to-accent text-white rounded-lg", attributes)
 }
 
 // Button that holds styles we want to apply to all buttons
@@ -38,5 +38,5 @@ export function customButtonNoTranslate(label: string, classList: string, attrib
 }
 
 export function langButton(key: string, label: string) {
-	return /* HTML */ ` <button class="bg-violet/30 hover:bg-accent w-full cursor-pointer py-2 text-center" data-lang="${key}">${label}</button> `
+	return /* HTML */ ` <button class="bg-secondary/30 hover:bg-accent w-full cursor-pointer py-2 text-center" data-lang="${key}">${label}</button> `
 }

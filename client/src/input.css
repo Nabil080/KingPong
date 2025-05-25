@@ -121,7 +121,7 @@
 	}
 
 	button[data-tab-item] {
-		@apply bg-violet hover:bg-accent;
+		@apply bg-secondary hover:bg-accent;
 	}
 
 	button[data-tab-item].active-tab {

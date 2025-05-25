@@ -13,11 +13,11 @@ function chatHTML(userData: UserData): string {
 			<div class="flex h-[calc(100%-57px)] flex-col justify-between">
 				<div id="chatMessages" data-dummy="true" class="no-scrollbar m-5 flex flex-col gap-5 overflow-y-auto text-sm">
 					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
-					<div class="bg-violet h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-secondary h-[32px] w-1/2 rounded-lg"></div>
 					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
-					<div class="bg-violet h-[32px] w-1/2" rounded-lg></div>
+					<div class="bg-secondary h-[32px] w-1/2" rounded-lg></div>
 					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
-					<div class="bg-violet h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-secondary h-[32px] w-1/2 rounded-lg"></div>
 					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
 				</div>
 				<form id="chatForm" class="flex">
@@ -72,7 +72,7 @@ export function appendNewChatMessage(app: App, chatMessage: Chat) {
 	messageDiv.classList.add("inline-block", "p-2", "w-fit", "max-w-[90%]", "break-words", "rounded-lg")
 
 	if (isReply(chatMessage)) {
-		messageDiv.classList.add("bg-violet")
+		messageDiv.classList.add("bg-secondary")
 	} else {
 		messageDiv.classList.add("bg-accent", "ml-auto")
 	}
