@@ -12,7 +12,6 @@ function tournamentMatchupElement(game: Game): string {
 	const player2 = game.player2
 
 	// Determine if there is a winner and if the player is not the winner
-	const isWinner = (player: any) => game.winner && player && game.winner === player
 	const isLoser = (player: any) => game.winner && player && game.winner !== player
 
 	return /* html */ `
