@@ -3,14 +3,15 @@ import { t } from "../../translations/translations.js"
 import { Paddle } from "./Elements/Paddle.js"
 import Game from "./Game.js"
 
+
 export default class GameRenderer {
 	public canvas?: HTMLCanvasElement
 	public ctx?: CanvasRenderingContext2D
-	private ballColor: string = "#C10BD9"
-	private paddleColor: string = "#C10BD9"
-	private borderColor: string = "#C10BD9"
+    private color: string = ""
 
-	constructor(public game: Game) {}
+	constructor(public game: Game) {
+        this.updateColor()
+    }
 
 	setCanvas(canvas: HTMLCanvasElement) {
 		this.canvas = canvas
@@ -37,6 +38,9 @@ export default class GameRenderer {
 		// Draw border
 		this.drawBorder()
 
+        // Middle line
+		this.drawDottedLine()
+
 		// Draw paddles
 		this.drawPaddles()
 
@@ -50,7 +54,6 @@ export default class GameRenderer {
 		// Draw score
 		this.drawScore()
 
-		this.drawDottedLine()
 
 		// Draw overlay
 		this.drawOverlay()
@@ -59,7 +62,7 @@ export default class GameRenderer {
 	drawBorder() {
 		if (!this.ctx || !this.canvas) return
 
-		this.ctx.strokeStyle = this.borderColor
+		this.ctx.strokeStyle = this.color
 		this.ctx.lineWidth = 2
 		this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height)
 	}
@@ -67,7 +70,7 @@ export default class GameRenderer {
 	// NOTE: Draws depending on the game state and the config
 	drawPaddles() {
 		if (!this.ctx || !this.canvas) return
-		this.ctx.fillStyle = this.paddleColor
+		this.ctx.fillStyle = this.color
 		this.ctx.fillRect(this.game.state.paddle1.x, this.game.state.paddle1.y, Game.PADDLE_WIDTH, this.game.options.paddleSize)
 		this.ctx.fillRect(this.game.state.paddle2.x, this.game.state.paddle2.y, Game.PADDLE_WIDTH, this.game.options.paddleSize)
 	}
@@ -96,7 +99,7 @@ export default class GameRenderer {
 	// NOTE: Draws depending on the game state and the config
 	drawBall() {
 		if (!this.ctx || !this.canvas) return
-		this.ctx.fillStyle = this.ballColor
+		this.ctx.fillStyle = this.color
 		this.ctx.beginPath()
 		this.ctx.arc(this.game.state.ball.x, this.game.state.ball.y, this.game.state.ball.radius, 0, 2 * Math.PI)
 		this.ctx.fill()
@@ -124,7 +127,7 @@ export default class GameRenderer {
 		const gapHeight = 8
 
 		// Set line appearance
-		this.ctx.strokeStyle = "#C10BD9"
+		this.ctx.strokeStyle = this.color
 		this.ctx.lineWidth = 2
 
 		// Start a new path for the dotted line
@@ -189,4 +192,21 @@ export default class GameRenderer {
 		this.ctx.textAlign = "center"
 		this.ctx.fillText(message, this.canvas.width / 2, this.canvas.height / 4)
 	}
+
+    public updateColor(){
+        const themes = [
+          { name: "purple", accent: "#C10BD9" },
+          { name: "blue", accent: "#3498DB" },
+          { name: "red", accent: "#E63946" },
+          { name: "green", accent: "#2ECC71" },
+          { name: "orange", accent: "#FFA500" },
+          { name: "cyber", accent: "#39FF14" },
+          { name: "pastel", accent: "#FFD6A5" },
+          { name: "monochrome", accent: "#999999" }
+        ]
+
+        const currentTheme = document.body.getAttribute("data-theme") as string
+        this.color = themes.find((theme) => theme.name === currentTheme)?.accent || ""
+    }
+
 }

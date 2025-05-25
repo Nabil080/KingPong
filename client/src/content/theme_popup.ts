@@ -14,7 +14,6 @@ function themePopupHTML(): string{
         "red",
         "green",
         "orange",
-        "cyber",
         "pastel",
         "monochrome",
 	]
@@ -25,10 +24,14 @@ function themePopupHTML(): string{
     return /* HTML */ `
 		<section class="small-size container">
 			<div class="mx-6 my-auto space-y-4 text-lg font-bold">
-				<!-- Current theme first -->
-                ${themeButton(currentTheme)}
+                <!-- Current theme first -->
+                <div>
+                    ${themeButton(currentTheme)}
+                </div>
 				<!-- Other themes below -->
-                ${otherThemes.map(theme => themeButton(theme)).join("")}
+                <div class="grid grid-cols-2 gap-4">
+                    ${otherThemes.map(theme => themeButton(theme)).join("")}
+                </div>
 			</div>
 		</section>
     `
@@ -40,6 +43,8 @@ function initButtonsEvents(app: App){
             const theme = button.getAttribute("data-theme") as string
             document.body.setAttribute("data-theme", theme)
             app.popup.close()
+            app.game?.renderer.updateColor()
+            app.background.game.renderer.updateColor()
         })
     )
 }
