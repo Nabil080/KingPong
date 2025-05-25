@@ -38,11 +38,15 @@ export class App {
 		this.router = new Router(this)
 		this.notifications = new NotificationManager(this)
 
+        // Load the theme from the storage if there is one
+        this.loadTheme()
+
 		// Initialize Elements
 		this.navbar = new Navbar(this)
 		this.background = new Background(this)
 		this.content = new Content(this)
 		this.popup = new Popup(this)
+
 	}
 
 	// Only start the app when everything is ready
@@ -77,4 +81,10 @@ export class App {
 	hideBackground() {
 		this.background.hide()
 	}
+
+    loadTheme() {
+        const theme = localStorage.getItem("theme")
+        if (theme)
+            document.body.setAttribute("data-theme", theme)
+    }
 }

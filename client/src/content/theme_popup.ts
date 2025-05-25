@@ -45,6 +45,7 @@ function initButtonsEvents(app: App){
             app.popup.close()
             app.game?.renderer.updateColor()
             app.background.game.renderer.updateColor()
+            localStorage.setItem("theme", theme)
         })
     )
 }
