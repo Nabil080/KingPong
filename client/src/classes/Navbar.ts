@@ -8,7 +8,7 @@ export default class Navbar {
 
 	constructor(private app: App) {
 		// Create the navbar element
-		this.root.className = "border-berry flex items-center justify-between border-b px-[25px] h-[60px]"
+		this.root.className = "border-accent flex items-center justify-between border-b px-[25px] h-[60px]"
 		this.root.innerHTML = /* HTML */ `
 			<!-- Left section: Logo and flag -->
 			<section id="left-nav" class="flex gap-4">

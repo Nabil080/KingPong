@@ -9,9 +9,9 @@ function registerPopupHTML(): string {
 	const content = /* HTML */ `
 		<section class="small-size container">
 			<div class="flex h-[57px] w-full text-xl font-bold">
-				<button class="bg-berry w-1/2 rounded-tl-lg px-4 py-2">${t("register")}</button>
+				<button class="bg-accent w-1/2 rounded-tl-lg px-4 py-2">${t("register")}</button>
 				<button
-					class="bg-violet hover:bg-berry flex w-1/2 cursor-pointer items-center justify-center rounded-tr-lg px-4 py-2"
+					class="bg-violet hover:bg-accent flex w-1/2 cursor-pointer items-center justify-center rounded-tr-lg px-4 py-2"
 					data-popup="connect"
 				>
 					${t("connect")}
@@ -29,7 +29,7 @@ function registerPopupHTML(): string {
 						>
 						<button
 							type="button"
-							class="bg-berry h-full w-1/2 rounded-br-lg rounded-tr-lg px-4 py-1.5 duration-300 hover:bg-opacity-80"
+							class="bg-accent h-full w-1/2 rounded-br-lg rounded-tr-lg px-4 py-1.5 duration-300 hover:bg-opacity-80"
 							onclick="document.getElementById('hiddenFile').click()"
 						>
 							${t("browse")}

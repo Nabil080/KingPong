@@ -1,7 +1,7 @@
 import { App } from "../classes/App.js"
 import { routeParams } from "../types/routes.js"
 import { createDurationPerGameChart, createMostPlayedUsersChart, createScorePerGameChart, createWinLossChart } from "../utils/charts.js"
-import { calculateStatistics, getUserDataOrRedirect, getUsernameOrRedirect } from "./profil.js"
+import { calculateStatistics, getUserDataOrredirect, getUsernameOrredirect } from "./profil.js"
 
 /**
  * Generates the HTML for the stats page.
@@ -29,11 +29,11 @@ function statsHTML(): string {
 
 export async function renderStats(app: App, params?: routeParams) {
 	// Get the username or redirect if necessary
-	const username = getUsernameOrRedirect(app, params)
+	const username = getUsernameOrredirect(app, params)
 	if (!username) return
 
 	// Fetch user data or render 404 if the user does not exist
-	const userData = getUserDataOrRedirect(app, username)
+	const userData = getUserDataOrredirect(app, username)
 	if (!userData) return
 
 	// Fetch matches from the cache

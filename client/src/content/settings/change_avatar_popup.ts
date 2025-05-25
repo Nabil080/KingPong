@@ -24,7 +24,7 @@ function changeAvatarPopupHTML(): string {
 						>
 						<button
 							type="button"
-							class="bg-berry h-full w-1/2 rounded-br-lg rounded-tr-lg px-4 py-1.5 duration-300 hover:bg-opacity-80"
+							class="bg-accent h-full w-1/2 rounded-br-lg rounded-tr-lg px-4 py-1.5 duration-300 hover:bg-opacity-80"
 							onclick="document.getElementById('hiddenFile').click()"
 						>
 							${t("browse")}

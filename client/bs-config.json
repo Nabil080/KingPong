@@ -1,6 +1,6 @@
 {
 	"injectChanges": false,
-	"files": ["./**/*.{html,htm,css,js}"],
+	"files": ["./**/*.{html,htm,css,js}", "tailwind.config.js"],
 	"watchOptions": { "ignored": "node_modules" },
 	"port": 3001,
 	"server": {

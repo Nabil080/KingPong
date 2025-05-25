@@ -24,7 +24,7 @@ function tournamentLobbyHTML(tournament: Tournament): string {
 	const winnerName = getPlayerName(tournament.games[2]?.winner) || t("unknown")
 
 	return /*HTML*/ `
-        <section class="large-size center from-eerie to-purple container h-full w-full bg-gradient-to-b p-8 text-xl text-white shadow-2xl relative overflow-hidden flex flex-col items-center">
+        <section class="large-size center from-background to-primary container h-full w-full bg-gradient-to-b p-8 text-xl text-white shadow-2xl relative overflow-hidden flex flex-col items-center">
             <img src="/assets/images/winningTournament.png" alt="Trophée"
                 class="absolute inset-0 w-full h-full object-cover opacity-80 pointer-events-none" />
             <div class="relative z-10 flex flex-col items-center h-full w-full">
@@ -33,7 +33,7 @@ function tournamentLobbyHTML(tournament: Tournament): string {
                 <div class="text-3xl md:text-4xl font-semibold mb-8 self-center">${winnerName}</div>
                 <div class="flex-1"></div>
                 <div class="mb-12 self-center">
-                    ${baseButton(t("back"), "id='cancel-btn' class='bg-purple border-4 border-berry text-xl font-bold py-4 w-40'")}
+                    ${baseButton(t("back"), "id='cancel-btn' class='bg-primary border-4 border-accent text-xl font-bold py-4 w-40'")}
                 </div>
             </div>
         </section>

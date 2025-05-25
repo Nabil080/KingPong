@@ -3,16 +3,16 @@ import { fullHistoryCard } from "../components/history.js"
 import { t } from "../translations/translations.js"
 import { Match } from "../types/match.js"
 import { routeParams } from "../types/routes.js"
-import { getUserDataOrRedirect, getUsernameOrRedirect } from "./profil.js"
+import { getUserDataOrredirect, getUsernameOrredirect } from "./profil.js"
 
 export async function renderHistory(app: App, params?: routeParams) {
 	app.hideBackground()
 	// Get the username or redirect if necessary
-	const username = getUsernameOrRedirect(app, params)
+	const username = getUsernameOrredirect(app, params)
 	if (!username) return
 
 	// Fetch user data or render 404 if the user does not exist
-	const userData = getUserDataOrRedirect(app, username)
+	const userData = getUserDataOrredirect(app, username)
 	if (!userData) return
 
 	// Fetch matches from the cache and reverse them

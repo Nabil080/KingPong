@@ -36,15 +36,15 @@ export default class NotificationManager {
 	createNotificationElement(notification: Notification): HTMLElement {
 		const notificationElement = document.createElement("div")
 		notificationElement.id = `notification_${notification.id}`
-		notificationElement.className = "notification-item flex items-center gap-4 bg-purple p-4 border"
+		notificationElement.className = "notification-item flex items-center gap-4 p-4 border"
 		if (notification.onClick) notificationElement.classList.add("hover-effect")
 
 		switch (notification.type) {
 			case "login":
-				notificationElement.classList.add("border-l-4", "border-green", "bg-opacity-20", "bg-lime-500", "shadow-sm")
+				notificationElement.classList.add("border-l-4", "border-green-500", "bg-opacity-20", "bg-lime-500", "shadow-sm")
 				break
 			case "logout":
-				notificationElement.classList.add("border-l-4", "border-red", "bg-opacity-20", "bg-red", "shadow-sm")
+				notificationElement.classList.add("border-l-4", "border-red-500", "bg-opacity-20", "bg-red-500", "shadow-sm")
 				break
 			case "message":
 			case "info":
@@ -62,7 +62,7 @@ export default class NotificationManager {
 				<p class="text-sm text-gray-200">${notification.message}</p>
 			</div>
 			<button data-close="${notification.id}" class="pointer-events-auto">
-				<svg xmlns="http://www.w3.org/2000/svg" class="hover:stroke-berry h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<svg xmlns="http://www.w3.org/2000/svg" class="hover:stroke-accent h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
 				</svg>
 			</button>
@@ -73,11 +73,10 @@ export default class NotificationManager {
 			const target = e.target as HTMLElement
 			if (target.matches("[data-close]") || target.closest("button[data-close]")) {
 				notification.onClose?.()
-				this.removeNotification(notification.id)
 			} else if (notification.onClick) {
 				notification.onClick()
-				this.removeNotification(notification.id)
 			}
+			this.removeNotification(notification.id)
 		})
 
 		return notificationElement

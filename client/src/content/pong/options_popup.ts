@@ -21,15 +21,15 @@ export function optionsPopupHTML(currentStep: currentStepType | undefined): stri
 				${option("paddleSize", t("paddleSize"), savedOptions.paddleSize, 50, 200, 1, isReadOnly)}
 				${option("maxScore", t("maxScore"), savedOptions.maxScore, 1, 10, 1, isReadOnly)}
 			</div>
-			<div class="border-berry bg-berry/20 divide-berry flex min-h-[76px] divide-x-2 border-t text-base font-bold">
+			<div class="border-accent bg-accent/20 divide-accent flex min-h-[76px] divide-x-2 border-t text-base font-bold">
 				${customButtonNoTranslate(
 					t("reset"),
-					"bg-berry/20 hover:bg-berry h-full w-1/2",
+					"bg-accent/20 hover:bg-accent h-full w-1/2",
 					`id='reset-options' ${isReadOnly ? " disabled" : ""}`,
 				)}
 				${customButtonNoTranslate(
 					t("confirmOptions"),
-					"bg-berry/20 hover:bg-berry h-full w-1/2",
+					"bg-accent/20 hover:bg-accent h-full w-1/2",
 					`id='confirm-options'${isReadOnly ? " disabled" : ""}`,
 				)}
 			</div>

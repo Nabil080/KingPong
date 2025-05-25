@@ -19,9 +19,9 @@ function tournamentFormHTML(): string {
 				<div class="relative w-1/2">
 					<select
 						name="type${id}"
-						class="player-type-select border-violet/50 hover:border-violet focus:ring-berry text-eerie h-[42px] w-full rounded-lg border-2 bg-white/95 px-4 py-2 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2"
+						class="player-type-select border-violet/50 hover:border-violet focus:ring-accent text-background h-[42px] w-full rounded-lg border-2 bg-white/95 px-4 py-2 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2"
 					>
-						${botOptions.map((bot) => `<option class="text-eerie py-1" value="${bot.value}">${bot.label}</option>`).join("")}
+						${botOptions.map((bot) => `<option class="text-background py-1" value="${bot.value}">${bot.label}</option>`).join("")}
 					</select>
 				</div>
 				<div class="w-1/2">${textInput(`player${id}`, t(`player${id}`), `required value='${defaultName}' maxlength='${USER_LEN.max}'`)}</div>

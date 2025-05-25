@@ -95,12 +95,12 @@ export function createScorePerGameChart(username: string = "", matches: Match[] 
 	// Use the last 100 matches
 	matches = matches.reverse().slice(0, 100)
 
-	const scoreData: { x: string; y: number }[] = matches.map((match) => {
+	const scoredata: { x: string; y: number }[] = matches.map((match) => {
 		let playerScore = match.player1 === username ? match.score1 : match.score2
 		let date = new Date(match.created_at!)
 		return { x: match.id!.toString(), y: playerScore }
 	})
-	const opponentScoreData: { x: string; y: number }[] = matches.map((match) => {
+	const opponentScoredata: { x: string; y: number }[] = matches.map((match) => {
 		let opponentScore = match.player1 !== username ? match.score1 : match.score2
 		let date = new Date(match.created_at!)
 		return { x: match.id!.toString(), y: opponentScore }
@@ -110,13 +110,13 @@ export function createScorePerGameChart(username: string = "", matches: Match[] 
 		datasets: [
 			{
 				label: t("yourScore"),
-				data: scoreData,
+				data: scoredata,
 				backgroundColor: GRAD[0],
 				borderColor: GRAD[0],
 			},
 			{
 				label: t("yourOpponent"),
-				data: opponentScoreData,
+				data: opponentScoredata,
 				backgroundColor: GRAD[1],
 				borderColor: GRAD[1],
 			},

@@ -52,7 +52,7 @@
 	}
 
 	.container {
-		@apply border-berry bg-purple relative rounded-lg border shadow-lg;
+		@apply border-accent bg-primary relative rounded-lg border shadow-lg;
 	}
 
 	.center {
@@ -60,7 +60,7 @@
 	}
 
 	.active-link {
-		@apply text-berry;
+		@apply text-accent;
 	}
 
 	.small-size {
@@ -79,7 +79,7 @@
 
 @layer components {
 	.container {
-		@apply border-berry bg-purple flex flex-col border shadow-lg;
+		@apply border-accent bg-primary flex flex-col border shadow-lg;
 	}
 
 	input {
@@ -109,11 +109,11 @@
 	}
 
 	div[data-status="online"] {
-		@apply bg-green;
+		@apply bg-green-500;
 	}
 
 	div[data-status="offline"] {
-		@apply bg-red;
+		@apply bg-red-500;
 	}
 
 	button[disabled] {
@@ -121,11 +121,11 @@
 	}
 
 	button[data-tab-item] {
-		@apply bg-violet hover:bg-berry;
+		@apply bg-violet hover:bg-accent;
 	}
 
 	button[data-tab-item].active-tab {
-		@apply !bg-berry;
+		@apply !bg-accent;
 	}
 
 	[data-link] {
@@ -136,7 +136,7 @@
 		@apply aspect-square rounded-full object-cover; /*border-2*/
 	}
 	.avatar.hover-effect {
-		@apply hover:border-berry group-hover:border-berry;
+		@apply hover:border-accent group-hover:border-accent;
 	}
 
 	#google-signin-button span {

@@ -12,13 +12,13 @@ function chatHTML(userData: UserData): string {
 			<div class="flex h-[57px] w-full text-sm font-bold">${playerCard(userData, false)}</div>
 			<div class="flex h-[calc(100%-57px)] flex-col justify-between">
 				<div id="chatMessages" data-dummy="true" class="no-scrollbar m-5 flex flex-col gap-5 overflow-y-auto text-sm">
-					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
 					<div class="bg-violet h-[32px] w-1/2 rounded-lg"></div>
-					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
 					<div class="bg-violet h-[32px] w-1/2" rounded-lg></div>
-					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
 					<div class="bg-violet h-[32px] w-1/2 rounded-lg"></div>
-					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-accent ml-auto h-[32px] w-1/2 rounded-lg"></div>
 				</div>
 				<form id="chatForm" class="flex">
 					<input
@@ -29,7 +29,7 @@ function chatHTML(userData: UserData): string {
 						data-target-id="${user.id}"
 						${user.status != "online" ? "disabled" : ""}
 					/>
-					<button type="submit" id="messageSubmit" class="bg-berry w-1/4 px-1 py-2" ${user.status != "online" ? "disabled" : ""}>
+					<button type="submit" id="messageSubmit" class="bg-accent w-1/4 px-1 py-2" ${user.status != "online" ? "disabled" : ""}>
 						Send
 					</button>
 				</form>
@@ -74,7 +74,7 @@ export function appendNewChatMessage(app: App, chatMessage: Chat) {
 	if (isReply(chatMessage)) {
 		messageDiv.classList.add("bg-violet")
 	} else {
-		messageDiv.classList.add("bg-berry", "ml-auto")
+		messageDiv.classList.add("bg-accent", "ml-auto")
 	}
 
 	// Safely set text content to prevent from XSS attacks(escapes HTML automatically)

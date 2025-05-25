@@ -10,10 +10,10 @@ import { formatTime } from "../utils/utils.js"
 import { connectPopup } from "./connect_popup.js"
 
 export async function renderProfil(app: App, params?: routeParams) {
-	const username = getUsernameOrRedirect(app, params)
+	const username = getUsernameOrredirect(app, params)
 	if (!username) return
 
-	const userData = getUserDataOrRedirect(app, username)
+	const userData = getUserDataOrredirect(app, username)
 	if (!userData) return
 
 	const matches = await app.cache.getMatchesByUsername(username)
@@ -42,7 +42,7 @@ export async function renderProfil(app: App, params?: routeParams) {
 
 // Returns the username from the URL parameters or from the logged-in user if there is none.
 // Opens the connect popup if no parameter or logged in user.
-export function getUsernameOrRedirect(app: App, params?: routeParams): string | null {
+export function getUsernameOrredirect(app: App, params?: routeParams): string | null {
 	if (!params?.username) {
 		if (app.loggedUser) {
 			return app.loggedUser.username
@@ -57,7 +57,7 @@ export function getUsernameOrRedirect(app: App, params?: routeParams): string | 
 }
 
 // Fetches user data from the cache and redirects to the 404 page if not found.
-export function getUserDataOrRedirect(app: App, username: string): UserData | null {
+export function getUserDataOrredirect(app: App, username: string): UserData | null {
 	const userData = app.cache.getUserByUsername(username)
 	if (!userData) {
 		// console.log("User not found, showing 404 page")
@@ -120,7 +120,7 @@ async function profilHTML(
 	// Statistics
 	const statInsightsHTML = /* HTML */ `
 		<div class="flex h-[57px] w-full font-bold">
-			<article class="border-berry h-[55.9px] w-full border-b px-4">
+			<article class="border-accent h-[55.9px] w-full border-b px-4">
 				${userData.user.username === app.loggedUser?.username
 					? `<div class="center h-full">${t("stats")}</div>`
 					: playerCard(userData, userData.user.id !== app.loggedUser?.id)}
@@ -134,11 +134,11 @@ async function profilHTML(
 				</div>
 				<div class="flex items-center justify-between">
 					<span>${t("wins")}:</span>
-					<span class="text-green">${win}</span>
+					<span class="text-green-500">${win}</span>
 				</div>
 				<div class="flex items-center justify-between">
 					<span>${t("loss")}:</span>
-					<span class="text-red">${loose}</span>
+					<span class="text-red-500">${loose}</span>
 				</div>
 				<div class="flex items-center justify-between">
 					<span>${t("winrate")}:</span>
@@ -160,7 +160,7 @@ async function profilHTML(
 					<span>${t("biggestVictory")}:</span>
 					${biggestVictory
 						? `
-						<span class="text-green">${biggestVictory.player1} ${biggestVictory.score1} - ${biggestVictory.score2} ${biggestVictory.player2}</span>
+						<span class="text-green-500">${biggestVictory.player1} ${biggestVictory.score1} - ${biggestVictory.score2} ${biggestVictory.player2}</span>
 						`
 						: t("none")}
 				</div>
@@ -168,7 +168,7 @@ async function profilHTML(
 					<span>${t("biggestLoose")}:</span>
 					${biggestLoose
 						? `
-						<span class="text-red">${biggestLoose.player1} ${biggestLoose.score1} - ${biggestLoose.score2} ${biggestLoose.player2}</span>
+						<span class="text-red-500">${biggestLoose.player1} ${biggestLoose.score1} - ${biggestLoose.score2} ${biggestLoose.player2}</span>
 						`
 						: t("none")}
 				</div>
@@ -181,7 +181,7 @@ async function profilHTML(
 	// Games with this user
 	const historyInsightsHTML = /* HTML */ `
 		<div class="flex h-[57px] w-full text-sm font-bold">
-			<article class="border-berry flex h-[55.9px] w-full items-center justify-center gap-[19px] border-b px-4">
+			<article class="border-accent flex h-[55.9px] w-full items-center justify-center gap-[19px] border-b px-4">
 				${userData.user.username === app.loggedUser?.username ? `${t("games")}` : t("gamesWith") + ` ${userData.user.username}`}
 			</article>
 		</div>

@@ -48,7 +48,7 @@ export function playersListHTML(app: App, tab: playerListTab): string {
 					id="player-search"
 					type="text"
 					placeholder="${t("search")}"
-					class="focus:ring-berry w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
+					class="focus:ring-accent w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
 				/>
 			</div>
 			<div data-tab-content="players-list" id="players-list" class="no-scrollbar h-full w-full overflow-y-scroll text-sm">

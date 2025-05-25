@@ -16,9 +16,9 @@ export function smallHistoryCard(username: string, match: Match): string {
 	const formattedTime = date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
 
 	return /* HTML */ `
-		<div class="border-berry flex h-[55.9px] w-full items-center justify-between border-b px-5 py-4 text-sm last:border-b-0">
+		<div class="border-accent flex h-[55.9px] w-full items-center justify-between border-b px-5 py-4 text-sm last:border-b-0">
 			<div class="flex w-full items-center justify-center gap-4">
-				<span class="${isWinner ? "text-green" : "text-red"} font-bold"> ${isWinner ? "✔" : "✘"} </span>
+				<span class="${isWinner ? "text-green-500" : "text-red-500"} font-bold"> ${isWinner ? "✔" : "✘"} </span>
 				<div id="player1" class="hover-effect flex items-center gap-2" data-link href="/profil/${match.player1}">
 					<span class="pointer-events-none"> ${match.player1} </span>
 					<span> ${match.score1} </span>
@@ -45,10 +45,10 @@ export function fullHistoryCard(app: App, username: string, match: Match): strin
 	if (!player1 || !player2) return ""
 
 	return /* HTML */ `
-		<div class="border-berry flex h-[55.9px] w-full items-center justify-between border-b px-5 py-4 text-sm">
+		<div class="border-accent flex h-[55.9px] w-full items-center justify-between border-b px-5 py-4 text-sm">
 			<div class="flex h-fit items-center gap-4">
 				<div class="flex items-center gap-2">
-					<span class="${isWinner ? "text-green" : "text-red"} font-bold"> ${isWinner ? "✔ V" : "✘ D"} </span>
+					<span class="${isWinner ? "text-green-500" : "text-red-500"} font-bold"> ${isWinner ? "✔ V" : "✘ D"} </span>
 				</div>
 
 				<div id="player1" class="hover-effect flex w-28 items-center gap-2" data-link href="/profil/${player1.username}">

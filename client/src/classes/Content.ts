@@ -36,7 +36,7 @@ export default class Content {
 	loader() {
 		this.root.innerHTML = /* HTML */ `
 			<div class="flex h-full w-full items-center justify-center">
-				<div class="border-t-berry h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-white"></div>
+				<div class="border-t-accent h-10 w-10 animate-spin rounded-full border-4 border-t-4 border-white"></div>
 			</div>
 		`
 	}

@@ -16,7 +16,7 @@ function tournamentMatchupElement(game: Game): string {
 	const isLoser = (player: any) => game.winner && player && game.winner !== player
 
 	return /* html */ `
-    <article class="bg-eerie border-purple flex w-full items-center justify-center gap-6 border-2 p-5 shadow-inner">
+    <article class="bg-background border-primary flex w-full items-center justify-center gap-6 border-2 p-5 shadow-inner">
         <span class="font-semibold text-center ${!player1 ? "opacity-60" : ""} ${isLoser(player1) ? "line-through text-gray-500" : ""}">${getPlayerName(player1, "?")}</span>
 		<span>${game.winner ? `${game.state.score1}` : ""}</span>
         <div class="${!player1 && !player2 ? "opacity-60" : ""}">
@@ -31,7 +31,7 @@ function tournamentMatchupElement(game: Game): string {
 
 function tournamentLobbyHTML(tournament: Tournament): string {
 	return /*HTML*/ `
-		<section class="large-size center from-eerie to-purple container h-full w-full gap-6 bg-gradient-to-b p-8 text-xl text-white shadow-2xl">
+		<section class="large-size center from-background to-primary container h-full w-full gap-6 bg-gradient-to-b p-8 text-xl text-white shadow-2xl">
 		<h2>${t("demi")}</h2>
 			${tournamentMatchupElement(tournament.games[0])}
 			${tournamentMatchupElement(tournament.games[1])}
@@ -39,7 +39,7 @@ function tournamentLobbyHTML(tournament: Tournament): string {
 			${tournamentMatchupElement(tournament.games[2])}
 			<div class="flex gap-6">
 			${baseButton("PLAY", "id='play-btn' class='neon-play text-center text-2xl font-bold py-4 w-40'")}
-			${baseButton("RESET", "id='cancel-btn' class='bg-purple border-4 border-berry text-xl font-bold py-4 w-40'")}
+			${baseButton("RESET", "id='cancel-btn' class='bg-primary border-4 border-accent text-xl font-bold py-4 w-40'")}
 			</div>
 		</section>
 	`
