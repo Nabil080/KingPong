@@ -133,9 +133,7 @@ class GameManager {
 					game.state.update() // Update the game state
 					game.sendGameState() // Send the game state to the players
 				} else if (game.currentStep === "done") {
-					registerGame(game) // Store the game result in database
 					this.removeGame(game) // Remove the game if it's done
-					game.sendGameState() // Send the final game state to the players
 				}
 			}
 		}, 1000 / 60) // 60 FPS

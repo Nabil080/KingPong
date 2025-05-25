@@ -1,3 +1,5 @@
+import { registerGame } from "../matches/matches.service.js"
+import { setStatus } from "../users/users.model.js"
 import WebSocketManager from "../websockets/WebSocket.Manager.js"
 import { GameStateReply } from "../websockets/websocket.types.js"
 import { Paddle } from "./Elements/Paddle.js"
@@ -140,4 +142,24 @@ export default class Game {
 			paddle.moveDown()
 		}
 	}
+
+    public start(){
+		this.currentStep = "playing"
+		this.startTime = Date.now()
+        // Set the players status to playing
+        setStatus(this.player1Id, "playing") 
+        setStatus(this.player2Id, "playing") 
+    }
+
+    public stop(){
+        this.currentStep = "done"
+		this.duration = Date.now() - (this.startTime || 0)
+        this.sendGameState()
+
+        // Register the game in database
+        registerGame(this)
+        // Change the player status
+        setStatus(this.player1Id, WebSocketManager.isConnected(this.player1Id) ? "online" : "offline") 
+        setStatus(this.player2Id, WebSocketManager.isConnected(this.player2Id) ? "online" : "offline") 
+    }
 }

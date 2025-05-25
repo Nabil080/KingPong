@@ -111,7 +111,8 @@ export function setReady(playerId: number, ready: boolean): Game | null {
 	}
 
 	// Check if both players are ready
-	game.updateCurrentStep()
+    if (game.player1Ready && game.player2Ready)
+        game.start()
 	game.sendGameState()
 	return game
 }

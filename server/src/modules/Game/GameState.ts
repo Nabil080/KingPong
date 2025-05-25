@@ -1,3 +1,4 @@
+import { registerGame } from "../matches/matches.service.js"
 import { Ball } from "./Elements/Ball.js"
 import { Paddle } from "./Elements/Paddle.js"
 import Game from "./Game.js"
@@ -43,12 +44,7 @@ export default class GameState {
 	setWinner(playerNumber: number) {
 		if (playerNumber === 1) this.game.winner = this.game.player1Id
 		else if (playerNumber === 2) this.game.winner = this.game.player2Id
-		this.done()
+		this.game.stop()
 	}
 
-	done() {
-		if (!this.game.winner) return
-		this.game.currentStep = "done"
-		this.game.duration = Date.now() - (this.game.startTime || 0)
-	}
 }
