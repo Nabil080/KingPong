@@ -6,27 +6,14 @@ export type sqlOptions = {
 	orderBy?: string
 }
 
-/**
- * @module User
- * @description Represents a user entity in the application.
- */
-export default class User {
-	public id?: number
-	public username: string = ""
-	public avatar: string = "default.png"
-	public password: string = ""
-	public two_factor_secret?: string
-	public status: "online" | "playing" | "offline" | "hidden" | "deactivated" | "banned" = "online"
-	public created_at?: Date
-
-	/**
-	 * Allow partial initialization like so new User({username: "Nabil", status:"banned"})
-	 */
-	constructor(init?: Partial<User>) {
-		Object.assign(this, init)
-	}
-
-	isOnline = () => this.status === "online"
+export type User = {
+	id: number
+	username: string
+	avatar: string
+	password: string
+	two_factor_secret?: string
+	status: "online" | "playing" | "offline" | "hidden" | "deactivated" | "banned"
+	created_at?: Date
 }
 
 // Types pour les requêtes d'authentification

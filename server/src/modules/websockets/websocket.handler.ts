@@ -1,8 +1,8 @@
-import { FastifyRequest } from "fastify"
 import { WebSocket } from "@fastify/websocket"
-import { WebSocketMessage } from "./websocket.types.js"
-import makeWebSocketService from "./websocket.service.js"
+import { FastifyRequest } from "fastify"
 import { log } from "../../utils/logger.js"
+import makeWebSocketService from "./websocket.service.js"
+import { WebSocketMessage } from "./websocket.types.js"
 
 /**
  * Main WebSocket connection handler.
@@ -10,15 +10,14 @@ import { log } from "../../utils/logger.js"
  * @description Handles WebSocket events and messages.
  */
 export default function handleConnection(socket: WebSocket, request: FastifyRequest) {
-	const service = makeWebSocketService(socket)
+	const service = makeWebSocketService(socket, request.server.jwt.verify)
 
-	//console.log("New websocket connection")
+	// console.log("New websocket connection")
 
 	socket.on("message", (data: any) => {
 		try {
-			//console.log(data)
 			const message = JSON.parse(data.toString()) as WebSocketMessage
-			log(`Received: ${message}`)
+			log(`Received: ${data.toString()}`)
 
 			switch (message.type) {
 				case "connect":
@@ -38,15 +37,27 @@ export default function handleConnection(socket: WebSocket, request: FastifyRequ
 					break
 
 				case "invite":
-					service.sendInvite(message)
+					service.handleInviteMessage(message)
 					break
 
-				case "inviteResponse":
-					service.sendInviteResponse(message)
+				case "cancel-invite":
+					service.handleCancelInviteMessage(message)
 					break
 
-				case "gameinput":
-					service.sendGameInput(message)
+				case "cancel-game":
+					service.handleCancelGameMessage(message)
+					break
+
+				case "invite-response":
+					service.handleInviteResponseMessage(message)
+					break
+
+				case "ready":
+					service.handleReadyMessage(message)
+					break
+
+				case "key-event":
+					service.handleKeyEventMessage(message)
 					break
 
 				default:
@@ -60,6 +71,6 @@ export default function handleConnection(socket: WebSocket, request: FastifyRequ
 	// logout client
 	socket.on("close", () => {
 		service.disconnectClient()
-		//console.log("Websocket deconnected")
+		// console.log("Websocket deconnected")
 	})
 }

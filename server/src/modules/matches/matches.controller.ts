@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
-import { registerMatch, fetchAllMatches, fetchMatchesByUser } from "./matches.service.js"
-import { Match } from "./matches.model.js"
 import { usernameExists } from "../users/users.model.js"
+import { Match } from "./matches.model.js"
+import { fetchAllMatches, fetchMatchesByUser, registerMatch } from "./matches.service.js"
 
 /**
  * Create a new match.

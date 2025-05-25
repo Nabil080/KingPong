@@ -1,17 +1,19 @@
 // src/config/server.ts
-import { FastifyInstance, FastifyPluginOptions } from "fastify"
 import fastifyCookie from "@fastify/cookie"
-import fastifySession from "@fastify/session"
 import fastifyCors from "@fastify/cors"
+import fastifySession from "@fastify/session"
 import fastifyStatic from "@fastify/static"
+import FastifyWebSocketPlugin from "@fastify/websocket"
 import { randomBytes } from "crypto"
+import { FastifyInstance, FastifyPluginOptions } from "fastify"
 import path from "path"
 import { registerAuthRoutes } from "../modules/auth/auth.routes.js"
-import { registerUsersRoutes } from "../modules/users/users.routes.js"
 import { registerCommonRoutes } from "../modules/common/common.routes.js"
-import handleConnection from "../modules/websockets/websocket.handler.js"
-import FastifyWebSocketPlugin from "@fastify/websocket"
+import GameManager from "../modules/Game/Game.Manager.js"
+import { registerGameRoutes } from "../modules/Game/game.routes.js"
 import { registerMatchesRoutes } from "../modules/matches/matches.routes.js"
+import { registerUsersRoutes } from "../modules/users/users.routes.js"
+import handleConnection from "../modules/websockets/websocket.handler.js"
 
 // Déclaration du module pour les sessions Fastify
 declare module "fastify" {
@@ -27,9 +29,11 @@ declare module "fastify" {
 export async function setupServer(fastify: FastifyInstance): Promise<void> {
 	// 🔹 Configuration de CORS
 	fastify.register(fastifyCors, {
-		origin: true, // En développement, permet toutes les origines
-		credentials: true, // Important pour les cookies et les sessions
-		methods: ["GET", "POST", "PUT", "DELETE"]
+		origin: true,
+		credentials: true,
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow incoming Auth header
+		exposedHeaders: ["Authorization"], // ✅ Expose Auth header to browser if needed
 	})
 
 	// 🔹 Configuration des sessions et des cookies
@@ -37,7 +41,8 @@ export async function setupServer(fastify: FastifyInstance): Promise<void> {
 	fastify.register(fastifySession, {
 		secret: randomBytes(32).toString("hex"),
 		cookie: {
-			secure: false, // Mettre `true` en production avec HTTPS
+			maxAge: 8 * 60 * 60 * 1000, // 8h to minutes to seconds to milliseconds
+			secure: true, // Mettre `true` en production avec HTTPS
 			httpOnly: true,
 			sameSite: "lax", // Aide à permettre les requêtes cross-origin avec credentials
 		},
@@ -55,6 +60,9 @@ export async function setupServer(fastify: FastifyInstance): Promise<void> {
 
 	// 🔹 Enregistrement des routes
 	fastify.register(registerRoutes)
+
+	// Start the loop for game state updates
+	GameManager.startGameLoop()
 }
 
 /**
@@ -73,6 +81,9 @@ function registerRoutes(fastify: FastifyInstance, options: FastifyPluginOptions)
 
 	// Enregistrement des routes communes
 	fastify.register(registerCommonRoutes)
+
+	// Enregistrement des routes pour le jeu
+	fastify.register(registerGameRoutes, { prefix: "game/" })
 
 	// Websocket entrypoint
 	fastify.get("/ws", { websocket: true }, handleConnection)

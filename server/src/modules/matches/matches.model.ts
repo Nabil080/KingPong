@@ -15,11 +15,15 @@ export interface Match {
  * Create a new match.
  */
 export function createMatch(match: Match): void {
-	const stmt = db.prepare(`
+	console.log("Creating match:", match)
+	return db
+		.prepare(
+			`
         INSERT INTO matches (player1, player2, winner, score1, score2, duration)
         VALUES (?, ?, ?, ?, ?, ?)
-    `)
-	stmt.run(match.player1, match.player2, match.winner, match.score1, match.score2, match.duration)
+    `,
+		)
+		.run(match.player1, match.player2, match.winner, match.score1, match.score2, match.duration)
 }
 
 /**
@@ -38,7 +42,7 @@ export function getMatchesByUser(username: string): Match[] {
 			`
         SELECT * FROM matches
         WHERE player1 = ? OR player2 = ?
-    `
+    `,
 		)
 		.all(username, username) as Match[]
 }

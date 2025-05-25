@@ -21,7 +21,7 @@ export function getAllUsersWithRelationships(loggedInUserId: number): UserWithRe
 		FROM users u
 		LEFT JOIN user_relationships r
 			ON u.id = r.related_user_id AND r.user_id = ?
-	`
+	`,
 		)
 		.all(loggedInUserId) as UserWithRelationship[]
 }
@@ -51,7 +51,7 @@ export function getUserByIdWithRelationships(loggedInUserId: number, targetId: n
 		LEFT JOIN user_relationships r
 			ON u.id = r.related_user_id AND r.user_id = ?
 		WHERE u.id = ? AND u.status != 'archived'
-	`
+	`,
 		)
 		.get(loggedInUserId, targetId) as UserWithRelationship
 }

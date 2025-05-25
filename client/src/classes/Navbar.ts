@@ -1,33 +1,30 @@
-import { App } from "./App.js"
 import { link } from "../components/buttons.js"
 import { t } from "../translations/translations.js"
 import { getAvatarPath } from "../utils/utils.js"
+import { App } from "./App.js"
 
 export default class Navbar {
 	public root: HTMLElement = document.createElement("nav")
 
 	constructor(private app: App) {
 		// Create the navbar element
-		this.root.className = "border-berry flex items-center justify-between border-b px-[25px]"
-		this.root.style.height = "60px"
+		this.root.className = "border-berry flex items-center justify-between border-b px-[25px] h-[60px]"
 		this.root.innerHTML = /* HTML */ `
 			<!-- Left section: Logo and flag -->
 			<section id="left-nav" class="flex gap-4">
-				<img id="logo" src="/assets/images/logo.png" href="/" data-link class="w-[38px]" alt="KingPong Logo" />
-				<img
-					data-popup="language"
-					id="lang-flag"
-					src="/assets/images/lang/${t("flag")}"
-					class="h-[40px] cursor-pointer"
-					alt="KingPong Flag"
-				/>
+				<a id="home-link" href="/" data-link class="group-event">
+					<img id="logo" src="/assets/images/logo.png" class="w-[38px]" alt="KingPong Logo" />
+				</a>
+				<button id="lang-button" data-popup="language" class="group-event">
+					<img id="lang-flag" src="/assets/images/lang/${t("flag")}" class="h-[40px]" alt="KingPong Flag" />
+				</button>
 			</section>
 
 			<!-- Center section: Navigation buttons -->
 			<section id="center-nav" class="flex items-center justify-center"></section>
 
 			<!-- Right section: User info/login -->
-			<section data-popup id="right-nav" class="hover-effect group flex items-center gap-2 [&>*]:pointer-events-none"></section>
+			<button data-popup id="right-nav" class="hover-effect group flex items-center gap-2 [&>*]:pointer-events-none"></button>
 		`
 	}
 
@@ -47,8 +44,8 @@ export default class Navbar {
 
 		const activeLink = linksContainer.querySelector(`[data-link="${pathname}"]`)
 		const previousActiveLink = linksContainer.querySelector(".active-link")
-		console.log("Active link:", activeLink)
-		console.log("Previous active link:", previousActiveLink)
+		// console.log("Active link:", activeLink)
+		// console.log("Previous active link:", previousActiveLink)
 
 		if (previousActiveLink) {
 			previousActiveLink.classList.remove("active-link")
@@ -69,8 +66,6 @@ export default class Navbar {
 		if (!linksContainer) return
 		linksContainer.innerHTML = `
 			${link(t("pong"), "/")}
-			${link(t("players"), "/players")}
-			${link(t("tournament"), "/tournament")}
 			${link(t("profil"), "/profil", "/profil/:?username")}
 			${link(t("stats"), "/stats", "/stats/:?username")}
 			${link(t("history"), "/history", "/history/:?username")}
@@ -79,8 +74,14 @@ export default class Navbar {
 
 	updateNavbarLoggedState() {
 		const loggedUser = this.app.loggedUser
+		const linksContainer = document.querySelector("nav #center-nav") as HTMLElement
 		const userInfoContainer = document.querySelector("nav #right-nav") as HTMLElement
 		if (!userInfoContainer) return
+
+		linksContainer.innerHTML = /* HTML */ `
+			${link(t("pong"), "/pong")} ${link(t("players"), "/players")} ${link(t("tournament"), "/tournament")}
+			${link(t("profil"), "/profil", "/profil/:?username")}
+		`
 
 		userInfoContainer.innerHTML = loggedUser
 			? /* HTML */ `

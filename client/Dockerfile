@@ -10,15 +10,13 @@ RUN mkdir -p /etc/ssl/private /etc/ssl/certs && \
 	-out /etc/ssl/certs/server.crt \
 	-subj "/C=FR/ST=IDF/L=Paris/O=42/CN=kingpong.42.fr"
 
-COPY package*.json .
+COPY package*.json ./
 
 RUN npm install --verbose
 
 # Add all our files except node_modules from .dockerignore
 COPY . .
 
-ENV PORT=3001
-
-EXPOSE 3001
+EXPOSE ${PORT}
 
 CMD ["npm", "run", "dev"]

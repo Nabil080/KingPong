@@ -1,16 +1,16 @@
-all: copy-translation dev
+all: dev
 
 build:
-	docker compose build
+	docker-compose build
 
 up:
-	docker compose up -d
+	docker-compose up -d
 
 down:
-	docker compose down
+	docker-compose down
 
 dev:
-	docker compose up --build
+	docker-compose up --build
 
 copy-translation:
 	cp client/src/translations/translations.ts server/src/

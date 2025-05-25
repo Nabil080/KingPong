@@ -19,6 +19,9 @@ export function playersTabContentHTML(app: App, tab: playerListTab): string {
 	} else if (tab === "blocked") {
 		users = app.cache.getAllBlockedUsers()
 		emptyMessage = t("noBlocked")
+	} else if (tab === "online") {
+		users = app.cache.getAllOtherOnlineUsers()
+		emptyMessage = t("noOnline")
 	}
 
 	users.sort((a, b) => {
@@ -28,7 +31,7 @@ export function playersTabContentHTML(app: App, tab: playerListTab): string {
 	})
 
 	return (
-		users.map((userData) => playerCard(userData.user, userData.relationship, true)).join("") ||
+		users.map((userData) => playerCard(userData, true)).join("") ||
 		`<div class="h-full w-full flex justify-center items-center">${emptyMessage}</div>`
 	)
 }
@@ -37,14 +40,15 @@ export function playersListHTML(app: App, tab: playerListTab): string {
 	return /* HTML */ `
 		<section class="small-size container">
 			<div data-tab="players-list" class="flex h-[57px] min-h-[57px] w-full text-xl font-bold">
-				${tabItem("all", t("players"), tab === "all", "w-1/2")} ${tabItem("friends", t("friends"), tab === "friends", "w-1/2")}
+				${tabItem("all", t("players"), tab === "all", "w-1/2 rounded-tl-lg")}
+				${tabItem("friends", t("friends"), tab === "friends", "w-1/2 rounded-tr-lg")}
 			</div>
 			<div class="p-4">
 				<input
 					id="player-search"
 					type="text"
 					placeholder="${t("search")}"
-					class="focus:ring-berry w-full border px-4 py-2 focus:outline-none focus:ring-2"
+					class="focus:ring-berry w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2"
 				/>
 			</div>
 			<div data-tab-content="players-list" id="players-list" class="no-scrollbar h-full w-full overflow-y-scroll text-sm">
@@ -88,4 +92,15 @@ export function renderPlayers(app: App): void {
 	})
 
 	app.showBackground()
+}
+
+export function onlinePlayersPopup(app: App): void {
+	const html = /* HTML */ `
+		<section class="small-size no-scrollbar container h-full w-full overflow-y-scroll text-sm">${playersTabContentHTML(app, "online")}</section>
+	`
+
+	// Default tab
+	app.popup.open(html)
+	initPlayerButtonEvents(app)
+	initSearchInputEvent()
 }

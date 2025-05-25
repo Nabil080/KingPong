@@ -1,5 +1,6 @@
 import { App } from "./App.js"
-import Game from "./Game/Game.js"
+
+export type ContentType = string | HTMLElement
 
 export default class Content {
 	public root: HTMLElement = document.createElement("main")
@@ -13,15 +14,22 @@ export default class Content {
 	}
 
 	render() {
-		this.root.style.height = `${window.innerHeight - this.app.navbar.root.clientHeight - 1}px`
+		// this.root.style.height = `${window.innerHeight - this.app.navbar.root.clientHeight - 1}px`
+		this.root.style.height = `calc(100vh - ${this.app.navbar.root.clientHeight + 1}px)`
 		// Append the main content element to the body
 		document.body.appendChild(this.root)
 	}
 
 	// Change the content of the main element
-	setContent(content: string) {
+	// This function can take a string or an HTMLElement as an argument
+	setContent(content: ContentType) {
 		if (this.root) {
-			this.root.innerHTML = content
+			if (typeof content === "string") {
+				this.root.innerHTML = content
+			} else if (content instanceof HTMLElement) {
+				this.root.innerHTML = ""
+				this.root.appendChild(content)
+			}
 		}
 	}
 

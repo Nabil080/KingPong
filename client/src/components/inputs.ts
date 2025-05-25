@@ -1,4 +1,10 @@
-function input(type: string, name: string, label: string, attributes: string = ""): string {
+function input(
+	type: string,
+	name: string,
+	label: string,
+	attributes: string = "",
+	classList: string = "w-full border-2 border-violet/50 hover:border-violet px-4 py-2 h-[42px] focus:outline-none focus:ring-2 focus:ring-berry rounded-lg text-eerie bg-white/95 shadow-sm transition-all duration-200",
+): string {
 	return /* HTML */ `
 		<div class="flex flex-col">
 			<input
@@ -6,8 +12,8 @@ function input(type: string, name: string, label: string, attributes: string = "
 				id="${name}-input"
 				name="${name}"
 				${attributes}
-				class="placeholder:text-grey-400 focus:ring-berry w-full border border-gray-300 px-4 py-1.5 focus:outline-none focus:ring-2"
-				placeholder="${label}"
+				class="${classList}"
+				${type === "reset" ? `value="${label}"` : `placeholder="${label}"`}
 			/>
 		</div>
 	`
@@ -19,6 +25,16 @@ export function textInput(name: string, label: string, attributes: string = ""):
 
 export function passwordInput(name: string, label: string, attributes: string = ""): string {
 	return input("password", name, label, attributes)
+}
+
+export function resetInput(name: string, label: string, attributes: string = ""): string {
+	return input(
+		"reset",
+		name,
+		label,
+		attributes,
+		"bg-gradient-to-r from-violet to-berry hover:opacity-90 active:opacity-100 active:scale-[0.99] h-[42px] w-full border-none text-base font-semibold text-white rounded-lg shadow-md transition-all duration-200",
+	)
 }
 
 export function errorDiv(): string {

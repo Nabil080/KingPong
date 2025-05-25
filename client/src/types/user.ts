@@ -26,5 +26,6 @@ export type RelationshipType = "friend" | "blocked" | null
 export type UserData = {
 	user: User
 	chats: Array<Chat>
+	unreadMessages?: number
 	relationship: RelationshipType
 }

@@ -1,6 +1,5 @@
-import fs from "fs"
-import path from "path"
 import { promises as fsPromises } from "fs"
+import path from "path"
 import { updateUserAvatar } from "../modules/auth/auth.service.js"
 
 export async function uploadAvatar(userId: number, avatar: { data: string; mimeType: string; filename: string }) {

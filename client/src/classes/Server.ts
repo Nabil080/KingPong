@@ -1,34 +1,43 @@
 import { connectPopup } from "../content/connect_popup.js"
-import { t } from "../translations/translations.js"
 import { RelationshipType, User } from "../types/user.js"
+import { GameStateReply } from "../types/websocket.js"
 import { fileToBase64 } from "../utils/forms.js"
 import { App } from "./App.js"
+import Game, { newGameFromStateReply } from "./Game/Game.js"
+
 export default class Server {
 	static URL: string
 	isLoggedIn: boolean = false
+	token: string | null = null
 
 	constructor(private app: App) {
-		// Update the user if there is a session
+		// Restore token from localStorage if present
+		this.token = localStorage.getItem("jwt")
 		this.startSession()
 	}
 
-	async sendServerRequest(endpoint: string, method: string, body?: any): Promise<any> {
+	public async sendServerRequest(endpoint: string, method: string, body?: any): Promise<any> {
 		try {
+			const headers: Record<string, string> = {}
+
+			// Include JWT token if available
+			if (this.token) {
+				headers["Authorization"] = `Bearer ${this.token}`
+			}
 			const options: RequestInit = {
 				method,
-				credentials: "include", // Include cookies for authentication
+				credentials: "include",
+				headers,
 			}
 
-			// Only include the body if it is provided
+			// Only set Content-Type and body if there is a body
 			if (body) {
+				headers["Content-Type"] = "application/json"
 				options.body = JSON.stringify(body)
-				options.headers = { "Content-type": "application/json" }
 			}
 
 			const res = await fetch(`${Server.URL}${endpoint}`, options)
-
 			const data = await res.json()
-			console.log("Server response:", data)
 
 			if (!res.ok) {
 				throw new Error(data.error || "Une erreur est survenue lors de la requête.")
@@ -41,42 +50,59 @@ export default class Server {
 		}
 	}
 
-	async getSessionUser(): Promise<User | undefined> {
-		try {
-			const data = await this.sendServerRequest("/auth/me", "GET")
-
-			if (data.loggedIn) {
-				return data.user
-			} else {
-				return undefined
-			}
-		} catch (error) {
-			console.error("Session check error:", error)
-			return undefined
-		}
-	}
+	// ------------------ SESSION ------------------
 
 	async loginRequest(username: string, password: string): Promise<any> {
-		try {
-			const data = await this.sendServerRequest("/auth/login", "POST", { username, password })
+		const data = await this.sendServerRequest("/auth/login", "POST", { username, password })
 
-			if (data.success) this.startSession()
-
-			return data
-		} catch (error) {
-			console.error("Login error:", error)
-			return { error: `${t("connectError")}` }
+		if (data.success) {
+			this.token = data.token
+			if (this.token) localStorage.setItem("jwt", this.token)
+			await this.startSession()
 		}
+
+		return data
 	}
 
-	async startSession(): Promise<any> {
+	async googleLoginRequest(credential: string): Promise<any> {
+		const data = await this.sendServerRequest("/auth/google", "POST", {
+			credential,
+		})
+
+		if (data.success && data.token) {
+			this.token = data.token
+			if (this.token) {
+				localStorage.setItem("jwt", this.token)
+			}
+
+			await this.startSession()
+		}
+
+		return data
+	}
+
+	async logoutRequest(): Promise<any> {
+		const data = await this.sendServerRequest("/auth/logout", "POST")
+
+		if (data.success) {
+			this.token = null
+			localStorage.removeItem("jwt")
+			await this.stopSession()
+		}
+
+		return data
+	}
+
+	async startSession(): Promise<void> {
+		console.warn("Starting session")
 		this.app.loggedUser = await this.getSessionUser()
+
 		if (this.app.loggedUser) {
-			// Connect to the websocket server
 			await this.app.websocket.sendConnectMessage()
 			this.isLoggedIn = true
-			// Update the cache
 			await this.app.cache.fetchAllUsers()
+			// If a game is already in progress, fetch the game state
+			await this.gameStateRequest()
 			// Update the view
 			this.app.navbar.updateNavbarLoggedState()
 			this.app.router.renderCurrentPage()
@@ -85,108 +111,66 @@ export default class Server {
 		}
 	}
 
-	public async logoutRequest(): Promise<any> {
-		try {
-			const data = await this.sendServerRequest("/auth/logout", "POST")
+	async stopSession(): Promise<void> {
+		console.warn("Stopping session")
+		if (!this.isLoggedIn) return
 
-			if (data.success) this.stopSession()
-
-			return data
-		} catch (error) {
-			console.error("Logout error:", error)
-			return { error: `${t("logoutError")}` }
-		}
-	}
-
-	async stopSession(): Promise<any> {
-		if (this.isLoggedIn === false) return
-		// Disconnect from the websocket server
 		await this.app.websocket.sendLogoutMessage()
 		this.isLoggedIn = false
 		this.app.loggedUser = undefined
-		// Update the cache
 		await this.app.cache.fetchAllUsers()
+		// Reset the game
+		this.app.game = undefined
 		// Update the view
 		this.app.navbar.updateNavbarLoggedState()
 		this.app.router.renderCurrentPage()
+		this.app.notifications.clearNotifications()
 	}
+
+	private async getSessionUser(): Promise<User | undefined> {
+		const data = await this.sendServerRequest("/auth/me", "GET")
+		return data.loggedIn ? data.user : undefined
+	}
+
+	// ------------------ AUTH ------------------
 
 	async registerRequest(username: string, password: string, avatarFile?: File | null): Promise<any> {
-		try {
-			// Prepare the request body
-			const requestBody: any = { username, password }
+		const requestBody: any = { username, password }
 
-			// If there's an avatar file, convert it to base64 and add it to the request
-			if (avatarFile) {
-				// Read the file as base64
-				const base64Avatar = await fileToBase64(avatarFile)
-
-				// Add the avatar data and file type to the request
-				requestBody.avatar = {
-					data: base64Avatar,
-					mimeType: avatarFile.type,
-					filename: avatarFile.name,
-				}
+		if (avatarFile) {
+			const base64Avatar = await fileToBase64(avatarFile)
+			requestBody.avatar = {
+				data: base64Avatar,
+				mimeType: avatarFile.type,
+				filename: avatarFile.name,
 			}
-
-			const data = await this.sendServerRequest("/auth/register", "POST", requestBody)
-
-			if (data.success) {
-				// Auto login after successful registration
-				return this.loginRequest(username, password)
-			}
-
-			return data
-		} catch (error) {
-			console.error("Register error:", error)
-			return { error: `${t("registError")}` }
 		}
+
+		const data = await this.sendServerRequest("/auth/register", "POST", requestBody)
+
+		if (data.success) {
+			return this.loginRequest(username, password)
+		}
+
+		return data
 	}
 
-	// ------------------ UPDATE REQUESTS ------------------
+	// ------------------ USER UPDATE ------------------
+
 	async updateUsername(newUsername: string): Promise<any> {
 		return this.sendServerRequest("/users/update/username", "POST", { username: newUsername })
 	}
 
-	async unblockUser(userId: number): Promise<any> {
-		return this.sendServerRequest(`/users/unblock/${userId}`, "DELETE")
-	}
-
-	async modifyRelationshipRequest(targetId: number, relationship: RelationshipType) {
-		if (this.isLoggedIn === false) {
-			connectPopup(this.app)
-			return
-		}
-
-		try {
-			const data = await this.sendServerRequest("/users/update/relationship", "POST", {
-				targetId,
-				relationship,
-			})
-
-			if (data.success) {
-				// update the cache
-				this.app.cache.updateRelationship(targetId, relationship)
-				// update the UI
-				this.app.router.renderCurrentPage()
-			}
-		} catch (err) {
-			console.error("Error updating relationship:", err)
-		}
-	}
-
 	async updateAvatar(avatarFile: File): Promise<any> {
-		// Read the file as base64
 		const base64Avatar = await fileToBase64(avatarFile)
 
-		// Add the avatar data and file type to the request
-		const avatarBody = {
-			data: base64Avatar,
-			mimeType: avatarFile.type,
-			filename: avatarFile.name,
-		}
-
-		return this.sendServerRequest("/users/update/avatar", "POST", { avatar: avatarBody })
+		return this.sendServerRequest("/users/update/avatar", "POST", {
+			avatar: {
+				data: base64Avatar,
+				mimeType: avatarFile.type,
+				filename: avatarFile.name,
+			},
+		})
 	}
 
 	async updatePassword(oldPassword: string, newPassword: string): Promise<any> {
@@ -194,5 +178,47 @@ export default class Server {
 			oldPassword,
 			newPassword,
 		})
+	}
+
+	// ------------------ RELATIONSHIPS ------------------
+
+	async modifyRelationshipRequest(targetId: number, relationship: RelationshipType) {
+		if (!this.isLoggedIn) {
+			connectPopup(this.app)
+			return
+		}
+
+		const data = await this.sendServerRequest("/users/update/relationship", "POST", {
+			targetId,
+			relationship,
+		})
+
+		if (data.success) {
+			this.app.cache.updateRelationship(targetId, relationship)
+			this.app.router.renderCurrentPage()
+		}
+	}
+
+	async unblockUser(userId: number): Promise<any> {
+		return this.sendServerRequest(`/users/unblock/${userId}`, "DELETE")
+	}
+
+	// ------------------ GAME STATE ------------------
+
+	async gameStateRequest(): Promise<any> {
+		if (!this.isLoggedIn) {
+			return
+		}
+
+		const data = (await this.sendServerRequest("/game/state", "GET")) as GameStateReply
+
+		if (data.type === "gameState") {
+			this.app.game = newGameFromStateReply(this.app, data)
+			this.app.websocket.handleGameStateReply(data)
+		} else {
+			this.app.game = new Game(this.app)
+		}
+
+		return data
 	}
 }

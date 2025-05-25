@@ -1,11 +1,12 @@
 import { App } from "../classes/App.js"
-import { GameUserType } from "../classes/Game/Game.js"
-import { GameBot } from "../classes/Game/GameBot.js"
-import { app } from "../index.js"
-import { RelationshipType, User } from "../types/user.js"
+import Game from "../classes/Game/Game.js"
+import { DEFAULT_LOCAL_1 } from "../types/player.js"
+import { UserData } from "../types/user.js"
 import { getAvatarPath } from "../utils/utils.js"
 
-export function playerCard(user: User, relationship: RelationshipType = null, showChat: boolean = true): string {
+export function playerCard(userData: UserData, showChat: boolean = true): string {
+	const { user, relationship, unreadMessages } = userData
+
 	const addButton =
 		relationship != "friend"
 			? `<img src="/assets/images/icons/add.png" class="w-[24px]" alt="Add friend" data-action="friend" data-user-id="${user.id}" />`
@@ -19,16 +20,23 @@ export function playerCard(user: User, relationship: RelationshipType = null, sh
 		<article
 			data-player-card=${user.id}
 			data-username=${user.username}
-			class="border-berry flex h-[55.9px] w-full items-center justify-between border-b px-4"
+			class="border-berry flex min-h-[55.9px] w-full items-center justify-between border-b px-4"
 		>
-			<div id="user-info" class="group relative flex items-center gap-4" data-link href="/profil/${user.username}">			
-			<img src="${getAvatarPath(user.avatar)}" class="avatar hover-effect pointer-events-none w-9" alt="${user.username}" />
-			<div data-status="${user.status}" class="avatar pointer-events-none absolute left-6 top-6 w-3"></div>
+			<div id="user-info" class="group flex items-center gap-4" data-link href="/profil/${user.username}">
+				<div class="relative">
+					<img src="${getAvatarPath(user.avatar)}" class="avatar hover-effect pointer-events-none w-9" alt="${user.username}" />
+					<div data-status="${user.status}" class="avatar pointer-events-none absolute bottom-0 right-0 w-3"></div>
+				</div>
 				<span class="pointer-events-none w-[9ch] truncate font-bold">${user.username}</span>
 			</div>
 			<div id="user-buttons" class="flex items-center gap-4">
 				${showChat
-					? `<img src="/assets/images/icons/msg.png" class="w-[24px] cursor-pointer" alt="Message" href="/chat/${user.id}" data-link >`
+					? /*HTML*/ `
+						<button class="hover-effect relative">
+							<img src="/assets/images/icons/msg.png" class="w-[24px]" alt="Message"  data-link href="/chat/${user.id}">
+							<div data-unread="${user.id}" class="${unreadMessages ? "" : "hidden"} absolute w-2 bottom-0 right-0 avatar pointer-events-none bg-orange-500"></div>
+						</button>
+					`
 					: ""}
 				<img src="/assets/images/icons/defy.png" class="w-[24px] cursor-pointer" alt="Defy" data-action="defy" data-user-id="${user.id}" />
 				<button class="hover-effect">${addButton}</button>
@@ -47,7 +55,7 @@ export function switchPlayerCardStatus(app: App, id: number, newStatus: "online"
 		// console.log("New player card user data : ", userData)
 		if (!userData) return
 
-		const cardHTML: string = playerCard(userData.user, userData.relationship, true)
+		const cardHTML: string = playerCard(userData, true)
 
 		playerCardElem = document.createElement("div")
 		playerCardElem.innerHTML = cardHTML
@@ -59,15 +67,15 @@ export function switchPlayerCardStatus(app: App, id: number, newStatus: "online"
 
 	// Update the status attribute
 	statusDiv.setAttribute("data-status", newStatus)
-	//console.log(`New status for ${id} : ${newStatus}`)
+	// console.log(`New status for ${id} : ${newStatus}`)
 
 	// moves the card to the new position
 	const playersList = document.getElementById("players-list")
 	if (!playersList) return
 
-	console.log(playerCardElem)
+	// console.log(playerCardElem)
 	playerCardElem.remove()
-	console.log(playerCardElem)
+	// console.log(playerCardElem)
 
 	if (newStatus === "online") {
 		// Find the first offline card to insert before it
@@ -82,6 +90,12 @@ export function switchPlayerCardStatus(app: App, id: number, newStatus: "online"
 		// Append to the end (offline area)
 		playersList.appendChild(playerCardElem)
 	}
+}
+
+export function addUnreadMessage(app: App, userId: number) {
+	const unreadDiv = document.querySelector(`[data-unread="${userId}"]`) as HTMLElement
+	if (!unreadDiv) return
+	unreadDiv.classList.remove("hidden")
 }
 
 export function initPlayerButtonEvents(app: App) {
@@ -118,7 +132,7 @@ export function initPlayerButtonEvents(app: App) {
 						break
 					case "defy":
 						// Send a game invitation via WebSocket
-						handleDefy(targetId, username)
+						handleDefy(app, targetId, username)
 						break
 				}
 			}
@@ -126,10 +140,28 @@ export function initPlayerButtonEvents(app: App) {
 	})
 }
 
-// Handle defy action (game invitation)
-function handleDefy(targetId: number, username: string) {
-	// // Send the invite via WebSocket
-	// sendInvite(targetId)
-	// // Show a notification that the invitation was sent
-	// notif(`${t("inviteSentTo")} ${username}`)
+// Handle defy action (redirects to pre-configured game)
+function handleDefy(app: App, targetId: number, username: string) {
+	if (!app.isLoggedIn()) {
+		app.popup.callHandler("connect")
+		return
+	}
+
+	// Can't defy if already in a remote game
+	if (app.game?.gameMode === "remote") {
+		app.router.navigate("/pong")
+		return
+	}
+
+	const targetUser = app.cache.getUser(targetId)
+	if (!targetUser) return
+
+	if (targetUser.user.status !== "online") {
+		app.notifications.userIsOfflineNotification(targetId)
+		return
+	}
+	app.game = new Game(app)
+	app.game.setPlayer(1, app.loggedUser ? { type: "remote", user: app.loggedUser } : DEFAULT_LOCAL_1)
+	app.game.setPlayer(2, { type: "remote", user: targetUser.user })
+	app.router.navigate("/pong")
 }

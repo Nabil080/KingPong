@@ -1,17 +1,52 @@
 import { App } from "../classes/App.js"
-import { baseButton, customButton } from "../components/buttons.js"
-import { setLang } from "../translations/translations.js"
-
-const langButton = (key: string, label: string) =>
-	/* HTML */ ` <button class="bg-violet hover:bg-berry w-full py-2 pl-[65px] text-left" data-lang="${key}">${label}</button>`
+import { langButton } from "../components/buttons.js"
+import { getLang, setLang } from "../translations/translations.js"
 
 export function languagePopupHTML(): string {
+	const currentLang = getLang()
+
+	const allLanguages = [
+		{ code: "fr", label: "🇫🇷 Français" },
+		{ code: "en", label: "🇬🇧 English" },
+		{ code: "ar", label: "🇲🇦 عربي" },
+		{ code: "ch", label: "🇨🇳 中文" },
+		{ code: "ta", label: "🇱🇰 தமிழ்" },
+	]
+
+	const currentLanguage = allLanguages.find((lang) => lang.code === currentLang)
+	const otherLanguages = allLanguages.filter((lang) => lang.code !== currentLang)
+
 	const content = /* HTML */ `
 		<section class="small-size container">
 			<div class="mx-6 my-auto space-y-4 text-lg font-bold">
-				${customButton("🇫🇷 Français", "bg-violet", "data-lang='fr'")} ${customButton("🇬🇧 English", "bg-violet", "data-lang='en'")}
-				${customButton("🇨🇳 中文", "bg-violet", "data-lang='ch'")} ${customButton("🇱🇰 தமிழ்", "bg-violet", "data-lang='ta'")}
-				${customButton("🇩🇿 عربي", "bg-violet", "data-lang='ar'")}
+				<!-- Current language first -->
+				${currentLanguage ? langButton(currentLanguage.code, currentLanguage.label) : ""}
+
+				<!-- Other languages below -->
+				<div class="flex gap-4">
+					${otherLanguages
+						.slice(0, 2)
+						.map((lang) => langButton(lang.code, lang.label))
+						.join("")}
+				</div>
+				${otherLanguages.length > 2
+					? `
+				<div class="flex gap-4">
+					${otherLanguages
+						.slice(2, 4)
+						.map((lang) => langButton(lang.code, lang.label))
+						.join("")}
+				</div>`
+					: ""}
+				${otherLanguages.length > 4
+					? `
+				<div class="flex gap-4">
+					${otherLanguages
+						.slice(4)
+						.map((lang) => langButton(lang.code, lang.label))
+						.join("")}
+				</div>`
+					: ""}
 			</div>
 		</section>
 	`

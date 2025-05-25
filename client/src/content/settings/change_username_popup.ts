@@ -2,7 +2,7 @@ import { App } from "../../classes/App.js"
 import { baseButton, popupLink } from "../../components/buttons.js"
 import { errorDiv, textInput } from "../../components/inputs.js"
 import { t } from "../../translations/translations.js"
-import { hideError, USER_LEN, showError } from "../../utils/forms.js"
+import { hideError, showError, USER_LEN } from "../../utils/forms.js"
 
 export function changeUsernamePopup(app: App) {
 	app.popup.open(changeUsernamePopupHTML())

@@ -1,39 +1,57 @@
-import { Paddle } from "./Elements/Paddle.js"
+import { updateGameButtons } from "../../content/pong/buttons.js"
 import { Ball } from "./Elements/Ball.js"
+import { Paddle } from "./Elements/Paddle.js"
 import Game from "./Game.js"
 
-export class GameState {
+export default class GameState {
 	public score1: number = 0
 	public score2: number = 0
 	public paddle1: Paddle
 	public paddle2: Paddle
 	public ball: Ball
 
-	constructor(public game: Game, private canvas: HTMLCanvasElement) {
-		const canvasWidth = canvas.width
-		const canvasHeight = canvas.height
-
-		// Initialize paddles
-		this.paddle1 = new Paddle(10, canvasHeight / 2 - 50, canvasWidth * 0.02, canvasHeight * 0.2, canvasHeight)
-		this.paddle2 = new Paddle(canvasWidth - 20, canvasHeight / 2 - 50, canvasWidth * 0.02, canvasHeight * 0.2, canvasHeight)
-
-		// Initialize ball
-		this.ball = new Ball(this.game, canvasWidth / 2, canvasHeight / 2, Math.min(canvasWidth, canvasHeight) * 0.02, 6, 0, canvasWidth, canvasHeight)
+	constructor(public game: Game) {
+		this.paddle1 = new Paddle(this.game, true)
+		this.paddle2 = new Paddle(this.game, false)
+		this.ball = new Ball(this.game)
 	}
 
-	// Updates the game state
-	public update() {
-		this.ball.update(this.paddle1, this.paddle2)
-
-		// Constrain paddles to the canvas
-		this.paddle1.constrain()
-		this.paddle2.constrain()
+	reset() {
+		this.paddle1.setInitialState()
+		this.paddle2.setInitialState()
+		this.ball.setInitialState()
+		this.score1 = 0
+		this.score2 = 0
 	}
 
-	// Resets the game state
-	public reset() {
-		this.paddle1.reset()
-		this.paddle2.reset()
-		this.ball.reset()
+	update() {
+		if (this.game.currentStep != "playing") return
+		this.game.inputs.update() // Handle player inputs
+		this.ball.update() // Handle ball direction
+		this.updateBots() // Move the paddles if they are bots
+	}
+
+	addPoint(playerNumber: number) {
+		if (playerNumber === 1) {
+			this.score1++
+			if (this.score1 >= this.game.options.maxScore) this.setWinner(1)
+		} else if (playerNumber === 2) {
+			this.score2++
+			if (this.score2 >= this.game.options.maxScore) this.setWinner(2)
+		}
+		this.ball.setInitialState()
+	}
+
+	setWinner(playerNumber: number) {
+		if (playerNumber === 1) this.game.winner = this.game.player1
+		else if (playerNumber === 2) this.game.winner = this.game.player2
+		this.game.currentStep = "done"
+		updateGameButtons(this.game)
+	}
+
+	updateBots() {
+		if (this.game.currentStep != "playing") return
+		if (this.game.player1?.type === "bot") this.paddle1.updateBot(this.game.player1.difficulty)
+		if (this.game.player2?.type === "bot") this.paddle2.updateBot(this.game.player2.difficulty)
 	}
 }

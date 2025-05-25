@@ -12,6 +12,8 @@ services:
             - "8080:8080"
         # dev command
         command: npm run dev
+        env_file:
+            - ./server/.env
         environment: # for logs
             - TZ=Europe/Paris
     client:
@@ -22,7 +24,7 @@ services:
             - ./client:/app
             - /app/node_modules
         ports:
-            - "3001:3001"
+            - "3000:3001"
         # dev command
         command: npm run dev
         # Makes tailwind --watch work (I don't know why)

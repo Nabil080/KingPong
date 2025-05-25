@@ -1,15 +1,19 @@
 import { App } from "../classes/App.js"
+import { GoogleButton } from "../classes/GoogleButton.js"
 import { baseButton } from "../components/buttons.js"
-import { errorDiv, textInput, passwordInput } from "../components/inputs.js"
+import { errorDiv, passwordInput, textInput } from "../components/inputs.js"
 import { t } from "../translations/translations.js"
-import { USER_LEN, PASS_LEN, validateAvatarInput, showError, hideError } from "../utils/forms.js"
+import { hideError, PASS_LEN, showError, USER_LEN, validateAvatarInput } from "../utils/forms.js"
 
 function registerPopupHTML(): string {
 	const content = /* HTML */ `
 		<section class="small-size container">
 			<div class="flex h-[57px] w-full text-xl font-bold">
-				<button class="bg-berry w-1/2 px-4 py-2">${t("register")}</button>
-				<button class="bg-violet hover:bg-berry flex w-1/2 cursor-pointer items-center justify-center px-4 py-2" data-popup="connect">
+				<button class="bg-berry w-1/2 rounded-tl-lg px-4 py-2">${t("register")}</button>
+				<button
+					class="bg-violet hover:bg-berry flex w-1/2 cursor-pointer items-center justify-center rounded-tr-lg px-4 py-2"
+					data-popup="connect"
+				>
 					${t("connect")}
 				</button>
 			</div>
@@ -19,13 +23,13 @@ function registerPopupHTML(): string {
 				<div>
 					<div class="flex w-full items-center">
 						<span
-							class="flex h-full flex-grow items-center truncate border-gray-300 bg-white px-4 py-1.5 text-gray-400"
+							class="flex h-full w-1/2 flex-grow items-center truncate rounded-bl-lg rounded-tl-lg border-gray-300 bg-white px-4 py-1.5 text-gray-400"
 							id="fileNameDisplay"
 							>${t("avatar")}</span
 						>
 						<button
 							type="button"
-							class="bg-berry h-full px-4 py-1.5 duration-300 hover:bg-opacity-80"
+							class="bg-berry h-full w-1/2 rounded-br-lg rounded-tr-lg px-4 py-1.5 duration-300 hover:bg-opacity-80"
 							onclick="document.getElementById('hiddenFile').click()"
 						>
 							${t("browse")}
@@ -47,7 +51,9 @@ function registerPopupHTML(): string {
 						<span class="text-sm text-gray-500">ou</span>
 						<div class="h-px flex-grow bg-gray-300"></div>
 					</div>
-					<div id="google-signin-button" class="w-full"></div>
+					<div id="google-signin-container" class="flex w-full items-center justify-center">
+						<div id="google-signin-button" class="w-full"></div>
+					</div>
 				</div>
 			</form>
 		</section>
@@ -78,10 +84,14 @@ function addFormEvent(app: App) {
 		// Hide any previous error
 		hideError(registerForm)
 
+		const alphanumericRegex = /^[a-zA-Z0-9]+$/
+
 		// Validation
 		try {
 			if (!username || !password || !confirmPassword) {
 				throw t("allField")
+			} else if (!alphanumericRegex.test(username)) {
+				throw t("usernameAlphanumericOnly")
 			} else if (username.length < USER_LEN.min) {
 				throw t("nameMinimum")
 			} else if (username.length > USER_LEN.max) {
@@ -93,7 +103,6 @@ function addFormEvent(app: App) {
 			} else if (password !== confirmPassword) {
 				throw t("notSamePass")
 			}
-
 			validateAvatarInput(avatarFile)
 
 			// Pass avatar file to register function
@@ -111,5 +120,11 @@ function addFormEvent(app: App) {
 
 export function registerPopup(app: App) {
 	app.popup.open(registerPopupHTML())
+
+	const googleButton = document.getElementById("google-signin-button") as HTMLElement
+	if (googleButton) {
+		new GoogleButton(app.server, googleButton)
+	}
+
 	addFormEvent(app)
 }

@@ -1,6 +1,5 @@
 import { App } from "../classes/App.js"
 import { initPlayerButtonEvents, playerCard } from "../components/player_card.js"
-import { t } from "../translations/translations.js"
 import { routeParams } from "../types/routes.js"
 import { Chat, UserData } from "../types/user.js"
 import { ChatMessage, ChatReply } from "../types/websocket.js"
@@ -10,16 +9,16 @@ function chatHTML(userData: UserData): string {
 
 	return /* HTML */ `
 		<section class="small-size container">
-			<div class="flex h-[57px] w-full text-sm font-bold">${playerCard(user, userData.relationship, false)}</div>
+			<div class="flex h-[57px] w-full text-sm font-bold">${playerCard(userData, false)}</div>
 			<div class="flex h-[calc(100%-57px)] flex-col justify-between">
 				<div id="chatMessages" data-dummy="true" class="no-scrollbar m-5 flex flex-col gap-5 overflow-y-auto text-sm">
-					<div class="bg-berry ml-auto h-[32px] w-1/2"></div>
-					<div class="bg-violet h-[32px] w-1/2"></div>
-					<div class="bg-berry ml-auto h-[32px] w-1/2"></div>
-					<div class="bg-violet h-[32px] w-1/2"></div>
-					<div class="bg-berry ml-auto h-[32px] w-1/2"></div>
-					<div class="bg-violet h-[32px] w-1/2"></div>
-					<div class="bg-berry ml-auto h-[32px] w-1/2"></div>
+					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-violet h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-violet h-[32px] w-1/2" rounded-lg></div>
+					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-violet h-[32px] w-1/2 rounded-lg"></div>
+					<div class="bg-berry ml-auto h-[32px] w-1/2 rounded-lg"></div>
 				</div>
 				<form id="chatForm" class="flex">
 					<input
@@ -48,9 +47,8 @@ function isInCorrectChatPage(app: App, chatMessage: Chat) {
 		if (path[1] === "chat" && Number(path[2]) === chatMessage.senderId) {
 			return true
 		} else {
-			const userData = app.cache.getUser(chatMessage.senderId)
-			const username = userData?.user?.username || chatMessage.senderId.toString()
-			// notif(`${username} ${t("sendMessage")}`, true)
+			// Send a notification
+			app.notifications.chatNotification(chatMessage.senderId, chatMessage.message)
 			return false
 		}
 	} else {
@@ -71,7 +69,7 @@ export function appendNewChatMessage(app: App, chatMessage: Chat) {
 
 	const messageDiv = document.createElement("div")
 	// Layout
-	messageDiv.classList.add("inline-block", "p-2", "w-fit", "max-w-[90%]", "break-words")
+	messageDiv.classList.add("inline-block", "p-2", "w-fit", "max-w-[90%]", "break-words", "rounded-lg")
 
 	if (isReply(chatMessage)) {
 		messageDiv.classList.add("bg-violet")
@@ -112,7 +110,7 @@ function initChatEvents(app: App) {
 }
 
 export function switchChatInput(id: number, enable: boolean) {
-	//console.log(`Switching ${id} to be ${enable}`)
+	// console.log(`Switching ${id} to be ${enable}`)
 	// Check that we're in the correct chat
 	const messageInput = document.querySelector(`#messageInput`) as HTMLInputElement
 	const messageSubmit = document.querySelector(`#messageSubmit`) as HTMLButtonElement
@@ -147,4 +145,7 @@ export function renderChat(app: App, params?: routeParams) {
 	app.cache.getConversation(Number(params.id))?.forEach((chat) => appendNewChatMessage(app, chat))
 	initPlayerButtonEvents(app)
 	initChatEvents(app)
+
+	// Remove the notification if it exists
+	app.notifications.removeChatNotificationFromUser(id)
 }

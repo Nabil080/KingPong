@@ -75,7 +75,7 @@ const getMatchesByUserSchema = {
 }
 
 export async function registerMatchesRoutes(fastify: FastifyInstance) {
-	fastify.post("/", { schema: createMatchSchema }, createMatchHandler) // Create a new match
-	fastify.get("/", { schema: getAllMatchesSchema }, getAllMatchesHandler) // Retrieve all matches
+	fastify.post("/create", { schema: createMatchSchema }, createMatchHandler) // Create a new match
+	fastify.get("/all", { schema: getAllMatchesSchema }, getAllMatchesHandler) // Retrieve all matches
 	fastify.get("/:username", { schema: getMatchesByUserSchema }, getMatchesByUserHandler) // Retrieve matches for a specific user
 }

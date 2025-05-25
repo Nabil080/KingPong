@@ -1,10 +1,12 @@
+import { EASY_BOT } from "../types/player.js"
 import { App } from "./App.js"
 import Game from "./Game/Game.js"
+// import Game from "./Game/Game.js"
 
 export default class Background {
 	private root: HTMLElement
 	private canvas: HTMLCanvasElement
-	private game: Game | null = null
+	public game: Game
 
 	constructor(private app: App) {
 		// Create the root element
@@ -18,33 +20,33 @@ export default class Background {
 		// Append the canvas to the body
 		this.root.appendChild(this.canvas)
 		document.body.appendChild(this.root)
+
+		// Initialize the game
+		this.game = new Game(this.app)
+		this.game.setPlayer(1, EASY_BOT)
+		this.game.setPlayer(2, EASY_BOT)
+		this.game.player1Ready = true
+		this.game.updateCurrentStep()
+		this.game.options.maxScore = 99999999
 	}
 
 	render() {
 		this.root.style.top = this.app.navbar.root.clientHeight - 1 + "px"
 		this.root.style.height = `${window.innerHeight - this.app.navbar.root.clientHeight - 1}px`
-		// Initialize the game
-		this.game = new Game(this.canvas)
-		this.game.setUpdateState(true)
 	}
 
 	// Show the background (start drawing)
 	show() {
-		this.root.style.display = "flex"
-		this.app.content.root.style.position = "relative"
-		this.app.content.root.style.zIndex = "1"
-		this.app.content.root.style.backdropFilter = "blur(5px)"
-		if (this.game) {
-			this.game.setRenderState(true)
-		}
+		this.root.classList.remove("hidden")
+		this.root.classList.add("flex")
+		this.app.content.root.classList.add("relative", "z-10", "backdrop-blur-sm")
+		this.game.renderer.setCanvas(this.canvas)
 	}
 
 	// Hide the background (stop drawing)
 	hide() {
-		this.root.style.display = "none"
-		this.app.content.root.style.backdropFilter = "none"
-		if (this.game) {
-			this.game.setRenderState(false)
-		}
+		this.root.classList.add("hidden")
+		this.app.content.root.classList.remove("backdrop-blur-sm")
+		this.game.renderer.unsetCanvas()
 	}
 }

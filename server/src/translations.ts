@@ -1,5 +1,11 @@
 export const translations = {
 	fr: {
+		chooseOpponent: "Choisir un adversaire",
+		chooseOptions: "Choisir les options",
+		seeOptions: "Voir les options",
+		validate: "Valider",
+		ready: "Prêt",
+		notReady: "Pas prêt",
 		pong: "Pong",
 		about: "À propos",
 		flag: "FR.png",
@@ -25,7 +31,7 @@ export const translations = {
 		search: "Rechercher un joueur...",
 		modifyName: "Modifier le nom",
 		modifyAvatar: "Modifier l'avatar",
-		modifyPassword: "Modifier le mot de passe",
+		modifyPassword: "Modifier le mdp",
 		blockedUser: "Utilisateur bloqué",
 		blockedUsers: "Utilisateurs bloqués",
 		graphic: "Graphique",
@@ -142,6 +148,9 @@ export const translations = {
 		deleteDataInfo: "Suppression : Vous pouvez demander la suppression de votre compte et de vos données.",
 		contactUs: "Contactez-nous",
 		contactUsInfo: "Si vous avez des questions concernant notre politique de confidentialité, veuillez nous contacter à",
+		noMatchesFound: "Aucun match trouvé !",
+		none: "aucun",
+		noFriends: "Pas d'amis :(",
 	},
 	en: {
 		pong: "Pong",
@@ -276,6 +285,17 @@ export const translations = {
 		deleteDataInfo: "Deletion: You can request the deletion of your account and data.",
 		contactUs: "Contact Us",
 		contactUsInfo: "If you have any questions about our confidentiality policy, please contact us at",
+		noMatchesFound: "No matches found!",
+		wins: "Wins",
+		loss: "Loss",
+		winrate: "Winrate",
+		playTime: "Play time",
+		fastestGame: "Fastest game",
+		longestGame: "Longest game",
+		none: "none",
+		seeMoreStats: "See more stats",
+		seeMoreGames: "See more games",
+		noFriends: "No friends :(",
 	},
 	ch: {
 		pong: "Pong",
@@ -405,6 +425,17 @@ export const translations = {
 		deleteDataInfo: "删除：您可以请求删除您的账户和数据。",
 		contactUs: "联系我们",
 		contactUsInfo: "如果您对我们的保密政策有任何疑问，请通过以下方式联系我们：",
+		noMatchesFound: "未找到比赛！",
+		wins: "胜利",
+		loss: "失败",
+		winrate: "胜率",
+		playTime: "游戏时间",
+		fastestGame: "最快游戏",
+		longestGame: "最长游戏",
+		none: "无",
+		seeMoreStats: "查看更多统计",
+		seeMoreGames: "查看更多游戏",
+		noFriends: "没有朋友 :(",
 	},
 	ta: {
 		pong: "Pong",
@@ -535,6 +566,17 @@ export const translations = {
 		deleteDataInfo: "நீக்கம்: உங்கள் கணக்கையும் தரவையும் நீக்க கோரலாம்.",
 		contactUs: "எங்களை தொடர்பு கொள்ளவும்",
 		contactUsInfo: "எங்கள் ரகசியக் கொள்கை குறித்து உங்களுக்கு ஏதேனும் கேள்விகள் இருந்தால், எங்களை தொடர்பு கொள்ளவும்:",
+		noMatchesFound: "未找到比赛！",
+		wins: "胜利",
+		loss: "失败",
+		winrate: "胜率",
+		playTime: "游戏时间",
+		fastestGame: "最快游戏",
+		longestGame: "最长游戏",
+		none: "无",
+		seeMoreStats: "查看更多统计",
+		seeMoreGames: "查看更多游戏",
+		noFriends: "நண்பர்கள் இல்லை :(",
 	},
 	ar: {
 		pong: "Pong",
@@ -663,6 +705,17 @@ export const translations = {
 		deleteDataInfo: "الحذف: يمكنك طلب حذف حسابك وبياناتك.",
 		contactUs: "اتصل بنا",
 		contactUsInfo: "إذا كانت لديك أي أسئلة حول سياسة السرية الخاصة بنا، يرجى الاتصال بنا على:",
+		noMatchesFound: "لم يتم العثور على مباريات!",
+		wins: "الانتصارات",
+		loss: "الخسائر",
+		winrate: "معدل الفوز",
+		playTime: "وقت اللعب",
+		fastestGame: "أسرع مباراة",
+		longestGame: "أطول مباراة",
+		none: "لا شيء",
+		seeMoreStats: "عرض المزيد من الإحصائيات",
+		seeMoreGames: "عرض المزيد من المباريات",
+		noFriends: "لا يوجد أصدقاء :(",
 	},
 }
 
@@ -692,5 +745,5 @@ export function getLang() {
 export function t(key: string): string {
 	const lang = getLang() as "fr" | "en" | "ch" | "ta" | "ar"
 	const langObj = translations[lang] as Record<string, string>
-	return langObj[key] || `${key} ✘ (Missing trad) ✘`
+	return langObj[key] || `${key}`
 }

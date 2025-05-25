@@ -8,9 +8,5 @@ export function blockedUsersPopup(app: App) {
 }
 
 function blockedUsersPopupHTML(app: App): string {
-	return /* HTML */ `
-		<div data-tab-content="players-list" id="players-list" class="small-size no-scrollbar container overflow-y-scroll text-sm">
-			${playersTabContentHTML(app, "blocked")}
-		</div>
-	`
+	return /* HTML */ ` <section class="small-size no-scrollbar container overflow-y-scroll">${playersTabContentHTML(app, "blocked")}</section> `
 }

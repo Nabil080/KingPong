@@ -1,11 +1,11 @@
-// src/modules/auth/auth.controller.ts (partial - only the register function)
-import { FastifyRequest, FastifyReply } from "fastify"
-import { RegisterRequest, LoginRequest, SuccessResponse, ErrorResponse, MaResponse } from "../../core/types.js"
-import * as AuthService from "./auth.service.js"
-import WebSocketManager from "../websockets/WebSocket.Manager.js"
+// src/modules/auth/auth.controller.ts
+import { FastifyReply, FastifyRequest } from "fastify"
+import { ErrorResponse, LoginRequest, MaResponse, RegisterRequest, SuccessResponse } from "../../core/types.js"
+import { t } from "../../translations.js"
 import { sendError } from "../../utils/errorHandler.js"
 import { uploadAvatar } from "../../utils/upload.js"
-import { t } from "../../translation.js"
+import WebSocketManager from "../websockets/WebSocket.Manager.js"
+import * as AuthService from "./auth.service.js"
 
 /**
  * Contrôleur pour l'inscription d'un nouvel utilisateur
@@ -15,6 +15,13 @@ export async function register(request: FastifyRequest<{ Body: RegisterRequest }
 
 	if (!username || !password) {
 		return reply.status(400).send({ error: `${t("userAndPwdRequired")}` })
+	}
+
+	if (username.length < 3 || username.length > 30) {
+		return reply.status(400).send({ error: t("nameMinimum") }) // ou maximum
+	}
+	if (password.length < 6 || password.length > 50) {
+		return reply.status(400).send({ error: t("passMinimum") })
 	}
 
 	try {
@@ -34,7 +41,7 @@ export async function register(request: FastifyRequest<{ Body: RegisterRequest }
 		return reply.send({ success: true })
 	} catch (err) {
 		console.error("Registration error:", err)
-		return reply.status(400).send({ error: `${t("nameTaken")}` })
+		return reply.status(400).send({ error: err })
 	}
 }
 
@@ -43,7 +50,6 @@ export async function register(request: FastifyRequest<{ Body: RegisterRequest }
  */
 export async function login(request: FastifyRequest<{ Body: LoginRequest }>, reply: FastifyReply): Promise<SuccessResponse | ErrorResponse> {
 	const { username, password } = request.body
-
 	try {
 		const userId = await AuthService.validateUser(username, password)
 		if (!userId) {
@@ -54,8 +60,13 @@ export async function login(request: FastifyRequest<{ Body: LoginRequest }>, rep
 		}
 
 		request.session.userId = userId
-		return reply.send({ success: true })
+
+		// ✅ Correct usage of fastify-jwt inside controller
+		const token = request.server.jwt.sign({ id: userId })
+		console.log("sending token to client : ", token)
+		return reply.send({ success: true, token })
 	} catch (err) {
+		console.error("Login error:", err)
 		return reply.status(401).send({ error: `${t("idIncorrect")}` })
 	}
 }

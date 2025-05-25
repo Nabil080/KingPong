@@ -1,8 +1,8 @@
 // src/modules/common/common.routes.ts
 import { FastifyInstance } from "fastify"
-import { healthCheckSchema } from "./common.schemas.js"
-import { seedDatabase } from "../../core/seed.js"
 import db from "../../core/db.js"
+import { seedDatabase } from "../../core/seed.js"
+import { healthCheckSchema } from "./common.schemas.js"
 
 /**
  * Enregistre les routes communes
@@ -15,7 +15,7 @@ export function registerCommonRoutes(fastify: FastifyInstance): void {
 	})
 
 	fastify.get("/dummy", (_, reply) => {
-		seedDatabase(db)
+		seedDatabase(db, true)
 		reply.send({ success: true, message: "Dummy data inserted successfully!" })
 	})
 }

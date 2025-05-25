@@ -1,10 +1,12 @@
 // src/modules/users/users.controller.ts
-import { FastifyRequest, FastifyReply } from "fastify"
-import * as UsersService from "./users.service.js"
-import { RelationshipType } from "./users.schemas.js"
+import { FastifyReply, FastifyRequest } from "fastify"
+import { t } from "../../translations.js"
+import "../../types/fastify-jwt.js"
 import { sendError } from "../../utils/errorHandler.js"
+import { sanitizeUsername } from "../../utils/sanitize.js"
 import { uploadAvatar } from "../../utils/upload.js"
-import { t } from "../../translation.js"
+import { RelationshipType } from "./users.schemas.js"
+import * as UsersService from "./users.service.js"
 
 /**
  * Retrieve all users.
@@ -55,15 +57,15 @@ export async function getCustomUserList(request: FastifyRequest, reply: FastifyR
 /**
  * Retrieve a user and its relationship with the session user.
  */
-export async function getCustomUserData(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+export async function getCustomUserData(request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) {
 	const loggedInUserId = request.session?.userId
-    if (!loggedInUserId){
-        return sendError(reply, 400, "Not logged in")
-    }
-	const targetId : number = request.params.id
-    if (!targetId){
-        return sendError(reply, 400, "No target id")
-    }
+	if (!loggedInUserId) {
+		return sendError(reply, 400, "Not logged in")
+	}
+	const targetId = request.params.id
+	if (!targetId) {
+		return sendError(reply, 400, "No target id")
+	}
 
 	try {
 		const user = UsersService.getCustomUserData(loggedInUserId, targetId)
@@ -78,8 +80,10 @@ export async function getCustomUserData(request: FastifyRequest<{ Params: { id: 
  * Modify a relationship between the logged-in user and another user.
  */
 export async function modifyRelationship(
-	request: FastifyRequest<{ Body: { targetId: number; relationship: RelationshipType } }>,
-	reply: FastifyReply
+	request: FastifyRequest<{
+		Body: { targetId: number; relationship: RelationshipType }
+	}>,
+	reply: FastifyReply,
 ) {
 	const loggedInUserId = request.session?.userId
 	const { targetId, relationship } = request.body
@@ -100,24 +104,24 @@ export async function modifyRelationship(
 /**
  * Update the user's username.
  */
-export async function updateUsername(request: FastifyRequest<{ Body: { username: string } }>, reply: FastifyReply) {
-	const loggedInUserId = request.session?.userId
+export async function updateUsername(request: FastifyRequest, reply: FastifyReply) {
 	const { username } = request.body
+	const userId = request.user?.id
+	console.log("request user = ", request.user)
 
-	if (!loggedInUserId) {
-		return sendError(reply, 401, `${t("notLoggedIn")}`)
-	}
+	if (!userId) return reply.status(401).send({ error: "users.controllers : Unauthorized" })
 
-	if (!username) {
-		return sendError(reply, 400, `${t("usernameMissing")}`)
+	const sanitizedUsername = sanitizeUsername(username)
+	if (sanitizedUsername.length === 0) {
+		return reply.status(400).send({ error: "Username cannot be empty after sanitization." })
 	}
 
 	try {
-		await UsersService.updateUsername(loggedInUserId, username)
-		return reply.status(200).send({ success: true })
-	} catch (error) {
-		console.error("Error updating username:", error)
-		return reply.status(500).send({ error: `${t("pseudoAlreadyTaken")}` })
+		await UsersService.updateUsername(userId, sanitizedUsername)
+		return reply.send({ success: true })
+	} catch (err) {
+		console.error(err)
+		return reply.status(500).send({ error: "Update failed" })
 	}
 }
 
@@ -134,7 +138,7 @@ export async function updateAvatar(
 			}
 		}
 	}>,
-	reply: FastifyReply
+	reply: FastifyReply,
 ) {
 	const loggedInUserId = request.session?.userId
 	const { avatar } = request.body
@@ -155,7 +159,12 @@ export async function updateAvatar(
 /**
  * Update the user's password.
  */
-export async function updatePassword(request: FastifyRequest<{ Body: { oldPassword: string; newPassword: string } }>, reply: FastifyReply) {
+export async function updatePassword(
+	request: FastifyRequest<{
+		Body: { oldPassword: string; newPassword: string }
+	}>,
+	reply: FastifyReply,
+) {
 	const loggedInUserId = request.session?.userId
 	const { oldPassword, newPassword } = request.body
 
@@ -196,9 +205,9 @@ export async function deleteUser(request: FastifyRequest<{ Params: { id: string 
 	}
 
 	try {
-		console.log("Deleting user with ID:", userId)
+		// console.log("Deleting user with ID:", userId)
 		await UsersService.deleteUser(userId)
-		console.log("User deleted successfully")
+		// console.log("User deleted successfully")
 		return reply.status(200).send({ success: true })
 	} catch (error) {
 		console.error("Error deleting user:", error)

@@ -12,6 +12,7 @@ module.exports = {
 			},
 			fontFamily: {
 				anonymous: ['"Anonymous Pro"', "monospace"],
+				ancizar: ['"Ancizar Sans"', "sans-serif"],
 			},
 		},
 	},

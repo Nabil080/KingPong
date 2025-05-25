@@ -1,7 +1,6 @@
-import { App } from "./App.js"
 import { connectPopup } from "../content/connect_popup.js"
-import { authorizationType, routeParams, routeType, viewRenderer } from "../types/routes.js"
-import { routes } from "../types/routes.js"
+import { authorizationType, routeParams, routes, routeType, viewRenderer } from "../types/routes.js"
+import { App } from "./App.js"
 
 export class Router {
 	private routes: routeType[] = []
@@ -42,6 +41,7 @@ export class Router {
 			if (!match) continue
 
 			if (route.authorization == "loggedIn" && this.app.isLoggedIn() == false) {
+				this.renderPreviousPage()
 				connectPopup(this.app)
 			} else if (route.authorization == "loggedOut" && this.app.isLoggedIn() == true) {
 				this.renderPreviousPage()

@@ -1,8 +1,9 @@
+import { t } from "../translations/translations.js"
 import { popupHandler, popups } from "../types/popups.js"
 import { App } from "./App.js"
 
 export default class Popup {
-	private popupElement: HTMLElement | null = null
+	public root: HTMLElement | null = null
 	private popupHandlers: Map<string, popupHandler> = new Map()
 
 	constructor(private app: App) {
@@ -48,18 +49,18 @@ export default class Popup {
 		this.close()
 
 		// Create the popup container
-		this.popupElement = document.createElement("div")
-		this.popupElement.id = "popup-container"
-		this.popupElement.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-		this.popupElement.style.top = this.app.navbar.root.clientHeight + 1 + "px" // +1 for the nav border
-		this.popupElement.style.height = window.innerHeight - this.app.navbar.root.clientHeight - 1 + "px"
+		this.root = document.createElement("div")
+		this.root.id = "popup-container"
+		this.root.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+		this.root.style.top = this.app.navbar.root.clientHeight + 1 + "px" // +1 for the nav border
+		this.root.style.height = window.innerHeight - this.app.navbar.root.clientHeight - 1 + "px"
 
-		this.popupElement.innerHTML = content
+		this.root.innerHTML = content
 
 		if (closeOnOutsideClick) {
 			// Add click listener for closing the popup
-			this.popupElement.addEventListener("click", (event) => {
-				if (event.target === this.popupElement) {
+			this.root.addEventListener("click", (event) => {
+				if (event.target === this.root) {
 					this.close()
 				}
 			})
@@ -72,23 +73,22 @@ export default class Popup {
 			// Add a message above the popup
 			const message = document.createElement("div")
 			message.className = "absolute top-24 text-center text-white p-2 backdrop-blur-2xl rounded-lg"
-			message.innerHTML = "Click outside to close the popup"
-			this.popupElement.appendChild(message)
+			message.innerHTML = t("clickOutside")
+			this.root.appendChild(message)
 		}
 
 		// Append the popup to the body
-		console.log("Appending popup to body :", this.popupElement)
-		document.body.appendChild(this.popupElement)
+		document.body.appendChild(this.root)
 	}
 
 	close() {
-		if (this.popupElement) {
-			this.popupElement.remove()
-			this.popupElement = null
+		if (this.root) {
+			this.root.remove()
+			this.root = null
 		}
 	}
 
 	isOpen(): boolean {
-		return this.popupElement !== null
+		return this.root !== null
 	}
 }

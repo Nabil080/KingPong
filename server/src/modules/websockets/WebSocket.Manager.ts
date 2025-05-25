@@ -1,6 +1,6 @@
 import { WebSocket } from "@fastify/websocket"
-import { WebSocketReply } from "./websocket.types.js"
 import { log } from "../../utils/logger.js"
+import { WebSocketReply } from "./websocket.types.js"
 
 /**
  * @module WebSocketManager

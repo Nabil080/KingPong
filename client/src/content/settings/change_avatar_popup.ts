@@ -2,7 +2,7 @@ import { App } from "../../classes/App.js"
 import { baseButton, popupLink } from "../../components/buttons.js"
 import { errorDiv } from "../../components/inputs.js"
 import { t } from "../../translations/translations.js"
-import { hideError, validateAvatarInput, showError } from "../../utils/forms.js"
+import { hideError, showError, validateAvatarInput } from "../../utils/forms.js"
 
 export function changeAvatarPopup(app: App) {
 	app.popup.open(changeAvatarPopupHTML())
@@ -18,13 +18,13 @@ function changeAvatarPopupHTML(): string {
 				<div>
 					<div class="flex w-full items-center">
 						<span
-							class="flex h-full flex-grow items-center truncate border-gray-300 bg-white px-4 py-1.5 text-gray-400"
+							class="flex h-full w-1/2 flex-grow items-center truncate rounded-bl-lg rounded-tl-lg border-gray-300 bg-white px-4 py-1.5 text-gray-400"
 							id="fileNameDisplay"
 							>${t("avatar")}</span
 						>
 						<button
 							type="button"
-							class="bg-berry h-full px-4 py-1.5 duration-300 hover:bg-opacity-80"
+							class="bg-berry h-full w-1/2 rounded-br-lg rounded-tr-lg px-4 py-1.5 duration-300 hover:bg-opacity-80"
 							onclick="document.getElementById('hiddenFile').click()"
 						>
 							${t("browse")}
@@ -32,7 +32,7 @@ function changeAvatarPopupHTML(): string {
 						<input
 							type="file"
 							id="hiddenFile"
-							name="new-avatar"
+							name="avatar"
 							accept="image/*"
 							class="hidden"
 							onchange="document.getElementById('fileNameDisplay').textContent = this.files[0] ? this.files[0].name : 'Avatar'"
@@ -50,7 +50,7 @@ function changeAvatarFormEvent(app: App) {
 	const form = document.getElementById("change-avatar-form") as HTMLFormElement
 	form?.addEventListener("submit", async (event) => {
 		event.preventDefault()
-		const avatarInput = document.querySelector("input[name='new-avatar']") as HTMLInputElement
+		const avatarInput = document.querySelector("input[name='avatar']") as HTMLInputElement
 
 		hideError(form)
 		try {

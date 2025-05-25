@@ -14,6 +14,14 @@ function confidentialityHTML(): string {
 					<li>${t("googleIdInfo")}</li>
 					<li>${t("gameStatsInfo")}</li>
 					<li>${t("friendsBlockedInfo")}</li>
+					<li>
+						<strong>${t("localStorageData")}:</strong>
+						<ul class="list-disc pl-6">
+							<li>${t("jwtTokenInfo")}</li>
+							<li>${t("languagePreferenceInfo")}</li>
+							<li>${t("gameOptionsPreferenceInfo")}</li>
+						</ul>
+					</li>
 				</ul>
 				<h2 class="mt-4 text-xl font-bold">2. ${t("howWeUseData")}</h2>
 				<ul class="list-disc pl-6">

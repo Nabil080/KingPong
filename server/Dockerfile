@@ -10,15 +10,13 @@ RUN mkdir -p /etc/ssl/private /etc/ssl/certs && \
 	-out /etc/ssl/certs/server.crt \
 	-subj "/C=FR/ST=IDF/L=Paris/O=42/CN=kingpong.42.fr"
 
-COPY package*.json .
+COPY package*.json ./
 # wsl fix
 RUN npm config set strict-ssl false
 RUN npm install --verbose
 
 # Add all our files except node_modules from .dockerignore
 COPY . .
-
-ENV PORT=8080
 
 EXPOSE ${PORT}
 

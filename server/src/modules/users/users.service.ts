@@ -1,10 +1,10 @@
 // src/modules/users/users.service.ts
-import * as UsersModel from "./users.model.js"
 import User from "../../core/types.js"
-import { RelationshipType, UserWithRelationship } from "./users.schemas.js"
+import { t } from "../../translations.js"
 import { hashPassword } from "../../utils/password_hash.js"
 import { validateUserById } from "../auth/auth.service.js"
-import { t } from "../../translation.js"
+import * as UsersModel from "./users.model.js"
+import { RelationshipType, UserWithRelationship } from "./users.schemas.js"
 
 /**
  * Récupère tous les utilisateurs
@@ -47,14 +47,14 @@ export function getCustomUserList(loggedInUserId: any) {
 }
 
 export function getCustomUserData(loggedInUserId: number, targetId: number) {
-    const user = UsersModel.getUserByIdWithRelationships(loggedInUserId, targetId)
+	const user = UsersModel.getUserByIdWithRelationships(loggedInUserId, targetId)
 
 	// Transform to UserData[] format
-    return {
-        user: user as User,
-        chats: [],
-        relationship: "relationship" in user ? user.relationship || null : null,
-    }
+	return {
+		user: user as User,
+		chats: [],
+		relationship: "relationship" in user ? user.relationship || null : null,
+	}
 }
 
 export function modifyRelationship(userId: number, targetId: number, relationship: RelationshipType) {

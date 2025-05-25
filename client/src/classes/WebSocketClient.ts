@@ -1,7 +1,27 @@
 import { switchPlayerCardStatus } from "../components/player_card.js"
 import { switchChatInput } from "../content/chat.js"
-import { t } from "../translations/translations.js"
-import { ChatReply, ConnectReply, LogoutReply, WebSocketMessage, WebSocketReply } from "../types/websocket.js"
+import { updateGameButtons } from "../content/pong/buttons.js"
+import { updateGamePlayers } from "../content/pong/players.js"
+import { RemotePlayer } from "../types/player.js"
+import {
+	CancelGameMessage,
+	CancelInviteMessage,
+	CancelInviteReply,
+	ChatReply,
+	ConnectMessage,
+	ConnectReply,
+	GameStateReply,
+	InviteReply,
+	InviteResponseMessage,
+	InviteResponseReply,
+	KeyEventMessage,
+	LogoutMessage,
+	LogoutReply,
+	PingMessage,
+	ReadyMessage,
+	WebSocketMessage,
+	WebSocketReply,
+} from "../types/websocket.js"
 import { App } from "./App.js"
 
 export default class WebSocketClient {
@@ -19,8 +39,8 @@ export default class WebSocketClient {
 	 */
 	private connect() {
 		this.ws.onopen = () => {
-			console.log("WebSocket connection established")
-			this.send({ type: "ping" })
+			// console.log("WebSocket connection established")
+			this.send({ type: "ping" } as PingMessage)
 			this.ready = true
 		}
 
@@ -42,27 +62,13 @@ export default class WebSocketClient {
 	 * Sends a message through the WebSocket connection
 	 * @param message - String or message object to send
 	 */
-	send(message: string | WebSocketMessage) {
+	async send(message: WebSocketMessage) {
+		while (!this.ready) {
+			await new Promise((resolve) => setTimeout(resolve, 100)) // Wait 100ms
+		}
 		if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-			// Special handling for invite responses
-			if (typeof message === "object" && message.type === "inviteResponse") {
-				// Check if this is an accept response missing gameId
-				if (message.response === "accept" && !message.gameId) {
-					// Add the gameId if missing
-					const fixedMessage = {
-						...message,
-						gameId: `game_${Date.now()}_${this.app.loggedUser?.id}_${message.senderId}`,
-					}
-					const data = JSON.stringify(fixedMessage)
-					this.ws.send(data)
-					return
-				}
-			}
-
-			// Normal processing for other message types
-			const data = typeof message === "string" ? message : JSON.stringify(message)
-			console.log("Websocket Sent: ", data)
-			this.ws.send(data)
+			this.ws.send(JSON.stringify(message))
+			// console.log("Websocket Sent: ", message)
 		} else {
 			console.warn("WebSocket is not connected yet")
 		}
@@ -74,22 +80,89 @@ export default class WebSocketClient {
 	 */
 	async sendConnectMessage() {
 		if (this.app.loggedUser) {
-			this.send({ type: "connect", userId: this.app.loggedUser.id })
+			this.send({ type: "connect", userId: this.app.loggedUser.id, token: this.app.server.token } as ConnectMessage)
 		}
 	}
 
 	async sendLogoutMessage() {
-		this.send({ type: "logout" })
+		this.send({ type: "logout" } as LogoutMessage)
 	}
+
+	sendGameInvite() {
+		if (!this.app.loggedUser || this.app.game?.player2?.type !== "remote") return
+
+		// TODO: send the game invite to the server
+		this.send({
+			type: "invite",
+			userId: this.app.loggedUser.id,
+			targetId: this.app.game.player2.user.id,
+			options: this.app.game.options,
+		})
+
+		this.app.notifications.sentGameInviteNotification(this.app.game.player2.user.id)
+	}
+
+	acceptGameInvite() {
+		if (!this.app.loggedUser) return
+		this.send({
+			type: "invite-response",
+			response: "accept",
+			userId: this.app.loggedUser!.id,
+			targetId: (this.app.game!.player1! as RemotePlayer).user.id,
+		})
+	}
+
+	declineGameInvite(senderId: number) {
+		if (!this.app.loggedUser) return
+		this.send({
+			type: "invite-response",
+			response: "decline",
+			userId: this.app.loggedUser.id,
+			targetId: senderId,
+		} as InviteResponseMessage)
+	}
+
+	updateReadyState(state: boolean) {
+		if (!this.app.loggedUser) return
+		this.send({
+			type: "ready",
+			userId: this.app.loggedUser.id,
+			state: state,
+		} as ReadyMessage)
+	}
+
+	sendKeyEvent(key: string, pressed: boolean) {
+		this.send({
+			type: "key-event",
+			key: key,
+			pressed: pressed,
+		} as KeyEventMessage)
+	}
+
+	cancelInvite() {
+		if (this.app.game?.gameMode !== "remote") return
+		this.send({
+			type: "cancel-invite",
+			targetId: (this.app.game.player2 as RemotePlayer).user.id,
+		} as CancelInviteMessage)
+	}
+
+	cancelGame() {
+		if (this.app.game?.gameMode !== "remote") return
+		this.send({
+			type: "cancel-game",
+		} as CancelGameMessage)
+	}
+
 	/**
 	 * Handles incoming WebSocket messages
 	 * @param data - The received message data
 	 */
 	private handleReply(reply: WebSocketReply) {
-		console.log("WebSocket reply:", reply)
+		// console.log("WebSocket reply:", reply)
 		switch (reply.type) {
 			case "pong":
-				console.log("Websocket received pong")
+				// console.log("Websocket received pong")
 				break
 			case "connect":
 			case "logout":
@@ -97,6 +170,21 @@ export default class WebSocketClient {
 				break
 			case "chat":
 				this.handleChatReply(reply)
+				break
+			case "invite":
+				this.handleInviteReply(reply)
+				break
+			case "cancel-invite":
+				this.handleCancelInviteReply(reply)
+				break
+			case "invite-response":
+				this.handleInviteResponseReply(reply)
+				break
+			case "cancel-game":
+				this.handleCancelGameReply(reply)
+				break
+			case "gameState":
+				this.handleGameStateReply(reply)
 				break
 			default:
 				console.warn("Unknown WebSocket message type:", reply.type)
@@ -127,10 +215,12 @@ export default class WebSocketClient {
 
 		// Update visual indicators of user status
 		switchPlayerCardStatus(this.app, reply.userId, status)
-		switchChatInput(reply.userId, false)
-		// const userData = wsClient.getUser(reply.userId)
-		// const username = userData?.user?.username || reply.userId.toString
-		// notif(`${username} ${t("disconnected")}`)
+		switchChatInput(reply.userId, status === "online")
+		if (status === "online") {
+			this.app.notifications.loginNotification(reply.userId)
+		} else {
+			this.app.notifications.logoutNotification(reply.userId)
+		}
 	}
 
 	handleChatReply(reply: ChatReply) {
@@ -139,5 +229,102 @@ export default class WebSocketClient {
 			return
 		}
 		this.app.cache.addMessage(reply.senderId, reply)
+	}
+
+	handleInviteReply(reply: InviteReply) {
+		if (this.app.cache.isBlocked(reply.senderId)) {
+			return
+		}
+		this.app.notifications.gameInviteNotification(reply.senderId, reply.options)
+	}
+
+	handleCancelInviteReply(reply: CancelInviteReply) {
+		if (this.app.cache.isBlocked(reply.senderId)) {
+			return
+		}
+
+		this.app.notifications.gameInviteCancelledNotification(reply.senderId)
+	}
+
+	handleInviteResponseReply(reply: InviteResponseReply) {
+		if (!this.app.game || this.app.cache.isBlocked(reply.senderId)) {
+			return
+		}
+
+		if (reply.response === "accept") {
+			this.app.game.player2Joined = true
+			this.app.game.currentStep = "not-ready"
+			this.app.notifications.gameInviteAcceptedNotification(reply.senderId)
+		} else {
+			this.app.game.player2 = undefined
+			this.app.game.currentStep = "configuring"
+			this.app.notifications.gameInviteDeclinedNotification(reply.senderId)
+		}
+		updateGameButtons(this.app.game)
+		updateGamePlayers(this.app.game)
+	}
+
+	handleGameStateReply(reply: GameStateReply) {
+		// console.log("Handling game state reply")
+		if (!this.app.game) return
+		const game = this.app.game
+		if (!game) return
+		if (game.player1?.type !== "remote" || game.player2?.type !== "remote") return
+		if (reply.player1.id !== game.player1.user.id) return
+		if (reply.player2.id !== game.player2.user.id) return
+
+		const oldStep = game.currentStep
+
+		// Store old ready states to detect changes
+		const wasPlayer1Ready = game.player1Ready
+		const wasPlayer2Ready = game.player2Ready
+
+		game.currentStep = reply.currentStep
+		game.player1Ready = reply.player1.ready
+		game.player2Ready = reply.player2.ready
+
+		// Log when a player becomes ready
+		if (game.player1Ready && !wasPlayer1Ready) {
+			this.app.notifications.playerReadyNotification(game.player1?.user.id)
+		}
+		if (game.player2Ready && !wasPlayer2Ready) {
+			this.app.notifications.playerReadyNotification(game.player2?.user.id)
+		}
+
+		game.state.score1 = reply.player1.score
+		game.state.score2 = reply.player2.score
+		game.state.paddle1.x = reply.paddle1.x
+		game.state.paddle1.y = reply.paddle1.y
+		game.state.paddle2.x = reply.paddle2.x
+		game.state.paddle2.y = reply.paddle2.y
+		game.state.ball.x = reply.ball.x
+		game.state.ball.y = reply.ball.y
+		game.state.ball.dx = reply.ball.dx
+		game.state.ball.dy = reply.ball.dy
+		game.state.ball.speed = reply.ball.speed
+
+		if (reply.winner) {
+			game.winner = reply.winner === game.player1?.user.id ? game.player1 : game.player2
+		}
+
+		// Dont update if it's just a simple frame of the game.
+		// This prevents the "give up" button from not having time to be pressed
+		if (!(oldStep === "playing" && game.currentStep === "playing")) {
+			updateGameButtons(game)
+			updateGamePlayers(game)
+		}
+		// console.log("Game state updated")
+	}
+
+	handleCancelGameReply(reply: WebSocketReply) {
+		if (!this.app.game) return
+		if (this.app.game.player1?.type !== "remote" || this.app.game.player2?.type !== "remote") return
+
+		// If we receive a cancel game message while not playing, there is no winner
+		this.app.game.currentStep = "cancelled"
+		this.app.game.player2Joined = false
+		this.app.game.player2Ready = false
+		updateGamePlayers(this.app.game)
+		updateGameButtons(this.app.game)
 	}
 }

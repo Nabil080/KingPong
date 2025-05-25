@@ -70,6 +70,10 @@ export default class Cache {
 		}
 	}
 
+	getAllOtherOnlineUsers(): UserData[] {
+		return Array.from(this.users.values()).filter((userData) => userData.user.status === "online" && userData.user.id !== this.app.loggedUser?.id)
+	}
+
 	clearUsers() {
 		this.users.clear()
 		this.ready = false
@@ -87,7 +91,7 @@ export default class Cache {
 		if (res.error) return
 		const users: UserData[] = res as UserData[]
 		users.forEach((userData) => this.users.set(userData.user.id, userData))
-		console.log("Users fetched from server :", this.users)
+		// console.log("Users fetched from server :", this.users)
 		this.ready = true
 	}
 
@@ -114,7 +118,7 @@ export default class Cache {
 			await this.fetchUser(id)
 			// console.log("New user : " , this.getUser(id))
 		} else {
-			console.log("User ", id, " already exists")
+			// console.log("User ", id, " already exists")
 			existing.user.status = status
 		}
 	}
@@ -164,6 +168,7 @@ export default class Cache {
 			return null
 		}
 
+		userData.unreadMessages = 0
 		return userData.chats || null
 	}
 
@@ -182,7 +187,7 @@ export default class Cache {
 	async getMatchesByUsername(username: string): Promise<Match[]> {
 		// Check if matches are already cached
 		if (this.matches.has(username)) {
-			console.log(`Matches for ${username} retrieved from cache.`)
+			// console.log(`Matches for ${username} retrieved from cache.`)
 			return this.matches.get(username) as Match[]
 		}
 
@@ -198,5 +203,10 @@ export default class Cache {
 		this.matches.set(username, matches)
 
 		return matches
+	}
+
+	// Clear matches for a specific user
+	clearMatches(username: string) {
+		this.matches.delete(username)
 	}
 }

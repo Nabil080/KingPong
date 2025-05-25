@@ -1,41 +1,67 @@
 import { WebSocket } from "@fastify/websocket"
+import { getUserById } from "../auth/auth.service.js"
+import GameManager from "../Game/Game.Manager.js"
+import { acceptInvite, cancelGame, cancelInvite, createInvite, declineInvite, setReady } from "../Game/game.service.js"
+import { setStatus } from "../users/users.model.js"
+import WebSocketManager from "./WebSocket.Manager.js"
 import {
+	CancelGameMessage,
+	CancelInviteMessage,
 	ChatMessage,
 	ChatReply,
 	ConnectMessage,
 	ConnectReply,
 	ErrorReply,
-	PongReply,
+	GameInputMessage,
+	GameInputReply,
 	InviteMessage,
 	InviteReply,
 	InviteResponseMessage,
 	InviteResponseReply,
-	GameInputMessage,
-	GameInputReply,
+	KeyEventMessage,
+	PongReply,
+	ReadyMessage,
 } from "./websocket.types.js"
-import WebSocketManager from "./WebSocket.Manager.js"
-import { getUserById } from "../auth/auth.service.js"
-import { setStatus } from "../users/users.model.js"
 
 /**
  * @module WebSocketServiceFactory
  * @description Factory function generating websocket service bound to a socket instance.
  */
-export default function makeWebSocketService(socket: WebSocket) {
+export default function makeWebSocketService(socket: WebSocket, verifyJwt: (token: string) => Promise<any>) {
 	let userId: number | null = null
 
 	return {
-		connectClient(message: ConnectMessage) {
+		async connectClient(message: ConnectMessage) {
 			let reply: ConnectReply | ErrorReply = { type: "error" }
 
-			//console.log("Trying to connect user id ", message.userId)
-			//console.log("current id : ", userId)
+			if (!message.token) {
+				reply.message = "token is missing"
+				WebSocketManager.reply(socket, reply)
+				return
+			}
+			let decoded: any
+			try {
+				decoded = await verifyJwt(message.token)
+			} catch (err) {
+				reply.message = "Invalid or expired token"
+				WebSocketManager.reply(socket, reply)
+				return
+			}
+			const tokenUserId = decoded.id || decoded.userId
+			if (!tokenUserId) {
+				reply.message = "Token does not contain user id"
+				WebSocketManager.reply(socket, reply)
+				return
+			}
+
 			if (!message.userId) {
 				reply.message = "userId is missing"
 			} else if (userId || WebSocketManager.isConnected(message.userId)) {
 				reply.message = "Already connected somewhere else"
 			} else if (!getUserById(message.userId)) {
 				reply.message = "Unknown id"
+			} else if (message.userId !== tokenUserId) {
+				reply.message = "userId does not match token"
 			} else {
 				userId = message.userId
 				WebSocketManager.addClient(message.userId, socket)
@@ -81,7 +107,7 @@ export default function makeWebSocketService(socket: WebSocket) {
 				WebSocketManager.sendTo(message.targetId, reply)
 			}
 		},
-		sendInvite(message: InviteMessage) {
+		handleInviteMessage(message: InviteMessage) {
 			let reply: InviteReply | ErrorReply = { type: "error" }
 
 			if (!userId) {
@@ -93,7 +119,7 @@ export default function makeWebSocketService(socket: WebSocket) {
 				reply = {
 					type: "invite",
 					senderId: userId,
-					inviteId: Date.now(), // Generate a unique ID for this invite
+					options: message.options,
 				}
 			}
 
@@ -102,27 +128,48 @@ export default function makeWebSocketService(socket: WebSocket) {
 			} else {
 				// Send success to sender
 				WebSocketManager.reply(socket, { type: "success" })
-				// Send invite to target
-				WebSocketManager.sendTo(message.targetId, reply)
+				// Create the game invite
+				// Notif is sent to the target user inside createInvite
+				createInvite(userId!, message.targetId, message.options)
 			}
 		},
-		sendInviteResponse(message: InviteResponseMessage) {
+		handleCancelInviteMessage(message: CancelInviteMessage) {
+			if (!userId) {
+				WebSocketManager.reply(socket, { type: "error", message: "You are not connected" })
+				return
+			}
+			const invite = cancelInvite(userId!, message.targetId)
+			if (!invite) {
+				WebSocketManager.reply(socket, { type: "error", message: "No invite found" })
+				return
+			}
+			WebSocketManager.reply(socket, { type: "success" })
+		},
+		handleCancelGameMessage(message: CancelGameMessage) {
+			if (!userId) {
+				WebSocketManager.reply(socket, { type: "error", message: "You are not connected" })
+				return
+			}
+			const game = cancelGame(userId!)
+			if (!game) {
+				WebSocketManager.reply(socket, { type: "error", message: "No game found" })
+				return
+			}
+			WebSocketManager.reply(socket, { type: "success" })
+		},
+		handleInviteResponseMessage(message: InviteResponseMessage) {
 			let reply: InviteResponseReply | ErrorReply = { type: "error" }
 
 			if (!userId) {
 				reply.message = "You are not connected"
-			} else if (WebSocketManager.isConnected(message.senderId) == false) {
+			} else if (WebSocketManager.isConnected(message.userId) == false) {
 				reply.message = "Sender is not connected"
-			} else if (message.response === "accept" && !message.gameId) {
-				reply.message = "GameId is required when accepting an invitation"
 			} else {
 				// Create response reply with gameId
 				reply = {
-					type: "inviteResponse",
-					inviteId: message.inviteId,
+					type: "invite-response",
 					senderId: userId,
 					response: message.response,
-					gameId: message.response === "accept" ? message.gameId! : "",
 				}
 			}
 
@@ -131,14 +178,28 @@ export default function makeWebSocketService(socket: WebSocket) {
 			} else {
 				// Send success to respondent
 				WebSocketManager.reply(socket, { type: "success" })
-				// Send response to original sender
-				WebSocketManager.sendTo(message.senderId, reply)
-
-				// Send confirmation back to the accepting user
-				// This allows the accepting client to also navigate to the game
-				if (reply.type === "inviteResponse" && reply.response === "accept") {
-					WebSocketManager.reply(socket, reply)
+				// Notif is sent to the host inside acceptInvite and declineInvite
+				if (message.response == "accept") {
+					acceptInvite(message.targetId, userId!)
+				} else if (message.response == "decline") {
+					declineInvite(message.targetId, userId!)
 				}
+				console.log("Invite response: ", message.response)
+			}
+		},
+		handleReadyMessage(message: ReadyMessage) {
+			if (!userId) {
+				return
+			}
+			setReady(userId, message.state)
+		},
+		handleKeyEventMessage(message: KeyEventMessage) {
+			if (!userId) {
+				return
+			}
+			const game = GameManager.findGameByPlayerId(userId)
+			if (game) {
+				game.handleKeyEvent(userId, message.key, message.pressed)
 			}
 		},
 		sendGameInput(message: GameInputMessage) {

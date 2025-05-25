@@ -2,100 +2,129 @@ import Game from "../Game.js"
 import { Paddle } from "./Paddle.js"
 
 export class Ball {
-	public game: Game
+	// Ball
+	public x: number = 0
+	public y: number = 0
+	public radius: number = 0
 
-	public startingX: number
-	public startingY: number
-	public startingVelocityX: number
-	public startingVelocityY: number
-	// Ball properties
-	public x: number
-	public y: number
-	public radius: number
-	public velocityX: number
-	public velocityY: number
-	// Container for the ball
-	public CanvasWidth: number
-	public CanvasHeight: number
+	// Movement
+	public dx: number = 0
+	public dy: number = 0
+	public speed: number = 0
 
-	constructor(game: Game, x: number, y: number, radius: number, velocityX: number, velocityY: number, CanvasWidth: number = 800, CanvasHeight: number = 600) {
-		this.game = game
-		this.startingX = x
-		this.startingY = y
-		this.startingVelocityX = velocityX
-		this.startingVelocityY = velocityY
-		this.x = x
-		this.y = y
-		this.radius = radius
-		this.velocityX = velocityX
-		this.velocityY = velocityY
-		this.CanvasWidth = CanvasWidth
-		this.CanvasHeight = CanvasHeight
+	constructor(public game: Game) {
+		this.setInitialState()
+	}
+
+	// Ensures the ball stays within the canvas bounds
+	public constrain() {}
+
+	// Resets the paddle to its initial position
+	public setInitialState() {
+		// Using game options
+		this.x = Game.WIDTH / 2
+		this.y = Game.HEIGHT / 2
+		this.radius = this.game.options.ballRadius
+		this.speed = this.game.options.ballSpeed
+		this.dx = 0
+		this.dy = 0
+	}
+
+	public launch() {
+		// Randomize initial trajectory
+		this.dx = Math.random() < 0.5 ? -1 : 1 // 50% chance left or right
+		this.dy = (Math.random() - 0.5) * 2 // Random angle between -1 and 1
+		//console.log("Launched at ", this.dx, ",", this.dy)
 	}
 
 	// Updates the ball's position
-	public update(paddle1: Paddle, paddle2: Paddle) {
-		this.x += this.velocityX
-		this.y += this.velocityY
+	// Only if the game is running
+	public update() {
+		if (this.game.currentStep != "playing") return
+		if (this.dx === 0) this.launch()
+
+		// console.log("Ball :", this)
+
+		this.x += this.dx * this.speed
+		this.y += this.dy * this.speed
 
 		// Bounce off the top and bottom edges
-		if (this.y - this.radius < 0 || this.y + this.radius > this.CanvasHeight) {
-			this.velocityY *= -1
+		if (this.y - this.radius < 0) {
+			this.dy *= -1
+			this.y = this.radius // Reposition the ball to be exactly at the top edge
+		} else if (this.y + this.radius > Game.HEIGHT) {
+			this.dy *= -1
+			this.y = Game.HEIGHT - this.radius // Reposition the ball to be exactly at the bottom edge
 		}
 
 		// Bounce off the paddles
-		this.checkPaddleCollision(paddle1)
-		this.checkPaddleCollision(paddle2)
+		this.checkPaddleCollision(this.game.state.paddle1)
+		this.checkPaddleCollision(this.game.state.paddle2)
 
 		// Check for scoring and reset the ball
-		if (this.x - this.radius < 0) {
-			this.game.gameState.score2 += 1
-			this.reset()
-		} else if (this.x + this.radius > this.CanvasWidth) {
-			this.game.gameState.score1 += 1
-			this.reset()
-		}
-	}
-
-	// Checks and handles collision with a paddle
-	private checkPaddleCollision(paddle: Paddle) {
-		// Check if the ball is within the paddle's horizontal and vertical bounds
-		if (
-			this.x - this.radius < paddle.x + paddle.width &&
-			this.x + this.radius > paddle.x &&
-			this.y + this.radius > paddle.y &&
-			this.y - this.radius < paddle.y + paddle.height
-		) {
-			// Reverse the horizontal velocity
-			this.velocityX *= -1
-
-			// Adjust the ball's position to prevent sticking
-			if (this.x < paddle.x) {
-				this.x = paddle.x - this.radius // Place the ball to the left of the paddle
-			} else {
-				this.x = paddle.x + paddle.width + this.radius // Place the ball to the right of the paddle
-			}
-
-			// Add some randomness to the vertical velocity
-			this.velocityY += (Math.random() - 0.5) * 2 // Randomize vertical direction slightly
-			this.velocityY = Math.max(Math.min(this.velocityY, 5), -5) // Clamp the vertical velocity
-
-			// Increase the ball's speed
-			this.increaseSpeed()
+		if (this.x + this.radius < 0) {
+			this.game.state.addPoint(2)
+			this.setInitialState()
+		} else if (this.x - this.radius > Game.WIDTH) {
+			this.game.state.addPoint(1)
 		}
 	}
 
 	// Increases the ball's speed
-	private increaseSpeed() {
-		const speedMultiplier = 1.1 // Increase speed by 10%
-		this.velocityX *= speedMultiplier
-		this.velocityY *= speedMultiplier
+	public increaseSpeed() {
+		this.speed += this.game.options.ballAcceleration
 	}
 
-	public reset() {
-		this.x = this.startingX
-		this.y = this.startingY
-		this.velocityX = this.startingVelocityX
-		this.velocityY = this.startingVelocityY
+	// Checks and handles collision with a paddle
+	private checkPaddleCollision(paddle: Paddle) {
+		const prevX = this.x - this.dx * this.speed
+		const prevY = this.y - this.dy * this.speed
+		const paddleLeft = paddle.x
+		const paddleRight = paddle.x + Game.PADDLE_WIDTH
+		const paddleTop = paddle.y
+		const paddleBottom = paddle.y + paddle.height
+
+		// Determine which side to check
+		let collideX, paddleXEdge
+		if (this.dx < 0) {
+			collideX = paddleRight + this.radius
+			paddleXEdge = paddleRight
+		} else if (this.dx > 0) {
+			collideX = paddleLeft - this.radius
+			paddleXEdge = paddleLeft
+		} else {
+			return // Not moving horizontally
+		}
+
+		// Check if the ball crosses the paddle's x-plane this frame
+		const crossed = (this.dx < 0 && prevX >= collideX && this.x <= collideX) || (this.dx > 0 && prevX <= collideX && this.x >= collideX)
+
+		if (crossed) {
+			// Linear interpolation to find y at collision
+			const t = (collideX - prevX) / (this.x - prevX)
+			const yAtCollision = prevY + (this.y - prevY) * t
+			if (yAtCollision + this.radius > paddleTop && yAtCollision - this.radius < paddleBottom) {
+				this.x = collideX
+				this.dx *= -1
+				const paddleCenter = paddle.y + paddle.height / 2
+				const collisionPoint = yAtCollision - paddleCenter
+				const normalizedCollision = collisionPoint / (paddle.height / 2)
+				this.dy = normalizedCollision * 0.75
+				this.increaseSpeed()
+			}
+		} else if (
+			// Fallback: still overlapping
+			this.x - this.radius < paddleRight &&
+			this.x + this.radius > paddleLeft &&
+			this.y + this.radius > paddleTop &&
+			this.y - this.radius < paddleBottom
+		) {
+			this.dx *= -1
+			const paddleCenter = paddle.y + paddle.height / 2
+			const collisionPoint = this.y - paddleCenter
+			const normalizedCollision = collisionPoint / (paddle.height / 2)
+			this.dy = normalizedCollision * 0.75
+			this.increaseSpeed()
+		}
 	}
 }

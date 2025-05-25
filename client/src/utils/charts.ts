@@ -1,5 +1,6 @@
 // chart.ts
 import type { Chart as ChartType } from "chart.js"
+import { t } from "../translations/translations.js"
 import { Match } from "../types/match.js"
 
 declare const Chart: typeof ChartType
@@ -67,7 +68,7 @@ export function createWinLossChart(wins: number = 10, losses: number = 5) {
 	if (!ctx) return
 
 	const chartData = {
-		labels: [`${wins} Wins`, `${losses} Losses`],
+		labels: [`${wins} ${t("wins")}`, `${losses} ${t("losses")}`],
 		datasets: [
 			{
 				data: [wins, losses],
@@ -76,7 +77,7 @@ export function createWinLossChart(wins: number = 10, losses: number = 5) {
 		],
 	}
 
-	let options = genericOptions("Winrate") as any
+	let options = genericOptions(t("winrate")) as any
 	delete options.scales
 
 	new Chart(ctx, {
@@ -108,13 +109,13 @@ export function createScorePerGameChart(username: string = "", matches: Match[] 
 	const chartData = {
 		datasets: [
 			{
-				label: "Your score",
+				label: t("yourScore"),
 				data: scoreData,
 				backgroundColor: GRAD[0],
 				borderColor: GRAD[0],
 			},
 			{
-				label: "Your opponent",
+				label: t("yourOpponent"),
 				data: opponentScoreData,
 				backgroundColor: GRAD[1],
 				borderColor: GRAD[1],
@@ -122,7 +123,7 @@ export function createScorePerGameChart(username: string = "", matches: Match[] 
 		],
 	}
 
-	let options = genericOptions("Score per game") as any
+	let options = genericOptions(t("scorePerGame")) as any
 	// options.plugins.legend.display = false
 
 	new Chart(ctx, {
@@ -147,7 +148,7 @@ export function createDurationPerGameChart(matches: Match[]) {
 	const chartData = {
 		datasets: [
 			{
-				label: "Duration per game",
+				label: t("durationPerGame"),
 				data: xyData,
 				backgroundColor: [GRAD[4]],
 				borderColor: GRAD[1],
@@ -155,7 +156,7 @@ export function createDurationPerGameChart(matches: Match[]) {
 		],
 	}
 
-	let options = genericOptions("Duration per game") as any
+	let options = genericOptions(t("durationPerGame")) as any
 	options.plugins.legend.display = false
 
 	new Chart(ctx, {
@@ -186,14 +187,14 @@ export function createMostPlayedUsersChart(username: string, matches: Match[]) {
 		labels: mostPlayedOpponents.map((opponent) => opponent.name),
 		datasets: [
 			{
-				label: "Most played users",
+				label: t("mostPlayedUsers"),
 				data: mostPlayedOpponents.map((opponent) => opponent.games),
 				backgroundColor: GRAD,
 			},
 		],
 	}
 
-	let options = genericOptions("Most played users") as any
+	let options = genericOptions(t("mostPlayedUsers")) as any
 	options.scales = {
 		r: {
 			display: false,

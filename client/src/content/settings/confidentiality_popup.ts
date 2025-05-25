@@ -9,7 +9,7 @@ export function confidentialityPopup(app: App) {
 function confidentialityPopupHTML(): string {
 	return /* HTML */ `
 		<section id="confidentiality" class="small-size container items-center justify-center gap-4 px-6">
-			${baseButton(t("blockedUsers"), "data-popup='blocked-users'")}
+			${baseButton(t("blockedUser"), "data-popup='blocked-users'")}
 			${baseButton(t("confidentialityPolicy"), "data-link href='/confidentiality'")}
 			${baseButton(t("deleteAccount"), "data-popup='delete-account'")} ${popupLink("settings", t("back"))}
 		</section>

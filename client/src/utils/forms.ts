@@ -1,6 +1,6 @@
 import { t } from "../translations/translations.js"
 
-export const USER_LEN = { min: 3, max: 12 }
+export const USER_LEN = { min: 3, max: 20 }
 export const PASS_LEN = { min: 6, max: 20 }
 
 export function showError(form: HTMLFormElement, message: string) {
@@ -10,8 +10,8 @@ export function showError(form: HTMLFormElement, message: string) {
 		return
 	}
 
-	console.log("Form element:", form)
-	console.log("Error message:", message)
+	// console.log("Form element:", form)
+	// console.log("Error message:", message)
 	errorDiv.textContent = message
 	errorDiv.classList.remove("hidden")
 }

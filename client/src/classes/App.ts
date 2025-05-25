@@ -1,13 +1,15 @@
+import { User } from "../types/user.js"
 import Background from "./Background.js"
 import Cache from "./Cache.js"
-import Content from "./Content.js"
+import Content, { ContentType } from "./Content.js"
+import Game from "./Game/Game.js"
 import Navbar from "./Navbar.js"
+import NotificationManager from "./NotificationManager.js"
 import Popup from "./Popup.js"
 import { Router } from "./Router.js"
 import Server from "./Server.js"
-import WebSocketClient from "./WebSocketClient.js"
-import { User } from "../types/user.js"
 import { Tournament } from "./Tournament.js"
+import WebSocketClient from "./WebSocketClient.js"
 
 export class App {
 	// Config
@@ -18,6 +20,7 @@ export class App {
 	public router: Router
 	public websocket: WebSocketClient
 	public cache: Cache
+	public notifications: NotificationManager
 	// Elements
 	public navbar: Navbar
 	public content: Content
@@ -25,8 +28,7 @@ export class App {
 	public popup: Popup
 	// // States
 	public tournament?: Tournament
-	// public notifications: Notification[]
-	// public game: Game
+	public game?: Game // Current game instance
 
 	constructor() {
 		// Initialize Services in appropriate order
@@ -34,6 +36,7 @@ export class App {
 		this.cache = new Cache(this)
 		this.websocket = new WebSocketClient(this)
 		this.router = new Router(this)
+		this.notifications = new NotificationManager(this)
 
 		// Initialize Elements
 		this.navbar = new Navbar(this)
@@ -51,7 +54,7 @@ export class App {
 				this.background.render()
 				this.content.render()
 				this.router.render()
-				console.log("App started")
+				// console.log("App started")
 			} else {
 				setTimeout(checkReady, 100) // Retry after 100ms
 			}
@@ -63,7 +66,7 @@ export class App {
 		return this.server.isLoggedIn
 	}
 
-	changeContent(content: string) {
+	changeContent(content: ContentType) {
 		this.content.setContent(content)
 	}
 

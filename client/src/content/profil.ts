@@ -1,6 +1,6 @@
 import { App } from "../classes/App.js"
 import { baseButton } from "../components/buttons.js"
-import { history } from "../components/history.js"
+import { smallHistoryCard } from "../components/history.js"
 import { initPlayerButtonEvents, playerCard } from "../components/player_card.js"
 import { t } from "../translations/translations.js"
 import { Match } from "../types/match.js"
@@ -42,12 +42,13 @@ export async function renderProfil(app: App, params?: routeParams) {
 
 // Returns the username from the URL parameters or from the logged-in user if there is none.
 // Opens the connect popup if no parameter or logged in user.
-function getUsernameOrRedirect(app: App, params?: routeParams): string | null {
+export function getUsernameOrRedirect(app: App, params?: routeParams): string | null {
 	if (!params?.username) {
 		if (app.loggedUser) {
 			return app.loggedUser.username
 		} else {
-			console.log("User not logged in, showing connect popup")
+			// console.log("User not logged in, showing connect popup")
+			app.router.renderPreviousPage()
 			connectPopup(app)
 			return null
 		}
@@ -56,10 +57,10 @@ function getUsernameOrRedirect(app: App, params?: routeParams): string | null {
 }
 
 // Fetches user data from the cache and redirects to the 404 page if not found.
-function getUserDataOrRedirect(app: App, username: string): UserData | null {
+export function getUserDataOrRedirect(app: App, username: string): UserData | null {
 	const userData = app.cache.getUserByUsername(username)
 	if (!userData) {
-		console.log("User not found, showing 404 page")
+		// console.log("User not found, showing 404 page")
 		app.router.notFound()
 		return null
 	}
@@ -67,7 +68,7 @@ function getUserDataOrRedirect(app: App, username: string): UserData | null {
 }
 
 // Calculates statistics based on a user and his matches
-function calculateStatistics(matches: Match[], username: string) {
+export function calculateStatistics(matches: Match[], username: string) {
 	const nbGame = matches.length
 	const gameTime = matches.reduce((total, match) => total + match.duration, 0)
 	const win = matches.filter((match) => match.winner === username).length
@@ -122,11 +123,11 @@ async function profilHTML(
 			<article class="border-berry h-[55.9px] w-full border-b px-4">
 				${userData.user.username === app.loggedUser?.username
 					? `<div class="center h-full">${t("stats")}</div>`
-					: playerCard(userData.user, userData.relationship, userData.user.id !== app.loggedUser?.id)}
+					: playerCard(userData, userData.user.id !== app.loggedUser?.id)}
 			</article>
 		</div>
-		<div class="flex h-full flex-col justify-center px-5 py-6">
-			<div class="flex min-h-[300px] w-full flex-col gap-2">
+		<div class="flex h-full flex-col items-center justify-center px-5 py-6 text-sm">
+			<div class="flex min-h-[300px] w-full flex-col justify-center gap-2">
 				<div class="flex items-center justify-between">
 					<span>${t("gameCount")}:</span>
 					<span class="">${nbGame}</span>
@@ -179,14 +180,15 @@ async function profilHTML(
 	`
 	// Games with this user
 	const historyInsightsHTML = /* HTML */ `
-		<div class="flex h-[57px] w-full font-bold">
+		<div class="flex h-[57px] w-full text-sm font-bold">
 			<article class="border-berry flex h-[55.9px] w-full items-center justify-center gap-[19px] border-b px-4">
 				${userData.user.username === app.loggedUser?.username ? `${t("games")}` : t("gamesWith") + ` ${userData.user.username}`}
 			</article>
 		</div>
-		<div class="flex h-full flex-col justify-center px-5 py-6">
+		<div class="flex h-full flex-col justify-center px-5 py-6 text-sm">
 			<div class="no-scrollbar flex min-h-[300px] flex-col justify-center overflow-y-auto text-center">
-				${last6Matches.map((match) => history(userData.user.username, match)).join("") || "Vous n'avez aucun match avec cet utilisateur."}
+				${last6Matches.map((match) => smallHistoryCard(userData.user.username, match)).join("") ||
+				"Vous n'avez aucun match avec cet utilisateur."}
 			</div>
 			<div class="mt-4 flex w-full cursor-pointer flex-col items-center justify-center gap-2">
 				${baseButton(t("seeMoreGames"), "data-link href=/history/" + userData.user.username)}
