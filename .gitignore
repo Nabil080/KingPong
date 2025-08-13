@@ -5,6 +5,4 @@ client/public/css
 client/public/js
 *.sqlite
 log
-package.json
-pacage-lock.json
 .vscodes
