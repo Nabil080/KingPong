@@ -38,5 +38,5 @@ export function resetInput(name: string, label: string, attributes: string = "")
 }
 
 export function errorDiv(): string {
-	return /* HTML */ ` <div class="text-red-500 absolute -top-10 left-0 hidden w-full px-2 text-center text-sm" data-error>This is an error</div> `
+	return /* HTML */ ` <div class="absolute -top-10 left-0 hidden w-full px-2 text-center text-sm text-red-500" data-error>This is an error</div> `
 }

@@ -21,7 +21,7 @@ export function optionsPopupHTML(currentStep: currentStepType | undefined): stri
 				${option("paddleSize", t("paddleSize"), savedOptions.paddleSize, 50, 200, 1, isReadOnly)}
 				${option("maxScore", t("maxScore"), savedOptions.maxScore, 1, 10, 1, isReadOnly)}
 			</div>
-			<div class="border-accent bg-accent bg-opacity-20 divide-accent flex min-h-[76px] divide-x-2 border-t text-base font-bold">
+			<div class="border-accent bg-accent divide-accent flex min-h-[76px] divide-x-2 border-t bg-opacity-20 text-base font-bold">
 				${customButtonNoTranslate(
 					t("reset"),
 					"bg-accent bg-opacity-20 hover:bg-opacity-100 h-full w-1/2",

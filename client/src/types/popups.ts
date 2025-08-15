@@ -36,5 +36,5 @@ export const popups: popupRoutes[] = [
 	{ id: "options", handler: optionsPopup },
 	{ id: "opponents", handler: opponentsPopup },
 	{ id: "online-players", handler: onlinePlayersPopup },
-    { id: "themes", handler: themePopup}
+	{ id: "themes", handler: themePopup },
 ]

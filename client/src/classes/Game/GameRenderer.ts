@@ -3,15 +3,14 @@ import { t } from "../../translations/translations.js"
 import { Paddle } from "./Elements/Paddle.js"
 import Game from "./Game.js"
 
-
 export default class GameRenderer {
 	public canvas?: HTMLCanvasElement
 	public ctx?: CanvasRenderingContext2D
-    private color: string = ""
+	private color: string = ""
 
 	constructor(public game: Game) {
-        this.updateColor()
-    }
+		this.updateColor()
+	}
 
 	setCanvas(canvas: HTMLCanvasElement) {
 		this.canvas = canvas
@@ -38,7 +37,7 @@ export default class GameRenderer {
 		// Draw border
 		this.drawBorder()
 
-        // Middle line
+		// Middle line
 		this.drawDottedLine()
 
 		// Draw paddles
@@ -53,7 +52,6 @@ export default class GameRenderer {
 
 		// Draw score
 		this.drawScore()
-
 
 		// Draw overlay
 		this.drawOverlay()
@@ -193,20 +191,19 @@ export default class GameRenderer {
 		this.ctx.fillText(message, this.canvas.width / 2, this.canvas.height / 4)
 	}
 
-    public updateColor(){
-        const themes = [
-          { name: "purple", accent: "#C10BD9" },
-          { name: "blue", accent: "#3498DB" },
-          { name: "red", accent: "#E63946" },
-          { name: "green", accent: "#2ECC71" },
-          { name: "orange", accent: "#FFA500" },
-          { name: "cyber", accent: "#39FF14" },
-          { name: "pastel", accent: "#FFD6A5" },
-          { name: "monochrome", accent: "#999999" }
-        ]
+	public updateColor() {
+		const themes = [
+			{ name: "purple", accent: "#C10BD9" },
+			{ name: "blue", accent: "#3498DB" },
+			{ name: "red", accent: "#E63946" },
+			{ name: "green", accent: "#2ECC71" },
+			{ name: "orange", accent: "#FFA500" },
+			{ name: "cyber", accent: "#39FF14" },
+			{ name: "pastel", accent: "#FFD6A5" },
+			{ name: "monochrome", accent: "#999999" },
+		]
 
-        const currentTheme = document.body.getAttribute("data-theme") as string
-        this.color = themes.find((theme) => theme.name === currentTheme)?.accent || ""
-    }
-
+		const currentTheme = document.body.getAttribute("data-theme") as string
+		this.color = themes.find((theme) => theme.name === currentTheme)?.accent || ""
+	}
 }

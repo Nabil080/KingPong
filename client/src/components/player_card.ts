@@ -4,17 +4,16 @@ import { DEFAULT_LOCAL_1 } from "../types/player.js"
 import { User, UserData } from "../types/user.js"
 import { getAvatarPath } from "../utils/utils.js"
 
-function status(user: User){
-    user.status = "playing"
-    let content = ""
-    if (user.status === "playing"){
-        content = `<button data-action="spectate" data-user-id="${user.id}" class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
+function status(user: User) {
+	let content = ""
+	if (user.status === "playing") {
+		content = `<button data-action="spectate" data-user-id="${user.id}" class="absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
                     <svg class="pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>`
-    } else {
-    	content = `<div data-status="${user.status}" class="avatar pointer-events-none absolute bottom-0 right-0 w-3"></div>`
-    }
-    return content
+	} else {
+		content = `<div data-status="${user.status}" class="avatar pointer-events-none absolute bottom-0 right-0 w-3"></div>`
+	}
+	return content
 }
 
 export function playerCard(userData: UserData, showChat: boolean = true): string {
@@ -38,7 +37,7 @@ export function playerCard(userData: UserData, showChat: boolean = true): string
 			<div id="user-info" class="group flex items-center gap-4" data-link href="/profil/${user.username}">
 				<div class="relative">
 					<img src="${getAvatarPath(user.avatar)}" class="avatar hover-effect pointer-events-none w-9" alt="${user.username}" />
-                    ${status(user)}
+					${status(user)}
 				</div>
 				<span class="pointer-events-none w-[9ch] truncate font-bold">${user.username}</span>
 			</div>
@@ -147,10 +146,10 @@ export function initPlayerButtonEvents(app: App) {
 						// Send a game invitation via WebSocket
 						handleDefy(app, targetId, username)
 						break
-                    case "spectate":
-                        // TODO: 
-                        alert("Spectate not implemented yet")
-                        break
+					case "spectate":
+						// TODO:
+						alert("Spectate not implemented yet")
+						break
 				}
 			}
 		})

@@ -38,5 +38,9 @@ export function customButtonNoTranslate(label: string, classList: string, attrib
 }
 
 export function langButton(key: string, label: string) {
-	return /* HTML */ ` <button class="bg-secondary bg-opacity-30 hover:bg-accent hover:bg-opacity-100 w-full cursor-pointer py-2 text-center" data-lang="${key}">${label}</button> `
+	return /* HTML */ `
+		<button class="bg-secondary hover:bg-accent w-full cursor-pointer bg-opacity-30 py-2 text-center hover:bg-opacity-100" data-lang="${key}">
+			${label}
+		</button>
+	`
 }
