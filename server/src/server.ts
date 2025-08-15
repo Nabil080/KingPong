@@ -26,10 +26,10 @@ const envToLogger = {
 // 🔹 Initialisation du serveur Fastify
 const fastify = Fastify({
 	logger: envToLogger.test,
-	https: {
-		key: fs.readFileSync("/etc/ssl/private/server.key"),
-		cert: fs.readFileSync("/etc/ssl/certs/server.crt"),
-	},
+	// https: {
+	// 	key: fs.readFileSync("/etc/ssl/private/server.key"),
+	// 	cert: fs.readFileSync("/etc/ssl/certs/server.crt"),
+	// },
 })
 
 fastify.register(fastifyJwt, {

@@ -5,9 +5,9 @@ import WebSocketClient from "./classes/WebSocketClient.js"
 const HOST_MACHINE = "localhost"
 // const HOST_MACHINE = "f2r4s9"
 
-App.URL = "https://localhost:3000" // Set the URL for the app
-Server.URL = `https://${HOST_MACHINE}:8080` // Set the URL for the server
-WebSocketClient.URL = `wss://${HOST_MACHINE}:8080/ws` // Set the URL for the WebSocket client
+App.URL = "http://localhost:3000" // Set the URL for the app
+Server.URL = `http://${HOST_MACHINE}:8080` // Set the URL for the server
+WebSocketClient.URL = `ws://${HOST_MACHINE}:8080/ws` // Set the URL for the WebSocket client
 
 const app = new App()
 

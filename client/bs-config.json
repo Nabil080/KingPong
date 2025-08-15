@@ -4,11 +4,7 @@
 	"watchOptions": { "ignored": "node_modules" },
 	"port": 3001,
 	"server": {
-		"baseDir": "public",
-		"https": {
-			"key": "./etc/ssl/certs/server.key",
-			"cert": "./etc/ssl/certs/server.crt"
-		}
+		"baseDir": "public"
 	},
 	"open": false,
 	"notify": false,

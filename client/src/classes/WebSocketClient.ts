@@ -27,7 +27,7 @@ import { App } from "./App.js"
 export default class WebSocketClient {
 	public ready: boolean = false
 	private ws: WebSocket
-	static URL = "wss://localhost:8080/ws"
+	static URL = "ws://localhost:8080/ws"
 
 	constructor(private app: App) {
 		this.ws = new WebSocket(WebSocketClient.URL)

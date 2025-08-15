@@ -29,7 +29,7 @@ declare module "fastify" {
 export async function setupServer(fastify: FastifyInstance): Promise<void> {
 	// 🔹 Configuration de CORS
 	fastify.register(fastifyCors, {
-		origin: true,
+		origin: ["http://localhost:3000"],
 		credentials: true,
 		methods: ["GET", "POST", "PUT", "DELETE"],
 		allowedHeaders: ["Content-Type", "Authorization"], // ✅ Allow incoming Auth header
@@ -42,7 +42,7 @@ export async function setupServer(fastify: FastifyInstance): Promise<void> {
 		secret: randomBytes(32).toString("hex"),
 		cookie: {
 			maxAge: 8 * 60 * 60 * 1000, // 8h to minutes to seconds to milliseconds
-			secure: true, // Mettre `true` en production avec HTTPS
+			secure: false, // Mettre `true` en production avec HTTPS
 			httpOnly: true,
 			sameSite: "lax", // Aide à permettre les requêtes cross-origin avec credentials
 		},
