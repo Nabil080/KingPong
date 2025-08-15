@@ -28,7 +28,7 @@ export function updateGamePlayers(game: Game) {
 			<h2>${player1Name}</h2>
 			${game.currentStep === "not-ready" ? readyBadge(game.player1Ready) : ""}
 		</div>
-		<img src="/assets/images/versus.png" class="mx-auto h-12" />
+		<img src="/assets/images/versus.png" class="theme-img mx-auto h-12" />
 		<div
 			id="player2"
 			class="${game.player2Joined ? "" : "opacity-50"} ${player2Link

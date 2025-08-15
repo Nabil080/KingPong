@@ -13,6 +13,7 @@ function themePopupHTML(): string {
 
 	return /* HTML */ `
 		<section class="small-size container">
+            <span class="text-center">/!\\ WORK IN PROGRESS /!\\</span>
 			<div class="mx-6 my-auto space-y-4 text-lg font-bold">
 				<!-- Current theme first -->
 				<div>${themeButton(currentTheme)}</div>

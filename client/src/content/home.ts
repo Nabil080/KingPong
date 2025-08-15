@@ -7,7 +7,7 @@ export function homeHTML(): string {
 		<section class="small-size container">
 			<div class="mx-6 my-auto space-y-4 text-lg font-bold">
 				<div id="logo-wrapper" class="mx-auto mb-6 w-1/2">
-					<img id="logo" src="/assets/images/full_logo.png" />
+					<img id="logo" src="/assets/images/full_logo.png" class="theme-img" />
 				</div>
 				${baseButton(t("online"), "data-link href='/players'")} ${baseButton(t("offline"), "data-link href='/pong'")}
 				${baseButton(t("tournament"), "data-link href='/tournament'")}

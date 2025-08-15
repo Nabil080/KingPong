@@ -13,14 +13,12 @@ export default class Navbar {
 			<!-- Left section: Logo and flag -->
 			<section id="left-nav" class="flex gap-4">
 				<a id="home-link" href="/" data-link class="group-event">
-					<img id="logo" src="/assets/images/logo.png" class="w-[38px]" alt="KingPong Logo" />
+					<img id="logo" src="/assets/images/logo.png" class="theme-img w-[38px]" alt="KingPong Logo" />
 				</a>
 				<button id="lang-button" data-popup="language" class="group-event">
 					<img id="lang-flag" src="/assets/images/lang/${t("flag")}" class="h-[40px]" alt="KingPong Flag" />
 				</button>
-                <button data-popup="themes">
-                    themes
-                </button>
+				<button data-popup="themes">Theme</button>
 			</section>
 
 			<!-- Center section: Navigation buttons -->
@@ -91,7 +89,7 @@ export default class Navbar {
 					<span class="content-center justify-center">${loggedUser.username}</span>
 					<img src="${getAvatarPath(loggedUser.avatar)}" alt="avatar" class="hover-effect avatar h-[38px] w-[38px]" />
 				`
-			: /* HTML */ ` <img src="/assets/images/icons/login.png" alt="avatar" class="hover-effect h-[38px] w-[38px]" /> `
+			: /* HTML */ ` <img src="/assets/images/icons/login.png" alt="avatar" class="theme-img hover-effect h-[38px] w-[38px]" /> `
 
 		// Popup event
 		userInfoContainer.setAttribute("data-popup", loggedUser ? "settings" : "connect")

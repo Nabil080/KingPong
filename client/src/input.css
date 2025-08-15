@@ -12,6 +12,7 @@
         --secondary: #940AA1;
         --accent: #C10BD9;
         --background: #230926;
+        --filter: brightness(0) saturate(100%) invert(24%) sepia(45%) saturate(5000%) hue-rotate(276deg) brightness(92%) contrast(105%);
     }
 
     [data-theme="blue"] {
@@ -19,6 +20,7 @@
         --secondary: #1E6FA4;
         --accent: #3498DB;
         --background: #0B1F33;
+        --filter: brightness(0) saturate(100%) invert(20%) sepia(90%) saturate(2000%) hue-rotate(190deg) brightness(95%) contrast(105%);
     }
 
     [data-theme="red"] {
@@ -26,6 +28,7 @@
         --secondary: #A4161A;
         --accent: #E63946;
         --background: #2B0B0E;
+        --filter: brightness(0) saturate(100%) invert(20%) sepia(80%) saturate(5000%) hue-rotate(345deg) brightness(95%) contrast(105%);
     }
 
     [data-theme="green"] {
@@ -33,6 +36,7 @@
         --secondary: #1A9445;
         --accent: #2ECC71;
         --background: #0D2B1A;
+        --filter: brightness(0) saturate(100%) invert(25%) sepia(85%) saturate(2000%) hue-rotate(135deg) brightness(95%) contrast(100%);
     }
 
     [data-theme="orange"] {
@@ -40,6 +44,7 @@
         --secondary: #D97706;
         --accent: #FFA500;
         --background: #2E1600;
+        --filter: brightness(0) saturate(100%) invert(33%) sepia(90%) saturate(3000%) hue-rotate(25deg) brightness(95%) contrast(105%);
     }
 
     [data-theme="cyber"] {
@@ -47,6 +52,7 @@
         --secondary: #00FF9F;
         --accent: #39FF14;
         --background: #020202;
+        --filter: brightness(0) saturate(100%) invert(5%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(95%) contrast(100%);
     }
 
     [data-theme="pastel"] {
@@ -54,6 +60,7 @@
         --secondary: #CBAACB;
         --accent: #FFD6A5;
         --background: #FAF3F3;
+        --filter: brightness(0) saturate(100%) invert(73%) sepia(15%) saturate(1000%) hue-rotate(105deg) brightness(95%) contrast(90%);
     }
 
     [data-theme="monochrome"] {
@@ -61,6 +68,7 @@
         --secondary: #333333;
         --accent: #999999;
         --background: #000000;
+        --filter: brightness(0) saturate(100%) invert(10%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
     }
 }
 
@@ -131,6 +139,9 @@
 	.large-size {
 		@apply h-[671px] w-[1080px];
 	}
+    .theme-img {
+        filter: var(--filter);
+    }
 }
 
 @layer components {
