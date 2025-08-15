@@ -61,7 +61,7 @@ export function fullHistoryCard(app: App, username: string, match: Match): strin
 					</div>
 					<span class="pointer-events-none truncate">${player1.username} ${match.score1}</span>
 				</div>
-				<img src="/assets/images/versus.png" class="w-8" />
+				<img src="/assets/images/versus.png" class="w-8 theme-img" />
 				<div id="player2" class="hover-effect flex w-28 items-center gap-2" data-link href="/profil/${player2.username}">
 					<span class="pointer-events-none w-full truncate text-right">${match.score2} ${player2.username}</span>
 					<div class="flex-shrink-0">

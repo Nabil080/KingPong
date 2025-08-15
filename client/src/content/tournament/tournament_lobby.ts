@@ -19,7 +19,7 @@ function tournamentMatchupElement(game: Game): string {
         <span class="font-semibold text-center ${!player1 ? "opacity-60" : ""} ${isLoser(player1) ? "line-through text-gray-500" : ""}">${getPlayerName(player1, "?")}</span>
 		<span>${game.winner ? `${game.state.score1}` : ""}</span>
         <div class="${!player1 && !player2 ? "opacity-60" : ""}">
-		<img src="/assets/images/versus.png" alt="VS" class="w-8 transform transition-transform duration-300 hover:scale-110" />
+		<img src="/assets/images/versus.png" alt="VS" class="theme-img w-8 transform transition-transform duration-300 hover:scale-110" />
 		<div class="bg-secondary opacity-40 blur"></div>
         </div>
 		<span>${game.winner ? `${game.state.score2}` : ""}</span>
