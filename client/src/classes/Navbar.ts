@@ -63,14 +63,7 @@ export default class Navbar {
 		}
 
 		// Update links language
-		const linksContainer = document.querySelector("nav #center-nav") as HTMLElement
-		if (!linksContainer) return
-		linksContainer.innerHTML = `
-			${link(t("pong"), "/")}
-			${link(t("profil"), "/profil", "/profil/:?username")}
-			${link(t("stats"), "/stats", "/stats/:?username")}
-			${link(t("history"), "/history", "/history/:?username")}
-			`
+        this.updateNavbarLoggedState()
 	}
 
 	updateNavbarLoggedState() {
