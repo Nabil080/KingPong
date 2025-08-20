@@ -60,6 +60,10 @@ export default function handleConnection(socket: WebSocket, request: FastifyRequ
 					service.handleKeyEventMessage(message)
 					break
 
+                case "spectate":
+                    service.handleSpectateMessage(message)
+                    break
+
 				default:
 					socket.send(JSON.stringify({ type: "error", message: "Unknown message type" }))
 			}

@@ -1,7 +1,7 @@
 import { WebSocket } from "@fastify/websocket"
 import { getUserById } from "../auth/auth.service.js"
 import GameManager from "../Game/Game.Manager.js"
-import { acceptInvite, cancelGame, cancelInvite, createInvite, declineInvite, setReady } from "../Game/game.service.js"
+import { acceptInvite, addSpectator, cancelGame, cancelInvite, createInvite, declineInvite, removeSpectator, setReady } from "../Game/game.service.js"
 import { setStatus } from "../users/users.model.js"
 import WebSocketManager from "./WebSocket.Manager.js"
 import {
@@ -21,6 +21,8 @@ import {
 	KeyEventMessage,
 	PongReply,
 	ReadyMessage,
+    SpectateMessage,
+    SpectateReply,
 } from "./websocket.types.js"
 
 /**
@@ -202,6 +204,22 @@ export default function makeWebSocketService(socket: WebSocket, verifyJwt: (toke
 				game.handleKeyEvent(userId, message.key, message.pressed)
 			}
 		},
+        handleSpectateMessage(message: SpectateMessage) {
+            let reply: SpectateReply | ErrorReply = { type: "error" }
+
+			if (!userId) {
+				reply.message = "You are not connected"
+			} else if (message.spectate && !addSpectator(userId, message.targetId)) {
+				reply.message = "Target user not in a game"
+			} else if (!message.spectate && !removeSpectator(userId)){
+				reply.message = "You are not spectating anyone"
+            } else {
+				reply = {
+					type: "spectate",
+					success: true,
+				}
+			}
+        },
 		sendGameInput(message: GameInputMessage) {
 			let reply: GameInputReply | ErrorReply = { type: "error" }
 

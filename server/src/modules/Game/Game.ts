@@ -75,7 +75,7 @@ export default class Game {
 	public duration: number = 0
 
     // Spectators
-    public spectators: number[] = [] // user ids
+    public spectators: Set<number> = new Set() // user ids
 
 	constructor(player1: number, player2: number, options: GameOptions) {
 		this.player1Id = player1
@@ -102,7 +102,7 @@ export default class Game {
 		WebSocketManager.sendTo(this.player1Id, gameStateReply)
 		WebSocketManager.sendTo(this.player2Id, gameStateReply)
         this.spectators.forEach(spectatorId => WebSocketManager.sendTo(spectatorId, gameStateReply))
-        console.log("Spectator count : " + this.spectators.length)
+        console.log("Spectator count : " + this.spectators.size)
 	}
 
 	public getReply(): GameStateReply {
