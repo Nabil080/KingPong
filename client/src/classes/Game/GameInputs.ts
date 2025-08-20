@@ -77,7 +77,11 @@ export class GameInputs {
 		if (this.game.player1?.type !== "remote" || this.game.player2?.type !== "remote") return
 
 		// Control the left or right paddle based on the logged-in user
-		const paddle = this.game.app.loggedUser!.id === this.game.player1?.user.id ? this.game.state.paddle1 : this.game.state.paddle2
+        let paddle;
+        if (this.game.app.loggedUser?.id === this.game.player1?.user.id) paddle = this.game.state.paddle1
+        else if (this.game.app.loggedUser?.id === this.game.player2?.user.id) paddle = this.game.state.paddle2
+        else return // Spectator has no controls
+
 		if (this.keys["w"]) {
 			paddle.moveUp()
 		}

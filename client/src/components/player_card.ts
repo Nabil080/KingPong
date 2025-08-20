@@ -147,8 +147,7 @@ export function initPlayerButtonEvents(app: App) {
 						handleDefy(app, targetId, username)
 						break
 					case "spectate":
-						// TODO:
-						alert("Spectate not implemented yet")
+                        app.websocket.sendSpectateMessage(targetId, true)
 						break
 				}
 			}

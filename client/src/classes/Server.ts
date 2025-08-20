@@ -215,7 +215,7 @@ export default class Server {
 		if (data.type === "gameState") {
 			this.app.game = newGameFromStateReply(this.app, data)
 			this.app.websocket.handleGameStateReply(data)
-		} else {
+		} else if (!this.app.game) {
 			this.app.game = new Game(this.app)
 		}
 

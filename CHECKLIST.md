@@ -163,10 +163,8 @@
 - [ ] LocalStorage section in confidentiality policy
 
 ## 17. Bonuses
-- [ ] Ajouter un theme en option similairement au language. On peut commencer avec un seul theme alternatif dans un premier temps
+- [x] Ajouter un theme en option similairement au language. On peut commencer avec un seul theme alternatif dans un premier temps
 - [x] Pour que la polar area chart (most played users) soit plus agreable a voir en correction,
 on peut faire varier le nombre de games contre chaque user dans seed.ts
 - [ ] Network disconnect/reconnect handling <!-- The client does nothing special when the connection to the server is lost, there is no way to know if the server is active or not. Maybe polling with error 500 page would fix this-->
 - [ ] 500 page for server internal error <!-- ignored -->
-
----

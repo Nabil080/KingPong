@@ -175,5 +175,6 @@ export function newGameFromStateReply(app: App, reply: GameStateReply) {
 	game.setPlayer(2, { type: "remote", user: player2 })
 	game.player2Joined = true
 	game.gameMode = "remote"
+    game.currentStep = reply.currentStep
 	return game
 }

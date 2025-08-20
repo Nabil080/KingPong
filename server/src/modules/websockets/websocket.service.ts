@@ -219,6 +219,7 @@ export default function makeWebSocketService(socket: WebSocket, verifyJwt: (toke
 					success: true,
 				}
 			}
+            WebSocketManager.reply(socket, reply)
         },
 		sendGameInput(message: GameInputMessage) {
 			let reply: GameInputReply | ErrorReply = { type: "error" }

@@ -3,6 +3,7 @@ import { switchChatInput } from "../content/chat.js"
 import { updateGameButtons } from "../content/pong/buttons.js"
 import { updateGamePlayers } from "../content/pong/players.js"
 import { RemotePlayer } from "../types/player.js"
+import { User } from "../types/user.js"
 import {
 	CancelGameMessage,
 	CancelInviteMessage,
@@ -25,6 +26,7 @@ import {
 	WebSocketReply,
 } from "../types/websocket.js"
 import { App } from "./App.js"
+import Game, { newGameFromStateReply } from "./Game/Game.js"
 
 export default class WebSocketClient {
 	public ready: boolean = false
@@ -157,12 +159,13 @@ export default class WebSocketClient {
 	}
 
 
-    sendSpectateMessage(spectating: boolean) {
+    sendSpectateMessage(targetId: number, spectating: boolean) {
         if (this.app.server.isLoggedIn === false) return
         if (this.app.game?.gameMode === "remote") return
 
         this.send({
             type: "spectate",
+            targetId: targetId,
             spectate: spectating
         } as SpectateMessage)
     }
@@ -199,6 +202,9 @@ export default class WebSocketClient {
 			case "gameState":
 				this.handleGameStateReply(reply)
 				break
+            case "spectate":
+                this.handleSpectateReply(reply)
+                break
 			default:
 				console.warn("Unknown WebSocket message type:", reply.type)
 		}
@@ -278,8 +284,8 @@ export default class WebSocketClient {
 	}
 
 	handleGameStateReply(reply: GameStateReply) {
-		// console.log("Handling game state reply")
-		if (!this.app.game) return
+        if (!this.app.game)
+            this.app.game = newGameFromStateReply(this.app, reply)
 		const game = this.app.game
 		if (!game) return
 		if (game.player1?.type !== "remote" || game.player2?.type !== "remote") return
@@ -342,6 +348,11 @@ export default class WebSocketClient {
 	}
 
     handleSpectateReply(reply: SpectateReply){
-        if (reply.success) this.app.router.navigate("/pong")
+        console.log("Spectate reply : ", reply)
+        if (reply.success)
+        {
+            this.app.game = undefined
+            this.app.router.navigate("/pong")
+        }
     }
 }

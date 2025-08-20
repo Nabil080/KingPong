@@ -62,10 +62,10 @@ class GameManager {
 	 * @returns The game the player is part of, or null if not found.
 	 */
 	findGameByPlayerId(playerId: number): Game | null {
-        this.games.forEach(game => {
+		for (const game of this.games) {
 			if (game.player1Id === playerId || game.player2Id === playerId)
                 return game
-        })
+        }
 		return null
 	}
 
@@ -75,10 +75,10 @@ class GameManager {
 	 * @returns The game the spectator is part of, or null if not found.
 	 */
     findGameBySpectatorId(spectatorId: number): Game | null {
-        this.games.forEach(game => {
+		for (const game of this.games) {
             if (game.spectators.has(spectatorId))
                 return game
-        })
+        }
 		return null
     }
 
