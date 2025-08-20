@@ -33,6 +33,12 @@ export type GameInputMessage = {
 	targetId: number
 }
 
+export type SpectateMessage = {
+    type: "spectate"
+    targetId: number
+    spectate: boolean
+}
+
 export type PongReply = { type: "pong"; loggedIn: boolean }
 export type ConnectReply = { type: "connect"; userId: number }
 export type LogoutReply = { type: "logout"; userId: number }
@@ -70,6 +76,11 @@ export type GameInputReply = {
 	paddlePosition?: number
 }
 
+export type SpectateReply = {
+    type: "spectate"
+    success: boolean
+}
+
 export type WebSocketMessage =
 	| ConnectMessage
 	| PingMessage
@@ -82,6 +93,7 @@ export type WebSocketMessage =
 	| KeyEventMessage
 	| CancelInviteMessage
 	| CancelGameMessage
+    | SpectateMessage
 
 export type WebSocketReply =
 	| PongReply
@@ -97,3 +109,4 @@ export type WebSocketReply =
 	| GameStateReply
 	| CancelInviteReply
 	| CancelGameReply
+    | SpectateReply

@@ -19,6 +19,8 @@ import {
 	LogoutReply,
 	PingMessage,
 	ReadyMessage,
+	SpectateMessage,
+	SpectateReply,
 	WebSocketMessage,
 	WebSocketReply,
 } from "../types/websocket.js"
@@ -153,6 +155,17 @@ export default class WebSocketClient {
 			type: "cancel-game",
 		} as CancelGameMessage)
 	}
+
+
+    sendSpectateMessage(spectating: boolean) {
+        if (this.app.server.isLoggedIn === false) return
+        if (this.app.game?.gameMode === "remote") return
+
+        this.send({
+            type: "spectate",
+            spectate: spectating
+        } as SpectateMessage)
+    }
 
 	/**
 	 * Handles incoming WebSocket messages
@@ -327,4 +340,8 @@ export default class WebSocketClient {
 		updateGamePlayers(this.app.game)
 		updateGameButtons(this.app.game)
 	}
+
+    handleSpectateReply(reply: SpectateReply){
+        if (reply.success) this.app.router.navigate("/pong")
+    }
 }
