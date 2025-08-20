@@ -1,5 +1,10 @@
 # Comprehensive Website Testing Checklist
 
+- spectator
+> spectator count / notif for players
+> live update when someone is playing
+> playing users on top
+
 ## 1. Authentication & Authorization
 - [x] Register with valid credentials
 - [x] Register with invalid credentials (short password, invalid email, etc.)

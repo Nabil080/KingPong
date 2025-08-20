@@ -3,6 +3,7 @@ import { FastifyRequest } from "fastify"
 import { log } from "../../utils/logger.js"
 import makeWebSocketService from "./websocket.service.js"
 import { WebSocketMessage } from "./websocket.types.js"
+import { removeSpectator } from "../Game/game.service.js"
 
 /**
  * Main WebSocket connection handler.
@@ -75,6 +76,7 @@ export default function handleConnection(socket: WebSocket, request: FastifyRequ
 	// logout client
 	socket.on("close", () => {
 		service.disconnectClient()
+        
 		// console.log("Websocket deconnected")
 	})
 }

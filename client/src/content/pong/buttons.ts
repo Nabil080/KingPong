@@ -118,8 +118,9 @@ function initRightButtonEvent(game: Game) {
 					break
                 case "leave":
                    game.app.websocket.sendSpectateMessage(0, false)
-                game.app.game = new Game(game.app)
-                game = game.app.game
+                    game.app.game = new Game(game.app)
+                    game = game.app.game
+                    break
 			}
 			updateGamePlayers(game)
 			updateGameButtons(game)

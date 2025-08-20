@@ -23,6 +23,7 @@ import {
 	ReadyMessage,
     SpectateMessage,
     SpectateReply,
+    StatusReply,
 } from "./websocket.types.js"
 
 /**
@@ -34,7 +35,7 @@ export default function makeWebSocketService(socket: WebSocket, verifyJwt: (toke
 
 	return {
 		async connectClient(message: ConnectMessage) {
-			let reply: ConnectReply | ErrorReply = { type: "error" }
+			let reply: StatusReply | ErrorReply = { type: "error" }
 
 			if (!message.token) {
 				reply.message = "token is missing"
@@ -67,7 +68,7 @@ export default function makeWebSocketService(socket: WebSocket, verifyJwt: (toke
 			} else {
 				userId = message.userId
 				WebSocketManager.addClient(message.userId, socket)
-				reply = { type: "connect", userId: userId }
+				reply = { type: "status", userId: userId , status: "online"}
 				setStatus(userId, "online")
 			}
 
@@ -84,7 +85,8 @@ export default function makeWebSocketService(socket: WebSocket, verifyJwt: (toke
 			if (userId) {
 				WebSocketManager.removeClient(userId)
 				setStatus(userId, "offline")
-				WebSocketManager.broadcast({ type: "logout", userId: userId })
+				WebSocketManager.broadcast({ type: "status", userId: userId, status: "offline"})
+                removeSpectator(userId)
 				userId = null
 			}
 		},

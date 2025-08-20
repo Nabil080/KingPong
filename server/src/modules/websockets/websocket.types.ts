@@ -85,6 +85,12 @@ export type SpectateReply = {
     success: boolean
 }
 
+export type StatusReply = {
+    type: "status"
+    userId: number
+    status: "online" | "offline" | "playing"
+}
+
 export type WebSocketMessage =
 	| ConnectMessage
 	| PingMessage
@@ -101,8 +107,6 @@ export type WebSocketMessage =
 
 export type WebSocketReply =
 	| PongReply
-	| ConnectReply
-	| LogoutReply
 	| ChatReply
 	| InviteReply
 	| InviteResponseReply
@@ -114,3 +118,4 @@ export type WebSocketReply =
 	| CancelInviteReply
 	| CancelGameReply
     | SpectateReply
+    | StatusReply

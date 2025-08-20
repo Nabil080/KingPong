@@ -3,30 +3,28 @@ import { switchChatInput } from "../content/chat.js"
 import { updateGameButtons } from "../content/pong/buttons.js"
 import { updateGamePlayers } from "../content/pong/players.js"
 import { RemotePlayer } from "../types/player.js"
-import { User } from "../types/user.js"
 import {
 	CancelGameMessage,
 	CancelInviteMessage,
 	CancelInviteReply,
 	ChatReply,
 	ConnectMessage,
-	ConnectReply,
 	GameStateReply,
 	InviteReply,
 	InviteResponseMessage,
 	InviteResponseReply,
 	KeyEventMessage,
 	LogoutMessage,
-	LogoutReply,
 	PingMessage,
 	ReadyMessage,
 	SpectateMessage,
 	SpectateReply,
+	StatusReply,
 	WebSocketMessage,
 	WebSocketReply,
 } from "../types/websocket.js"
 import { App } from "./App.js"
-import Game, { newGameFromStateReply } from "./Game/Game.js"
+import { newGameFromStateReply } from "./Game/Game.js"
 
 export default class WebSocketClient {
 	public ready: boolean = false
@@ -43,7 +41,6 @@ export default class WebSocketClient {
 	 */
 	private connect() {
 		this.ws.onopen = () => {
-			// console.log("WebSocket connection established")
 			this.send({ type: "ping" } as PingMessage)
 			this.ready = true
 		}
@@ -175,13 +172,12 @@ export default class WebSocketClient {
 	 * @param data - The received message data
 	 */
 	private handleReply(reply: WebSocketReply) {
-		// console.log("WebSocket reply:", reply)
+		console.log("WebSocket reply:", reply)
 		switch (reply.type) {
 			case "pong":
 				// console.log("Websocket received pong")
 				break
-			case "connect":
-			case "logout":
+            case "status":
 				this.handleUserStatusReply(reply)
 				break
 			case "chat":
@@ -215,17 +211,14 @@ export default class WebSocketClient {
 	// ------------------- REPLY HANDLERS ------------------
 	// ------------------- REPLY HANDLERS ------------------
 
-	async handleUserStatusReply(reply: ConnectReply | LogoutReply) {
-		// Determine the status based on the reply type
-		const status = reply.type === "connect" ? "online" : "offline"
-
+	async handleUserStatusReply(reply: StatusReply) {
 		// Ignore update for self
 		if (reply.userId === this.app.loggedUser?.id) {
 			return
 		}
 
 		// Update user status in the cache
-		await this.app.cache.updateStatus(reply.userId, status)
+		await this.app.cache.updateStatus(reply.userId, reply.status)
 
 		// Ignore visual updates for blocked users
 		if (this.app.cache.isBlocked(reply.userId)) {
@@ -233,11 +226,11 @@ export default class WebSocketClient {
 		}
 
 		// Update visual indicators of user status
-		switchPlayerCardStatus(this.app, reply.userId, status)
-		switchChatInput(reply.userId, status === "online")
-		if (status === "online") {
+		switchPlayerCardStatus(this.app, reply.userId, reply.status)
+		switchChatInput(reply.userId, reply.status !== "offline")
+		if (reply.status === "online") {
 			this.app.notifications.loginNotification(reply.userId)
-		} else {
+		} else if (reply.status === "offline" ){
 			this.app.notifications.logoutNotification(reply.userId)
 		}
 	}

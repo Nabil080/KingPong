@@ -26,7 +26,7 @@ export function playersTabContentHTML(app: App, tab: playerListTab): string {
 
 	users.sort((a, b) => {
 		const statusA = a.user.status === "online" || a.user.status === "playing" ? 0 : 1
-		const statusB = b.user.status === "online" || a.user.status === "playing" ? 0 : 1
+		const statusB = b.user.status === "online" || b.user.status === "playing" ? 0 : 1
 		return statusA - statusB
 	})
 

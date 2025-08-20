@@ -11,7 +11,11 @@ function status(user: User) {
                     <svg class="pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>`
 	} else {
-		content = `<div data-status="${user.status}" class="avatar pointer-events-none absolute bottom-0 right-0 w-3"></div>`
+		content = `<div data-status="${user.status}" class="avatar pointer-events-none absolute bottom-0 right-0 w-3">
+                    <button data-action="spectate" data-user-id="${user.id}" class="hidden absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4">
+                        <svg class="pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="white" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-icon lucide-eye"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>`
 	}
 	return content
 }
@@ -58,7 +62,7 @@ export function playerCard(userData: UserData, showChat: boolean = true): string
 	`
 }
 
-export function switchPlayerCardStatus(app: App, id: number, newStatus: "online" | "offline") {
+export function switchPlayerCardStatus(app: App, id: number, newStatus: "online" | "offline" | "playing") {
 	let playerCardElem = document.querySelector(`[data-player-card="${id}"]`) as HTMLElement
 
 	// Create the card if it does not exists (useful for new registration)
@@ -74,12 +78,14 @@ export function switchPlayerCardStatus(app: App, id: number, newStatus: "online"
 	}
 
 	const statusDiv = playerCardElem?.querySelector(`[data-status]`) as HTMLElement
-
 	if (!statusDiv) return
 
 	// Update the status attribute
+    const oldStatus = statusDiv.getAttribute("data-status")
 	statusDiv.setAttribute("data-status", newStatus)
-	// console.log(`New status for ${id} : ${newStatus}`)
+
+    // If we aren't changing from or to offline there's no need to move the card
+    if (newStatus !== "offline" && oldStatus !== "offline") return
 
 	// moves the card to the new position
 	const playersList = document.getElementById("players-list")

@@ -102,7 +102,7 @@ export default class Game {
 		WebSocketManager.sendTo(this.player1Id, gameStateReply)
 		WebSocketManager.sendTo(this.player2Id, gameStateReply)
         this.spectators.forEach(spectatorId => WebSocketManager.sendTo(spectatorId, gameStateReply))
-        console.log("Spectator count : " + this.spectators.size)
+        // console.log("Spectator count : " + this.spectators.size)
 	}
 
 	public getReply(): GameStateReply {
@@ -155,6 +155,10 @@ export default class Game {
         // Set the players status to playing
         setStatus(this.player1Id, "playing") 
         setStatus(this.player2Id, "playing") 
+        // Broadcast for live update
+        WebSocketManager.broadcast({type:"status", userId: this.player1Id, status: "playing"})
+        WebSocketManager.broadcast({type:"status", userId: this.player2Id, status: "playing"})
+    
     }
 
     public stop(){

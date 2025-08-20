@@ -40,8 +40,6 @@ export type SpectateMessage = {
 }
 
 export type PongReply = { type: "pong"; loggedIn: boolean }
-export type ConnectReply = { type: "connect"; userId: number }
-export type LogoutReply = { type: "logout"; userId: number }
 export type ChatReply = { type: "chat"; senderId: number; message: string }
 export type ErrorReply = { type: "error"; message?: string }
 export type SuccessReply = { type: "success" }
@@ -81,6 +79,12 @@ export type SpectateReply = {
     success: boolean
 }
 
+export type StatusReply = {
+    type: "status"
+    userId: number
+    status: "online" | "offline" | "playing"
+}
+
 export type WebSocketMessage =
 	| ConnectMessage
 	| PingMessage
@@ -97,8 +101,6 @@ export type WebSocketMessage =
 
 export type WebSocketReply =
 	| PongReply
-	| ConnectReply
-	| LogoutReply
 	| ChatReply
 	| InviteReply
 	| InviteResponseReply
@@ -110,3 +112,4 @@ export type WebSocketReply =
 	| CancelInviteReply
 	| CancelGameReply
     | SpectateReply
+    | StatusReply

@@ -84,7 +84,7 @@ export function cancelGame(playerId: number) {
 	} else if (game.currentStep === "playing") {
 		// If the game is in progress, set the other player as the winner and end the game
 		game.winner = game.player1Id === playerId ? game.player2Id : game.player1Id
-		game.state.done()
+		game.stop()
 	}
 	// Notify the other player that the game was canceled
 	WebSocketManager.sendTo(playerId === game.player1Id ? game.player2Id : game.player1Id, { type: "cancel-game" } as CancelGameReply)

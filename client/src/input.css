@@ -183,6 +183,10 @@
 		@apply bg-red-500;
 	}
 
+    div[data-status="playing"] button {
+        @apply block;
+    }
+
 	button[disabled] {
 		opacity: 50%;
 	}
