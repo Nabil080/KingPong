@@ -1,5 +1,5 @@
 import { registerGame } from "../matches/matches.service.js"
-import { setStatus } from "../users/users.model.js"
+import { getStatus, setStatus } from "../users/users.model.js"
 import WebSocketManager from "../websockets/WebSocket.Manager.js"
 import { GameStateReply } from "../websockets/websocket.types.js"
 import { Paddle } from "./Elements/Paddle.js"
@@ -171,5 +171,8 @@ export default class Game {
         // Change the player status
         setStatus(this.player1Id, WebSocketManager.isConnected(this.player1Id) ? "online" : "offline") 
         setStatus(this.player2Id, WebSocketManager.isConnected(this.player2Id) ? "online" : "offline") 
+        // Broadcast for live update
+        WebSocketManager.broadcast({type:"status", userId: this.player1Id, status: getStatus(this.player1Id)})
+        WebSocketManager.broadcast({type:"status", userId: this.player2Id, status: getStatus(this.player2Id)})
     }
 }

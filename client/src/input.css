@@ -183,6 +183,9 @@
 		@apply bg-red-500;
 	}
 
+    div[data-status="playing"] {
+        @apply pointer-events-none;
+    }
     div[data-status="playing"] button {
         @apply block;
     }

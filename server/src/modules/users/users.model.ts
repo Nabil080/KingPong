@@ -68,6 +68,10 @@ export function setStatus(id: number, status: string) {
 	return db.prepare("UPDATE users SET status = ? WHERE id = ?").run(status, id)
 }
 
+export function getStatus(id:number){
+    return getUserById(id)?.id
+}
+
 /**
  * Modifies, adds, or deletes a relationship between two users.
  * @param userId The ID of the user modifying the relationship.
