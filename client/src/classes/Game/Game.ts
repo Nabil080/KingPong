@@ -9,7 +9,7 @@ import GameRenderer from "./GameRenderer.js"
 import GameState from "./GameState.js"
 
 export type currentStepType = "configuring" | "waiting-for-opponent" | "not-ready" | "playing" | "pause" | "done" | "cancelled"
-export type gameMode = "local" | "remote" | "tournament" // | "spectator"
+export type gameMode = "local" | "remote" | "tournament" | "spectator"
 
 export default class Game {
 	// Constants

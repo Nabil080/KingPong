@@ -23,6 +23,7 @@ const ButtonDefinitions: Record<string, (game: Game) => string> = {
 	giveup: (game) => baseButton(t("giveup"), `data-action='giveup'`),
 	cancelTournament: (game) => baseButton(t("cancelTournament"), `data-action='cancelTournament'`),
 	next: (game) => baseButton(t("next"), `data-action='next'`),
+    leave: (game) => baseButton(t("leave"), `data-action='leave'`),
 }
 
 // Button mapping
@@ -42,11 +43,18 @@ const ButtonsMap: { gamemode: gameModeType; currentStep: currentStepType; button
 	{ gamemode: "tournament", currentStep: "playing", buttons: ["cancelTournament", "pause"] },
 	{ gamemode: "tournament", currentStep: "pause", buttons: ["cancelTournament", "resume"] },
 	{ gamemode: "tournament", currentStep: "done", buttons: ["next"] },
+	{ gamemode: "spectator", currentStep: "playing", buttons: ["options", "leave"] },
 ]
 
 export function updateGameButtons(game: Game) {
 	const gameButtons = document.getElementById("gameButtons")
 	if (!gameButtons) return
+
+    const userId = game.app.loggedUser?.id
+
+    // Detects if you are a spectator of the game
+    if (game.player1?.type === "remote" && game.player1?.user.id != userId && game.player2?.type === "remote" && game.player2.user.id != userId)
+        game.gameMode = "spectator"
 
 	// Find the button set for the current gamemode and step
 	const mapping = ButtonsMap.find((mapping) => mapping.gamemode === game.gameMode && mapping.currentStep === game.currentStep)
@@ -108,6 +116,10 @@ function initRightButtonEvent(game: Game) {
 					game.app.tournament!.currentGame = undefined
 					renderTournament(game.app)
 					break
+                case "leave":
+                   game.app.websocket.sendSpectateMessage(0, false)
+                game.app.game = new Game(game.app)
+                game = game.app.game
 			}
 			updateGamePlayers(game)
 			updateGameButtons(game)

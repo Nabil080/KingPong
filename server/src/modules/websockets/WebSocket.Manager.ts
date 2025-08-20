@@ -37,7 +37,8 @@ class WebSocketManager {
 		const client = this.clients.get(id)
 		if (!client) return
 		client.send(JSON.stringify(reply))
-		log(`Sent to ${id}: ${JSON.stringify(reply)}`)
+        if (reply.type !== "gameState")
+            log(`Sent to ${id}: ${JSON.stringify(reply)}`)
 	}
 
 	reply(socket: WebSocket, reply: WebSocketReply) {
