@@ -142,3 +142,26 @@ export function movePaddle(playerId: number, direction: "up" | "down") {
 	game.movePaddle(playerId, direction)
 	return game
 }
+
+export function addSpectator(spectatorId: number, targetId: number){
+    const game = GameManager.findGameByPlayerId(targetId)
+    if (!game) {
+        log("Game not found")
+        return null
+    }
+
+    game.spectators.add(spectatorId)
+    return game
+}
+
+export function removeSpectator(spectatorId: number){
+    const game = GameManager.findGameBySpectatorId(spectatorId)
+
+    if (!game) {
+        log("Game not found")
+        return null
+    }
+
+    game.spectators.delete(spectatorId)
+    return game
+}
