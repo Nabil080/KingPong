@@ -4,7 +4,7 @@
 
 A full-stack multiplayer Pong game built as a Single Page Application (SPA) for seamless, real-time gameplay, tournaments, and social features. KingPong delivers a fluid experience with live user status updates, customizable themes, and efficient caching—demonstrating my skills in modern web development and real-time systems.
 
-> **Note**: No live demo is available, but check out the [screenshots](#-screenshots) below or this [demo video](wip) for a closer look. Also feel free to check the code or compile on your machine.
+> **Note**: No live demo is available, but check out the [screenshots](#-screenshots) below or this [demo video](https://youtu.be/FOPV-0sY1fc) for a closer look. Also feel free to check the code or compile on your machine.
 
 ## 📋 Table of Contents
 
@@ -250,7 +250,7 @@ KingPong is GDPR compliant, prioritizing user control with clear data policies, 
 ## 📸 Screenshots
 
 <div style="text-align: center;">
-  <p>Screenshots showcasing some features of KingPong. See the <a target="_blank" href="https://video.com">demo video</a> for dynamic gameplay and interactions.</p>
+  <p>Screenshots showcasing some features of KingPong. See the <a target="_blank" href="https://youtu.be/FOPV-0sY1fc">demo video</a> for dynamic gameplay and interactions.</p>
 </div>
 
 <div style="text-align: center;">
