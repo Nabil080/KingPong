@@ -8,7 +8,7 @@ export default class Navbar {
 
 	constructor(private app: App) {
 		// Create the navbar element
-		this.root.className = "border-accent flex items-center justify-between border-b px-[25px] h-[60px]"
+		this.root.className = "border-accent flex items-center border-b px-[25px] h-[60px] relative justify-between"
 		this.root.innerHTML = /* HTML */ `
 			<!-- Left section: Logo and flag -->
 			<section id="left-nav" class="flex gap-4">
@@ -22,7 +22,7 @@ export default class Navbar {
 			</section>
 
 			<!-- Center section: Navigation buttons -->
-			<section id="center-nav" class="flex items-center justify-center"></section>
+			<section id="center-nav" class="flex items-center justify-center absolute left-1/2 -translate-x-1/2"></section>
 
 			<!-- Right section: User info/login -->
 			<button data-popup id="right-nav" class="hover-effect group flex items-center gap-2 [&>*]:pointer-events-none"></button>
