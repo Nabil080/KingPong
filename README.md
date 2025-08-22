@@ -43,6 +43,7 @@ KingPong is a web-based Pong game where players compete in real-time matches, jo
 
 ### Social Features
 - **Real-Time Chat**: Instant messaging with unread message pings on user profiles.
+- **Real-Time Spectating**: Spectate other player's game.
 - **Friend Management**: Add friends, block users, and see live status (online, offline, playing).
 - **Notifications**: Fading or persistent alerts for invites, messages, etc., with click-to-redirect or discard options.
 - **Player Stats**: View match history and performance metrics.
@@ -52,6 +53,17 @@ KingPong is a web-based Pong game where players compete in real-time matches, jo
 - **Username/Password**: Secure login with easy updates.
 - **Google OAuth**: Quick sign-in integration.
 - **JWT**: Token-based session management.
+
+### Security
+- **Cross-Site Scripting (XSS)**: All stored user inputs are sanitized to prevent malicious script injection. HTML elements are created programmatically to ensure safe rendering.
+- **SQL Injection**: Database queries use prepared statements with parameterized inputs to eliminate the risk of SQL injection attacks.
+- **Request Validation**: Every API request is validated against strict JSON schemas to ensure data integrity and prevent malformed or malicious inputs.
+- **JSON Web Tokens (JWT)**: Authentication is handled via JWTs, with short-lived access tokens and secure refresh tokens stored in HttpOnly cookies to prevent client-side access. Tokens are validated server-side to ensure session integrity.
+- **Server-Side Game Logic**: All critical game calculations are performed server-side using an authoritative server model, preventing clients from manipulating game state or cheating.
+- **Secure WebSocket Communication**: Real-time features like gameplay and chat use WebSocket Secure (WSS) over TLS to encrypt data in transit. WebSocket connections require authenticated tokens to prevent unauthorized access.
+- **HTTPS Encryption**: All network communication, including API calls and WebSocket connections, is secured with TLS to protect sensitive data like user credentials and game states.
+- **Password Security**: User passwords are hashed using bcrypt.
+- **CSRF Protection**: Cross-Site Request Forgery is mitigated through anti-CSRF tokens and strict origin checks for all state-changing requests.
 
 ## 🛠 Tech Stack
 
