@@ -35,7 +35,8 @@ CREATE TABLE IF NOT EXISTS matches (
     score1 INTEGER NOT NULL,
     score2 INTEGER NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    duration INTEGER NOT NULL
+    duration INTEGER NOT NULL,
+    inputs TEXT NULL
 )
 `)
 

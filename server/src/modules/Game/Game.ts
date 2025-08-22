@@ -16,10 +16,21 @@ export interface GameOptions {
 export interface KeysType {
 	[key: string]: boolean
 }
+export interface ReplayInputType{
+    timestamp: number
+    player: PlayerNumber
+    key: string
+    pressed: boolean
+
+}
+
+export type PlayerNumber = 1 | 2
+
 class GameInputs {
 	static TRACKED_KEYS: string[] = ["w", "s", "ArrowUp", "ArrowDown"] // List of keys to track
 	private player1keys: KeysType = {}
 	private player2keys: KeysType = {}
+    public  stored: ReplayInputType[] = []
 
 	constructor(public game: Game) {}
 
@@ -39,12 +50,13 @@ class GameInputs {
 		}
 	}
 
-	public setPlayerKey(player: number, key: string, pressed: boolean) {
+	public setPlayerKey(player: PlayerNumber, key: string, pressed: boolean) {
 		if (player === 1) {
 			this.player1keys[key] = pressed
 		} else if (player === 2) {
 			this.player2keys[key] = pressed
 		}
+        this.stored.push({timestamp: Date.now(), player: player, key: key, pressed: pressed})
 	}
 }
 

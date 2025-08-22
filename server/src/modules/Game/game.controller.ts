@@ -21,8 +21,10 @@ export interface KeyEventRequest {
 }
 
 export interface MoveEventRequest {
-	direction: "up" | "down"
+	direction: DirectionType
 }
+
+export type DirectionType = "up" | "down"
 
 export function getState(request: FastifyRequest, reply: FastifyReply) {
 	const playerId = request.session.userId

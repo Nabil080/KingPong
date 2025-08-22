@@ -36,6 +36,7 @@ export function registerGame(game: Game): void {
 		score1: game.state.score1,
 		score2: game.state.score2,
 		duration: Math.floor(game.duration / 1000), // duration in seconds
+        inputs: JSON.stringify(game.gameInputs.stored)
 	}
 	console.log("create match result : ", createMatch(match))
 }

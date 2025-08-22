@@ -9,6 +9,7 @@ export interface Match {
 	score2: number
 	duration: number
 	created_at?: string
+    inputs: string
 }
 
 /**
@@ -19,11 +20,11 @@ export function createMatch(match: Match): void {
 	return db
 		.prepare(
 			`
-        INSERT INTO matches (player1, player2, winner, score1, score2, duration)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO matches (player1, player2, winner, score1, score2, duration, inputs)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     `,
 		)
-		.run(match.player1, match.player2, match.winner, match.score1, match.score2, match.duration)
+		.run(match.player1, match.player2, match.winner, match.score1, match.score2, match.duration, match.inputs)
 }
 
 /**
