@@ -1,10 +1,21 @@
 import Game from "./Game.js"
 
-export interface ReplayInputType{
+export type ReplayEntryType = {
     timestamp: number
+    entry: ReplayInputType | ReplayBallAngleType
+}
+
+export type ReplayInputType = {
+    type: "input"
     player: 1 | 2
     key: string
     pressed: boolean
+}
+
+export type ReplayBallAngleType = {
+    type: "ballAngle"
+    dx: number
+    dy: number
 }
 
 export class GameInputs {
@@ -12,7 +23,7 @@ export class GameInputs {
 	private keys: { [key: string]: boolean } = {} // Tracks the state of keys
 	private replay1keys: { [key: string]: boolean } = {} // Tracks the state of keys
 	private replay2keys: { [key: string]: boolean } = {} // Tracks the state of keys
-    public  stored: ReplayInputType[] = []
+    public  stored: ReplayEntryType[] = []
 
 	constructor(private game: Game) {
 		this.initialize()
@@ -115,11 +126,17 @@ export class GameInputs {
         console.log(currentTime)
 
         while (inputs.length > 0 && inputs[0].timestamp <= currentTime) {
-            const input = inputs.shift()!; // Remove and get the first input
-            if (input.player === 1) {
-                this.replay1keys[input.key] = input.pressed;
-            } else if (input.player === 2) {
-                this.replay2keys[input.key] = input.pressed;
+            const input = inputs.shift()!.entry; // Remove and get the first input
+            if (input.type === "input")
+            {
+                if (input.player === 1) {
+                    this.replay1keys[input.key] = input.pressed;
+                } else if (input.player === 2) {
+                    this.replay2keys[input.key] = input.pressed;
+                }
+            } else if (input.type === "ballAngle"){
+                this.game.state.ball.dx = input.dx
+                this.game.state.ball.dy = input.dy
             }
         }
 

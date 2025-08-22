@@ -16,11 +16,23 @@ export interface GameOptions {
 export interface KeysType {
 	[key: string]: boolean
 }
-export interface ReplayInputType{
+
+export type ReplayEntryType = {
     timestamp: number
+    entry: ReplayInputType | ReplayBallAngleType
+}
+
+export type ReplayInputType = {
+    type: "input"
     player: PlayerNumber
     key: string
     pressed: boolean
+}
+
+export type ReplayBallAngleType = {
+    type: "ballAngle"
+    dx: number
+    dy: number
 }
 
 export type PlayerNumber = 1 | 2
@@ -29,7 +41,7 @@ class GameInputs {
 	static TRACKED_KEYS: string[] = ["w", "s", "ArrowUp", "ArrowDown"] // List of keys to track
 	private player1keys: KeysType = {}
 	private player2keys: KeysType = {}
-    public  stored: ReplayInputType[] = []
+    public  stored: ReplayEntryType[] = []
 
 	constructor(public game: Game) {}
 
@@ -55,7 +67,7 @@ class GameInputs {
 		} else if (player === 2) {
 			this.player2keys[key] = pressed
 		}
-        this.stored.push({timestamp: (Date.now() - this.game.startTime), player: player, key: key, pressed: pressed})
+        this.stored.push({timestamp: (Date.now() - this.game.startTime), entry: {type:"input", player: player, key: key, pressed: pressed}})
 	}
 }
 

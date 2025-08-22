@@ -91,15 +91,7 @@ export async function initHistoryCardEvents(app: App){
 	document.querySelectorAll("[data-replay]").forEach((button) => {
         console.log(button)
 		button.addEventListener("click", async (event) => {
-			const matchId = Number(button.getAttribute("data-id"))
-
-            const match = await app.server.getMatch(matchId)
-            if (!match) return
-
-            //TODO: Recreate a game from the data
-            app.game = newReplayGame(app, match)
-            //TODO: Go to pong and play the game
-            app.router.navigate("/pong")
+            app.router.navigate("/pong/" + button.getAttribute("data-id"))
         })
     })
 }
