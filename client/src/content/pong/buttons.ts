@@ -24,6 +24,7 @@ const ButtonDefinitions: Record<string, (game: Game) => string> = {
 	cancelTournament: (game) => baseButton(t("cancelTournament"), `data-action='cancelTournament'`),
 	next: (game) => baseButton(t("next"), `data-action='next'`),
     leave: (game) => baseButton(t("leave"), `data-action='leave'`),
+    play: (game) => baseButton(t("play"), `data-action='play'`),
 }
 
 // Button mapping
@@ -44,6 +45,8 @@ const ButtonsMap: { gamemode: gameModeType; currentStep: currentStepType; button
 	{ gamemode: "tournament", currentStep: "pause", buttons: ["cancelTournament", "resume"] },
 	{ gamemode: "tournament", currentStep: "done", buttons: ["next"] },
 	{ gamemode: "spectator", currentStep: "playing", buttons: ["options", "leave"] },
+	{ gamemode: "replay", currentStep: "pause", buttons: ["leave", "resume"] },
+	{ gamemode: "replay", currentStep: "playing", buttons: ["leave", "pause"] },
 ]
 
 export function updateGameButtons(game: Game) {

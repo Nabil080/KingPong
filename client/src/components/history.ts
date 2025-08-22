@@ -1,4 +1,5 @@
 import { App } from "../classes/App.js"
+import { newReplayGame } from "../classes/Game/Game.js"
 import { Match } from "../types/match.js"
 import { getAvatarPath } from "../utils/utils.js"
 
@@ -74,10 +75,31 @@ export function fullHistoryCard(app: App, username: string, match: Match): strin
 				</div>
 			</div>
 
+            <button data-replay data-id="${match.id}">replay</button>
+
 			<div class="text-sm">
 				<span class="text-gray-300">${formattedDate}</span>
 				<span class="text-gray-300">${formattedTime}</span>
 			</div>
 		</div>
 	`
+}
+
+export async function initHistoryCardEvents(app: App){
+    console.log("init")
+	// Listen for clicks in the players list container
+	document.querySelectorAll("[data-replay]").forEach((button) => {
+        console.log(button)
+		button.addEventListener("click", async (event) => {
+			const matchId = Number(button.getAttribute("data-id"))
+
+            const match = await app.server.getMatch(matchId)
+            if (!match) return
+
+            //TODO: Recreate a game from the data
+            app.game = newReplayGame(app, match)
+            //TODO: Go to pong and play the game
+            app.router.navigate("/pong")
+        })
+    })
 }

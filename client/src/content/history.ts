@@ -1,5 +1,5 @@
 import { App } from "../classes/App.js"
-import { fullHistoryCard } from "../components/history.js"
+import { fullHistoryCard, initHistoryCardEvents } from "../components/history.js"
 import { t } from "../translations/translations.js"
 import { Match } from "../types/match.js"
 import { routeParams } from "../types/routes.js"
@@ -20,9 +20,10 @@ export async function renderHistory(app: App, params?: routeParams) {
 
 	// Render the history page
 	const pageContent = await historyHTML(app, username, matches)
-	// Wait for 2 seconds before showing the content
-
 	app.changeContent(pageContent)
+
+    // init the events
+    initHistoryCardEvents(app)
 }
 
 /**

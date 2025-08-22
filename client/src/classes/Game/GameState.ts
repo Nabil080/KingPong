@@ -24,8 +24,11 @@ export default class GameState {
 		this.score2 = 0
 	}
 
+    // TODO: handle replay mode
 	update() {
 		if (this.game.currentStep != "playing") return
+        // if (this.game.gameMode === "replay")
+        //     console.log(this.game)
 		this.game.inputs.update() // Handle player inputs
 		this.ball.update() // Handle ball direction
 		this.updateBots() // Move the paddles if they are bots

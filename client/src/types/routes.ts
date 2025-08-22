@@ -42,7 +42,7 @@ export const routes: routeType[] = [
 	{ path: "/profil/:?username", title: "Profil", renderer: renderProfil, authorization: "everyone" as authorizationType },
 	{ path: "/history/:?username", title: "Historique", renderer: renderHistory, authorization: "everyone" as authorizationType },
 	{ path: "/stats/:?username", title: "Statistique", renderer: renderStats, authorization: "everyone" as authorizationType },
-	{ path: "/pong", title: "Pong", renderer: pongRenderer, authorization: "everyone" as authorizationType },
+	{ path: "/pong/:?id", title: "Pong", renderer: pongRenderer, authorization: "everyone" as authorizationType },
 	{
 		path: "/confidentiality",
 		title: "Politique de confidentialite",

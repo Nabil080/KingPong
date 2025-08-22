@@ -1,8 +1,18 @@
 import Game from "./Game.js"
 
+export interface ReplayInputType{
+    timestamp: number
+    player: 1 | 2
+    key: string
+    pressed: boolean
+}
+
 export class GameInputs {
 	static TRACKED_KEYS: string[] = ["w", "s", "ArrowUp", "ArrowDown"] // List of keys to track
 	private keys: { [key: string]: boolean } = {} // Tracks the state of keys
+	private replay1keys: { [key: string]: boolean } = {} // Tracks the state of keys
+	private replay2keys: { [key: string]: boolean } = {} // Tracks the state of keys
+    public  stored: ReplayInputType[] = []
 
 	constructor(private game: Game) {
 		this.initialize()
@@ -46,7 +56,9 @@ export class GameInputs {
 			this.handleLocalInputs()
 		} else if (this.game.gameMode === "remote") {
 			this.handleRemoteInputs()
-		}
+		} else if (this.game.gameMode === "replay") {
+            this.handleReplayInputs()
+        }
 	}
 
 	// Handles inputs for local game mode
@@ -95,4 +107,26 @@ export class GameInputs {
 			paddle.moveDown()
 		}
 	}
+
+    private handleReplayInputs() {
+        const currentTime = this.game.getCurrentTime();
+        const inputs = this.game.inputs.stored;
+
+        console.log(currentTime)
+
+        while (inputs.length > 0 && inputs[0].timestamp <= currentTime) {
+            const input = inputs.shift()!; // Remove and get the first input
+            if (input.player === 1) {
+                this.replay1keys[input.key] = input.pressed;
+            } else if (input.player === 2) {
+                this.replay2keys[input.key] = input.pressed;
+            }
+        }
+
+        if (this.replay1keys["w"] || this.replay1keys["ArrowUp"]) this.game.state.paddle1.moveUp();
+        if (this.replay1keys["s"] || this.replay1keys["ArrowDown"]) this.game.state.paddle1.moveDown();
+        if (this.replay2keys["w"] || this.replay2keys["ArrowUp"]) this.game.state.paddle2.moveUp();
+        if (this.replay2keys["s"] || this.replay2keys["ArrowDown"]) this.game.state.paddle2.moveDown();
+    }
+
 }

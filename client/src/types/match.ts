@@ -7,4 +7,5 @@ export interface Match {
 	score2: number
 	duration: number
 	created_at?: string
+    inputs?: string
 }

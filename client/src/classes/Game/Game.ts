@@ -1,4 +1,5 @@
 import { updateGamePlayers } from "../../content/pong/players.js"
+import { Match } from "../../types/match.js"
 import { GameOptions } from "../../types/options.js"
 import { DEFAULT_LOCAL_1, Player, RemotePlayer } from "../../types/player.js"
 import { GameStateReply } from "../../types/websocket.js"
@@ -9,7 +10,7 @@ import GameRenderer from "./GameRenderer.js"
 import GameState from "./GameState.js"
 
 export type currentStepType = "configuring" | "waiting-for-opponent" | "not-ready" | "playing" | "pause" | "done" | "cancelled"
-export type gameMode = "local" | "remote" | "tournament" | "spectator"
+export type gameMode = "local" | "remote" | "tournament" | "spectator" | "replay"
 
 export default class Game {
 	// Constants
@@ -33,6 +34,10 @@ export default class Game {
 	public renderer: GameRenderer = new GameRenderer(this)
 	public state: GameState = new GameState(this)
 	public inputs: GameInputs = new GameInputs(this)
+
+	// Timer
+	public startTime: number = 0
+	public duration: number = 0
 
 	constructor(public app: App) {
 		this.setInitialPlayer()
@@ -143,6 +148,7 @@ export default class Game {
 	}
 
 	// Empty the cache for the remote matches so the game is fetched from the server in profil/history/stats page
+    // /!\ temporary solution
 	private updateCache() {
 		if (this.currentStep !== "done" || this.gameMode !== "remote") return
 		this.app.cache.clearMatches((this.player1 as RemotePlayer).user.username)
@@ -162,6 +168,11 @@ export default class Game {
 		this.winner = undefined
 		this.currentStep = "configuring"
 	}
+
+    // Get current time
+    public getCurrentTime(){
+        return Date.now() - this.startTime
+    }
 }
 
 export function newGameFromStateReply(app: App, reply: GameStateReply) {
@@ -177,4 +188,21 @@ export function newGameFromStateReply(app: App, reply: GameStateReply) {
 	game.gameMode = "remote"
     game.currentStep = reply.currentStep
 	return game
+}
+
+export function newReplayGame(app: App, match: Match){
+    console.log(match)
+    const game = new Game(app)
+    const player1 = app.cache.getUserByUsername(match.player1)?.user
+    const player2 = app.cache.getUserByUsername(match.player2)?.user
+	if (!player1 || !player2) return
+
+	game.setPlayer(1, { type: "remote", user: player1 })
+	game.setPlayer(2, { type: "remote", user: player2 })
+	game.player2Joined = true
+	game.gameMode = "replay"
+    game.currentStep = "playing"
+    game.inputs.stored = JSON.parse(match.inputs!)
+    game.startTime = Date.now()
+    return game
 }

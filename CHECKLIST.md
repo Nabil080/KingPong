@@ -1,9 +1,6 @@
 # Comprehensive Website Testing Checklist
 
-- spectator
-> spectator count / notif for players
-> live update when someone is playing
-> playing users on top
+- replay feature
 
 ## 1. Authentication & Authorization
 - [x] Register with valid credentials

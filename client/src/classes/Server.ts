@@ -221,4 +221,8 @@ export default class Server {
 
 		return data
 	}
+
+    async getMatch(matchId: number): Promise<any> {
+        return await this.sendServerRequest("/matches/replay/" + matchId, "GET")
+    }
 }

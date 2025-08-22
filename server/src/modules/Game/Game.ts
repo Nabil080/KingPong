@@ -21,7 +21,6 @@ export interface ReplayInputType{
     player: PlayerNumber
     key: string
     pressed: boolean
-
 }
 
 export type PlayerNumber = 1 | 2
@@ -56,7 +55,7 @@ class GameInputs {
 		} else if (player === 2) {
 			this.player2keys[key] = pressed
 		}
-        this.stored.push({timestamp: Date.now(), player: player, key: key, pressed: pressed})
+        this.stored.push({timestamp: (Date.now() - this.game.startTime), player: player, key: key, pressed: pressed})
 	}
 }
 

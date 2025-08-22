@@ -1,6 +1,7 @@
 import { App } from "../../classes/App.js"
-import Game from "../../classes/Game/Game.js"
+import Game, { newReplayGame } from "../../classes/Game/Game.js"
 import { GameOptions } from "../../types/options.js"
+import { routeParams } from "../../types/routes.js"
 import { User } from "../../types/user.js"
 import { updateGameButtons } from "./buttons.js"
 import { updateGamePlayers } from "./players.js"
@@ -28,18 +29,24 @@ export function renderGameboard(app: App, game: Game) {
 	updateGameButtons(game)
 }
 
-export async function pongRenderer(app: App) {
+export async function pongRenderer(app: App, params?: routeParams) {
 	// Retrieve game from the server if there is one
 	if (!app.game) {
 		await app.server.gameStateRequest()
 	}
 	// Double check
 	if (!app.game) {
-		app.game = new Game(app)
+        app.game = new Game(app)
 	}
 
+    const id = Number(params?.id)
+    if (id){
+        const match = await app.server.getMatch(id)
+        if (match) app.game = newReplayGame(app, match)
+    }
+
 	// Render the game
-	renderGameboard(app, app.game)
+	renderGameboard(app, app.game!)
 }
 
 export function joinLobby(app: App, user: User, options: GameOptions) {
