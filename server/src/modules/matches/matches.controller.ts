@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { usernameExists } from "../users/users.model.js"
-import { Match } from "./matches.model.js"
+import { getMatchById, Match } from "./matches.model.js"
 import { fetchAllMatches, fetchMatchesByUser, registerMatch } from "./matches.service.js"
 
 /**
@@ -42,5 +42,20 @@ export async function getMatchesByUserHandler(request: FastifyRequest<{ Params: 
 	} catch (error) {
 		console.error("Error retrieving matches for user:", error)
 		return reply.status(500).send({ error: "Failed to retrieve matches for user." })
+	}
+}
+
+/**
+ * Retrieve a match by its id
+ */
+export async function getMatchByIdHandler(request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) {
+    const {id} = request.params
+	try {
+		const match = getMatchById(id)
+        if (!match) throw "no match"
+		return reply.status(200).send(match)
+	} catch (error) {
+		console.error("Error retrieving match id ", id, ":", error)
+		return reply.status(500).send({ error: "Failed to retrieve match with id of ", id })
 	}
 }

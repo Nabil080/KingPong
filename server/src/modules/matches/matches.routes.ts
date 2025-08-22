@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify"
-import { createMatchHandler, getAllMatchesHandler, getMatchesByUserHandler } from "./matches.controller.js"
+import { createMatchHandler, getAllMatchesHandler, getMatchByIdHandler, getMatchesByUserHandler } from "./matches.controller.js"
 
 const createMatchSchema = {
 	body: {
@@ -74,8 +74,18 @@ const getMatchesByUserSchema = {
 	},
 }
 
+const getMatchByIdSchema = {
+	params: {
+		type: "object",
+		required: ["id"],
+		properties: {
+			username: { type: "integer" },
+		},
+	},
+}
 export async function registerMatchesRoutes(fastify: FastifyInstance) {
 	fastify.post("/create", { schema: createMatchSchema }, createMatchHandler) // Create a new match
 	fastify.get("/all", { schema: getAllMatchesSchema }, getAllMatchesHandler) // Retrieve all matches
 	fastify.get("/:username", { schema: getMatchesByUserSchema }, getMatchesByUserHandler) // Retrieve matches for a specific user
+	fastify.get("/replay/:id", { schema: getMatchByIdSchema }, getMatchByIdHandler) // Retrieve matches for a specific user
 }

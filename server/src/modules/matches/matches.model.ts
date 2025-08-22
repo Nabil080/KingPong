@@ -47,3 +47,14 @@ export function getMatchesByUser(username: string): Match[] {
 		)
 		.all(username, username) as Match[]
 }
+
+export function getMatchById(id: number): Match {
+	return db
+		.prepare(
+			`
+        SELECT * FROM matches
+        WHERE id = ?
+    `,
+		)
+		.get(id) as Match
+}
